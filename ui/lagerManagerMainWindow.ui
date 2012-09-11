@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1047</width>
+    <height>907</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QMdiArea" name="mdiArea"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1047</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>&amp;Datei</string>
+    </property>
+    <addaction name="actionQuit"/>
+   </widget>
+   <widget class="QMenu" name="menu_Reports">
+    <property name="title">
+     <string>&amp;Reports</string>
+    </property>
+    <widget class="QMenu" name="menu_Verbrauch">
+     <property name="title">
+      <string>&amp;Verbrauch</string>
+     </property>
+     <addaction name="action_Report_Verbrauch_Artikel"/>
+    </widget>
+    <widget class="QMenu" name="menu_Umsaetze">
+     <property name="title">
+      <string>&amp;Umsätze</string>
+     </property>
+     <addaction name="action_Report_Umsaetze_UmsatzTag"/>
+     <addaction name="action_Report_Umsaetze_UmsatzAufwand"/>
+    </widget>
+    <widget class="QMenu" name="menu_Lagerstand">
+     <property name="title">
+      <string>&amp;Lager</string>
+     </property>
+     <addaction name="action_Report_Lager_Lagerstand"/>
+     <addaction name="action_Report_Lager_MinimumLagerstand"/>
+     <addaction name="action_Report_Lager_Inventur"/>
+    </widget>
+    <widget class="QMenu" name="menu_Einkauf">
+     <property name="title">
+      <string>&amp;Einkauf</string>
+     </property>
+     <addaction name="action_Report_Einkauf_GesamteLieferungen"/>
+    </widget>
+    <addaction name="menu_Lagerstand"/>
+    <addaction name="menu_Verbrauch"/>
+    <addaction name="menu_Umsaetze"/>
+    <addaction name="menu_Einkauf"/>
+   </widget>
+   <widget class="QMenu" name="menu_Lieferungen">
+    <property name="title">
+     <string>&amp;Lieferungen</string>
+    </property>
+    <addaction name="action_Lieferungen_Lieferungen"/>
+    <addaction name="action_Lieferungen_Lieferanten"/>
+    <addaction name="action_Lieferungen_InitialerLagerstand"/>
+   </widget>
+   <widget class="QMenu" name="menuStammdaten">
+    <property name="title">
+     <string>&amp;Stammdaten</string>
+    </property>
+    <addaction name="action_Stammdaten_Perioden"/>
+    <addaction name="action_Stammdaten_Import"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menu_Reports"/>
+   <addaction name="menu_Lieferungen"/>
+   <addaction name="menuStammdaten"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionQuit">
+   <property name="text">
+    <string>&amp;Beenden</string>
+   </property>
+  </action>
+  <action name="action_Lieferungen_Lieferungen">
+   <property name="text">
+    <string>&amp;Lieferungen</string>
+   </property>
+  </action>
+  <action name="action_Lieferungen_Lieferanten">
+   <property name="text">
+    <string>L&amp;ieferanten</string>
+   </property>
+  </action>
+  <action name="actionZoomIn">
+   <property name="text">
+    <string>&amp;Vergrößern</string>
+   </property>
+   <property name="toolTip">
+    <string>Vergrößern</string>
+   </property>
+  </action>
+  <action name="actionZoomOut">
+   <property name="text">
+    <string>Verkleinern</string>
+   </property>
+   <property name="toolTip">
+    <string>Verkleinern</string>
+   </property>
+  </action>
+  <action name="action_Report_Lager_Lagerstand">
+   <property name="text">
+    <string>&amp;Lagerstand</string>
+   </property>
+  </action>
+  <action name="action_Report_Lager_MinimumLagerstand">
+   <property name="text">
+    <string>&amp;Minimum erreicht</string>
+   </property>
+  </action>
+  <action name="action_Stammdaten_Perioden">
+   <property name="text">
+    <string>&amp;Perioden</string>
+   </property>
+  </action>
+  <action name="action_Lieferungen_InitialerLagerstand">
+   <property name="text">
+    <string>Initialer Lager&amp;stand</string>
+   </property>
+  </action>
+  <action name="action_Report_Verbrauch_Artikel">
+   <property name="text">
+    <string>&amp;Artikel</string>
+   </property>
+  </action>
+  <action name="actionAuf_wand">
+   <property name="text">
+    <string>Auf&amp;wand</string>
+   </property>
+  </action>
+  <action name="action_Report_Umsaetze_UmsatzTag">
+   <property name="text">
+    <string>&amp;Umsatz/Tag</string>
+   </property>
+  </action>
+  <action name="action_Report_Umsaetze_UmsatzAufwand">
+   <property name="text">
+    <string>Umsatz:&amp;Aufwand</string>
+   </property>
+  </action>
+  <action name="action_Report_Lager_Inventur">
+   <property name="text">
+    <string>&amp;Inventur</string>
+   </property>
+  </action>
+  <action name="action_Stammdaten_Import">
+   <property name="text">
+    <string>&amp;Import</string>
+   </property>
+  </action>
+  <action name="action_Report_Einkauf_GesamteLieferungen">
+   <property name="text">
+    <string>&amp;Gesamte Lieferungen</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
