@@ -49,7 +49,6 @@ class LieferungForm(FormBase):
 		self.detailModel.setRelation(1, QtSql.QSqlRelation('lieferungen', 'lieferung_id', 'datum'))
 		self.detailModel.setRelation(2, QtSql.QSqlRelation('artikel_basis', 'artikel_id', 'artikel_bezeichnung'))
 		self.detailModel.setEditStrategy(QtSql.QSqlTableModel.OnManualSubmit)
-		self.updateDetailFilter()
 		
 		
 		#Master table
@@ -83,11 +82,13 @@ class LieferungForm(FormBase):
 		self.detailTableView.setItemDelegate(QtSql.QSqlRelationalDelegate(self.detailTableView))
 		self.detailTableView.setSelectionMode(QtGui.QTableView.SingleSelection)
 		self.detailTableView.setSelectionBehavior(QtGui.QTableView.SelectRows)
+		self.detailTableView.setColumnHidden(0, True)
+		self.detailTableView.setColumnHidden(1, True)
 		self.detailTableView.resizeColumnsToContents()
 		self.detailTableView.horizontalHeader().setStretchLastSection(True)
 		self.detailTableView.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
 		
-		
+		self.updateDetailFilter()
 		
 
 	def setupSignals(self):
@@ -152,6 +153,7 @@ class LieferungForm(FormBase):
 		relModel.setFilter('artikel_periode = %s and artikel_id in (select lager_artikel_artikel from lager_artikel)'%self.getCurrentPeriodId())
 		relModel.sort(1, QtCore.Qt.AscendingOrder)
 		self.detailModel.select()
+		self.detailTableView.resizeColumnsToContents()
 		
 	def getCurrentLieferungId(self):
 		try:
