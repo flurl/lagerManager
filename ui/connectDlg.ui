@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>248</width>
-    <height>181</height>
+    <height>214</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,61 +21,59 @@
        <property name="fieldGrowthPolicy">
         <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
        </property>
-       <item row="1" column="0">
+       <item row="2" column="0">
         <widget class="QLabel" name="label_2">
          <property name="text">
           <string>Datenbank</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="0">
+       <item row="4" column="0">
         <widget class="QLabel" name="label_4">
          <property name="text">
           <string>Paßwort</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
-        <widget class="QLineEdit" name="lineEdit_pw">
-         <property name="echoMode">
-          <enum>QLineEdit::PasswordEchoOnEdit</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QComboBox" name="comboBox_db">
-         <property name="editable">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
+       <item row="1" column="0">
         <widget class="QLabel" name="label">
          <property name="text">
           <string>Host</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="0">
+       <item row="3" column="0">
         <widget class="QLabel" name="label_3">
          <property name="text">
           <string>User</string>
          </property>
         </widget>
        </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>Verbindung</string>
+         </property>
+        </widget>
+       </item>
        <item row="0" column="1">
-        <widget class="QComboBox" name="comboBox_host">
+        <widget class="QComboBox" name="comboBox_connection">
          <property name="editable">
           <bool>true</bool>
          </property>
         </widget>
        </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="lineEdit_host"/>
+       </item>
        <item row="2" column="1">
-        <widget class="QComboBox" name="comboBox_user">
-         <property name="editable">
-          <bool>true</bool>
-         </property>
-        </widget>
+        <widget class="QLineEdit" name="lineEdit_db"/>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLineEdit" name="lineEdit_user"/>
+       </item>
+       <item row="4" column="1">
+        <widget class="QLineEdit" name="lineEdit_pw"/>
        </item>
       </layout>
      </item>
@@ -91,10 +89,6 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>comboBox_host</tabstop>
-  <tabstop>comboBox_db</tabstop>
-  <tabstop>comboBox_user</tabstop>
-  <tabstop>lineEdit_pw</tabstop>
   <tabstop>pushButton_connect</tabstop>
  </tabstops>
  <resources/>

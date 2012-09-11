@@ -16,34 +16,26 @@ class ConnectDialog(QtGui.QDialog):
 		self.ui.setupUi(self)
 		
 		self.connect(self.ui.pushButton_connect, QtCore.SIGNAL('clicked()'), self.connectToDb)
+		self.connect(self.ui.comboBox_connection, QtCore.SIGNAL('currentIndexChanged (const QString&)'), self.loadStoredConnection)
 		
-		#try:
-		#	c = config.config['app_db_connections']['all']
-		#	for params in c:
-		#		print params['host']
-		#		self.ui.comboBox_host.addItem(params['host'])
-		#		self.ui.comboBox_db.addItem(params['db'])
-		#		self.ui.comboBox_user.addItem(params['user'])
-		#except KeyError:
-		#	pass
-			
-			
 		try:
-			c = config.config['app_db_connections']['last']
-			self.ui.comboBox_host.addItem(c['host'])
-			self.ui.comboBox_db.addItem(c['db'])
-			self.ui.comboBox_user.addItem(c['user'])
+			c = config.config['app_db_connections']
+			for conn in c.keys():
+				self.ui.comboBox_connection.addItem(conn)
 		except KeyError:
 			pass
+			
+		self.loadStoredConnection(unicode(self.ui.comboBox_connection.currentText()))
+		
 		
 #		self._connectToDb()
 #		self._setupForm()
 
 
 	def connectToDb(self):
-		host = unicode(self.ui.comboBox_host.currentText())
-		db = unicode(self.ui.comboBox_db.currentText())
-		user = unicode(self.ui.comboBox_user.currentText())
+		host = unicode(self.ui.lineEdit_host.text())
+		db = unicode(self.ui.lineEdit_db.text())
+		user = unicode(self.ui.lineEdit_user.text())
 		pw = unicode(self.ui.lineEdit_pw.text())
 		
 		if DBConnection.connect(host, user, pw, db):
@@ -51,7 +43,7 @@ class ConnectDialog(QtGui.QDialog):
 			try:
 				c = config.config['app_db_connections']
 			except KeyError:
-				config.config['app_db_connections'] = {}
+				c = config.config['app_db_connections'] = {}
 			
 #			try:
 #				allConnections = config.config['app_db_connections']['all']
@@ -60,6 +52,10 @@ class ConnectDialog(QtGui.QDialog):
 				
 #			if connParams not in allConnections:
 #				allConnections.append(connParams)
+
+			connName = unicode(self.ui.comboBox_connection.currentText())
+			if connName != '':
+				c[connName] = connParams
 				
 			config.config['app_db_connections']['last'] = connParams
 			config.config.write()
@@ -67,5 +63,13 @@ class ConnectDialog(QtGui.QDialog):
 		else:
 			QtGui.QMessageBox.critical(self, 'Verbindung fehlgeschlagen', 'Verbindung fehlgeschlagen', QtGui.QMessageBox.Ok)
 		
-		
+	def loadStoredConnection(self, name):
+		name = unicode(name)
+		try:
+			c = config.config['app_db_connections'][name]
+			self.ui.lineEdit_host.setText(c['host'])
+			self.ui.lineEdit_db.setText(c['db'])
+			self.ui.lineEdit_user.setText(c['user'])
+		except KeyError:
+			pass
 
