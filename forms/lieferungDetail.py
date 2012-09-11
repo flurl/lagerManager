@@ -34,17 +34,16 @@ class LieferungDetailForm(FormBase):
 		self.detailModel.setTable('lieferungen_details')
 		self.detailModel.setRelation(1, QtSql.QSqlRelation('lieferungen', 'lieferung_id', 'datum'))
 		self.detailModel.setRelation(2, QtSql.QSqlRelation('artikel_basis', 'artikel_id', 'artikel_bezeichnung'))
-		relModel = self.detailModel.relationModel(2)
-		relModel.setFilter('artikel_id in (select lager_artikel_artikel from lager_artikel)')
-		relModel.sort(1, QtCore.Qt.AscendingOrder)
 		self.detailModel.setEditStrategy(QtSql.QSqlTableModel.OnFieldChange)
-		self.detailModel.select()
+		#self.detailModel.select()
 		
 		self.detailTableView = self.ui.tableView_details
 		self.detailTableView.setModel(self.detailModel)
 		self.detailTableView.setItemDelegate(QtSql.QSqlRelationalDelegate(self.detailTableView))
 		self.detailTableView.setSelectionMode(QtGui.QTableView.SingleSelection)
 		self.detailTableView.setSelectionBehavior(QtGui.QTableView.SelectRows)
+		self.detailTableView.setColumnHidden(0, True)
+		self.detailTableView.setColumnHidden(1, True)
 		self.detailTableView.resizeColumnsToContents()
 		self.detailTableView.horizontalHeader().setStretchLastSection(True)
 		
@@ -74,6 +73,7 @@ class LieferungDetailForm(FormBase):
 		self.mapper = mapper
 		
 		self.updateDetailFilter()
+		self.detailTableView.resizeColumnsToContents()
 		
 			
 	def accept(self):
@@ -89,7 +89,7 @@ class LieferungDetailForm(FormBase):
 	def addDetail(self):
 		lieferungId = self.getCurrentLieferungId()
 		
-		query = "select min(lager_artikel_artikel) from lager_artikel"
+		query = "select min(lager_artikel_artikel) from lager_artikel where lager_artikel_periode = %s" % (self.getCurrentPeriodId(), )
 		results = self.db.exec_(query)
 		results.next()
 		artikelId = results.value(0).toInt()[0]
@@ -101,6 +101,7 @@ class LieferungDetailForm(FormBase):
 		results = self.db.exec_(query)
 		self.db.commit()
 		self.detailModel.select()
+		self.detailTableView.resizeColumnsToContents()
 		
 		
 	def deleteDetail(self):
@@ -115,7 +116,20 @@ class LieferungDetailForm(FormBase):
 		return id_
 		
 	def updateDetailFilter(self):
-		self.detailModel.setFilter('lieferungen_details.lieferung_id=%s'%(self.getCurrentLieferungId(),))
+		relModel = self.detailModel.relationModel(2)
+		relModel.setFilter('artikel_id in (select lager_artikel_artikel from lager_artikel where lager_artikel_periode = %(perId)s) and artikel_periode = %(perId)s'% {'perId':self.getCurrentPeriodId()})
+		relModel.sort(1, QtCore.Qt.AscendingOrder)
+	
+		self.detailModel.setFilter('lieferungen_details.lieferung_id=%s and artikel_periode = %s'%(self.getCurrentLieferungId(), self.getCurrentPeriodId()))
 		self.detailModel.select()
+		
+	def getCurrentPeriodId(self):
+		query = QtSql.QSqlQuery()
+		query.prepare('select periode_id from perioden where ? between periode_start and periode_ende' )
+		query.addBindValue(QtCore.QVariant(self.ui.dateEdit_datum.date()))
+		query.exec_()
+		query.next()
+		periodeId = query.value(0).toInt()[0]
+		return periodeId
 		
 
