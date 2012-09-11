@@ -44,14 +44,6 @@ class ConnectDialog(QtGui.QDialog):
 				c = config.config['app_db_connections']
 			except KeyError:
 				c = config.config['app_db_connections'] = {}
-			
-#			try:
-#				allConnections = config.config['app_db_connections']['all']
-#			except KeyError:
-#				allConnections = config.config['app_db_connections']['all'] = {}
-				
-#			if connParams not in allConnections:
-#				allConnections.append(connParams)
 
 			connName = unicode(self.ui.comboBox_connection.currentText())
 			if connName != '':
