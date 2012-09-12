@@ -37,19 +37,18 @@ class ConnectDialog(QtGui.QDialog):
 		db = unicode(self.ui.lineEdit_db.text())
 		user = unicode(self.ui.lineEdit_user.text())
 		pw = unicode(self.ui.lineEdit_pw.text())
+		connName = unicode(self.ui.comboBox_connection.currentText())
 		
-		if DBConnection.connect(host, user, pw, db):
+		if DBConnection.connect(host, user, pw, db, connName):
 			connParams = {'host': host, 'db': db, 'user': user}
 			try:
 				c = config.config['app_db_connections']
 			except KeyError:
 				c = config.config['app_db_connections'] = {}
 
-			connName = unicode(self.ui.comboBox_connection.currentText())
 			if connName != '':
 				c[connName] = connParams
 				
-			config.config['app_db_connections']['last'] = connParams
 			config.config.write()
 			self.accept()
 		else:

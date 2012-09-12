@@ -4,8 +4,10 @@ from PyQt4 import QtSql
 from CONSTANTS import *
 
 dbConn = QtSql.QSqlDatabase.addDatabase('QMYSQL')
+connName = ''
 
-def connect(host, user, pw, db):
+def connect(host, user, pw, db, name=''):
+	global dbConn, connName
 	dbConn.setHostName(host)
 	dbConn.setDatabaseName(db)
 	dbConn.setPassword(pw)
@@ -15,4 +17,5 @@ def connect(host, user, pw, db):
 		print 'Failed to open database'
 		return False
 	else:
+		connName = name
 		return True

@@ -16,6 +16,7 @@ from PyQt4 import QtCore, QtGui
 from ui.lagerManagerMainWindow_gui import Ui_MainWindow
 #from articleSelectionDialog import ArticleSelectionDialog
 from CONSTANTS import *
+import DBConnection
 
 import GLOBALS
 
@@ -35,6 +36,8 @@ class MainWindow(QtGui.QMainWindow):
 		self._setupForm()
 		
 		self.openConnectDlg()
+		
+		self.statusBar().addPermanentWidget(QtGui.QLabel('Verbindung: '+DBConnection.connName))
 		
 	def _setupForm(self):
 		self.connect(self.ui.actionQuit, QtCore.SIGNAL('triggered()'), self.close)
