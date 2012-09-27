@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/forms/lieferungDetailForm.ui'
 #
-# Created: Mon Sep 10 20:04:54 2012
+# Created: Thu Sep 27 18:06:18 2012
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_LieferungDetailForm(object):
     def setupUi(self, LieferungDetailForm):
         LieferungDetailForm.setObjectName("LieferungDetailForm")
-        LieferungDetailForm.resize(673, 383)
+        LieferungDetailForm.resize(687, 693)
         self.gridLayout = QtGui.QGridLayout(LieferungDetailForm)
         self.gridLayout.setObjectName("gridLayout")
         self.groupBox = QtGui.QGroupBox(LieferungDetailForm)
@@ -41,13 +41,42 @@ class Ui_LieferungDetailForm(object):
         self.dateEdit_datum.setCalendarPopup(True)
         self.dateEdit_datum.setObjectName("dateEdit_datum")
         self.formLayout.setWidget(2, QtGui.QFormLayout.FieldRole, self.dateEdit_datum)
+        self.label_4 = QtGui.QLabel(self.groupBox)
+        self.label_4.setObjectName("label_4")
+        self.formLayout.setWidget(3, QtGui.QFormLayout.LabelRole, self.label_4)
+        self.horizontalLayout_2 = QtGui.QHBoxLayout()
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.lineEdit_dokId = QtGui.QLineEdit(self.groupBox)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.lineEdit_dokId.sizePolicy().hasHeightForWidth())
+        self.lineEdit_dokId.setSizePolicy(sizePolicy)
+        self.lineEdit_dokId.setReadOnly(True)
+        self.lineEdit_dokId.setObjectName("lineEdit_dokId")
+        self.horizontalLayout_2.addWidget(self.lineEdit_dokId)
+        self.pushButton_fileChooser = QtGui.QPushButton(self.groupBox)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.pushButton_fileChooser.sizePolicy().hasHeightForWidth())
+        self.pushButton_fileChooser.setSizePolicy(sizePolicy)
+        self.pushButton_fileChooser.setObjectName("pushButton_fileChooser")
+        self.horizontalLayout_2.addWidget(self.pushButton_fileChooser)
+        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_2.addItem(spacerItem)
+        self.formLayout.setLayout(3, QtGui.QFormLayout.FieldRole, self.horizontalLayout_2)
         self.gridLayout_2.addLayout(self.formLayout, 0, 0, 1, 1)
+        self.label_document = ClickableLabel(self.groupBox)
+        self.label_document.setText("")
+        self.label_document.setObjectName("label_document")
+        self.gridLayout_2.addWidget(self.label_document, 1, 0, 1, 1)
         self.gridLayout.addWidget(self.groupBox, 0, 0, 1, 1)
         self.buttonBox = QtGui.QDialogButtonBox(LieferungDetailForm)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
-        self.gridLayout.addWidget(self.buttonBox, 2, 0, 1, 1)
+        self.gridLayout.addWidget(self.buttonBox, 3, 0, 1, 1)
         self.groupBox_2 = QtGui.QGroupBox(LieferungDetailForm)
         self.groupBox_2.setObjectName("groupBox_2")
         self.verticalLayout = QtGui.QVBoxLayout(self.groupBox_2)
@@ -60,13 +89,13 @@ class Ui_LieferungDetailForm(object):
         self.pushButton_deleteDetail = QtGui.QPushButton(self.groupBox_2)
         self.pushButton_deleteDetail.setObjectName("pushButton_deleteDetail")
         self.horizontalLayout.addWidget(self.pushButton_deleteDetail)
-        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem)
+        spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem1)
         self.verticalLayout.addLayout(self.horizontalLayout)
         self.tableView_details = QtGui.QTableView(self.groupBox_2)
         self.tableView_details.setObjectName("tableView_details")
         self.verticalLayout.addWidget(self.tableView_details)
-        self.gridLayout.addWidget(self.groupBox_2, 1, 0, 1, 1)
+        self.gridLayout.addWidget(self.groupBox_2, 2, 0, 1, 1)
 
         self.retranslateUi(LieferungDetailForm)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("accepted()"), LieferungDetailForm.accept)
@@ -79,7 +108,10 @@ class Ui_LieferungDetailForm(object):
         self.label.setText(QtGui.QApplication.translate("LieferungDetailForm", "ID", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("LieferungDetailForm", "Lieferant", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("LieferungDetailForm", "Datum", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_4.setText(QtGui.QApplication.translate("LieferungDetailForm", "Dokument", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton_fileChooser.setText(QtGui.QApplication.translate("LieferungDetailForm", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox_2.setTitle(QtGui.QApplication.translate("LieferungDetailForm", "Details", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_newDetail.setText(QtGui.QApplication.translate("LieferungDetailForm", "&Hinzufügen", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_deleteDetail.setText(QtGui.QApplication.translate("LieferungDetailForm", "&Löschen", None, QtGui.QApplication.UnicodeUTF8))
 
+from lib.ClickableLabel import ClickableLabel

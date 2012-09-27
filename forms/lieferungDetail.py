@@ -5,7 +5,10 @@ from PyQt4 import QtCore, QtGui, QtSql
 
 from forms.formBase import FormBase
 from ui.forms.lieferungDetailForm_gui import Ui_LieferungDetailForm
+
 import config
+from CONSTANTS import *
+
 
 #class DateEditDelegate(QtGui.QItemDelegate):
 	
@@ -27,6 +30,11 @@ class LieferungDetailForm(FormBase):
 	uiClass = Ui_LieferungDetailForm
 	ident = 'lieferungDetail'
 	
+	def __init__(self, parent):
+		FormBase.__init__(self, parent)
+		self.docImage = None
+		self.documentChanged = False
+		
 	def setupUi(self):
 		super(LieferungDetailForm, self).setupUi()
 		
@@ -52,6 +60,9 @@ class LieferungDetailForm(FormBase):
 		#super(LieferungDetailForm, self).setupSignals()
 		self.connect(self.ui.pushButton_newDetail, QtCore.SIGNAL('clicked()'), self.addDetail)
 		self.connect(self.ui.pushButton_deleteDetail, QtCore.SIGNAL('clicked()'), self.deleteDetail)
+		self.connect(self.ui.pushButton_fileChooser, QtCore.SIGNAL('clicked()'), self.chooseFile)
+		self.connect(self.ui.lineEdit_dokId, QtCore.SIGNAL('textChanged (const QString&)'), self.displayImageFromDb)
+		self.connect(self.ui.label_document, QtCore.SIGNAL('clicked()'), self.showImage)
 		
 
 	def setModel(self, model, idx):
@@ -68,6 +79,7 @@ class LieferungDetailForm(FormBase):
 		mapper.addMapping(self.ui.lineEdit_id, 0)
 		mapper.addMapping(self.ui.comboBox_lieferant, 1)
 		mapper.addMapping(self.ui.dateEdit_datum, 2)
+		mapper.addMapping(self.ui.lineEdit_dokId, self.model.fieldIndex('lie_dokid'))
 		mapper.setSubmitPolicy(QtGui.QDataWidgetMapper.ManualSubmit)
 		mapper.setCurrentIndex(idx.row())
 		self.mapper = mapper
@@ -77,6 +89,7 @@ class LieferungDetailForm(FormBase):
 		
 			
 	def accept(self):
+		self.saveDocument()
 		self.mapper.submit()
 		self.model.submitAll()
 		super(LieferungDetailForm, self).accept()
@@ -112,7 +125,7 @@ class LieferungDetailForm(FormBase):
 		
 	def getCurrentLieferungId(self):
 		id_ = self.model.record(self.mapper.currentIndex()).value(0).toInt()[0]
-		print 'lieferungID: ', id_, self.mapper.currentIndex(), self.model.record(self.mapper.currentIndex()).value(0)
+		#print 'lieferungID: ', id_, self.mapper.currentIndex(), self.model.record(self.mapper.currentIndex()).value(0)
 		return id_
 		
 	def updateDetailFilter(self):
@@ -132,4 +145,78 @@ class LieferungDetailForm(FormBase):
 		periodeId = query.value(0).toInt()[0]
 		return periodeId
 		
+		
+	def chooseFile(self):
+		fileName = QtGui.QFileDialog.getOpenFileName(self, self.tr("Open Image"), "", self.tr("Image Files (*.png *.jpg *.bmp)"))
+		print fileName
+		image = QtGui.QImage(fileName)
+		pic = QtGui.QPixmap.fromImage(image)
+		self.ui.label_document.setPixmap(self.scalePixmap(pic)) #Put image into QLabel object
+		
+		#load image to bytearray
+		ba = QtCore.QByteArray()
+		f = QtCore.QFile(fileName)
+		if f.open(QtCore.QIODevice.ReadOnly):
+			ba = f.readAll()
+			f.close()
+			self.docImage = ba
+			self.documentChanged = True
 
+	def saveDocument(self):
+		if self.documentChanged and self.docImage is not None:
+			#Writing the image into table
+			self.beginTransaction()
+			query = QtSql.QSqlQuery()
+			query.prepare('insert into dokumente (dok_dotid, dok_bezeichnung, dok_data) values (?, ?, ?)')
+			query.addBindValue(EINGANGSRECHNUNGID)
+			query.addBindValue('Lieferung-%s'%(self.getCurrentLieferungId(), ))
+			query.addBindValue(self.docImage)
+			query.exec_()
+			if query.lastError().isValid():
+				print 'Error inserting image:', query.lastError().text()
+				self.rollback()
+			else:
+				self.commit()
+				self.ui.lineEdit_dokId.setText(query.lastInsertId().toString())
+	
+	def displayImageFromDb(self):
+		dokId = self.ui.lineEdit_dokId.text()
+		dokId, ok = dokId.toInt()
+		if ok and dokId > 0:
+			query = QtSql.QSqlQuery()
+			query.prepare('select dok_data from dokumente where dok_id = ?')
+			query.addBindValue(dokId)
+			query.exec_()
+			query.next()
+			if query.lastError().isValid():
+				print 'Error retrieving document:', query.lastError().text()
+			else:
+				ba = query.value(0).toByteArray()
+				self.docImage = ba
+				pic = QtGui.QPixmap()
+				pic.loadFromData(ba)
+				#Show the image into a QLabel object
+				self.ui.label_document.setPixmap(self.scalePixmap(pic))
+			
+	def scalePixmap(self, pm):
+		return pm.scaled(200, 200, QtCore.Qt.KeepAspectRatio, QtCore.Qt.FastTransformation)
+
+	def showImage(self):
+		print 'clicked'
+		if self.docImage is not None:
+			print 'in if'
+			label = QtGui.QLabel()
+			pic = QtGui.QPixmap()
+			pic.loadFromData(self.docImage)
+			#Show the image into a QLabel object
+			label.setPixmap(pic)
+			
+			area = QtGui.QScrollArea(self)
+			area.setWidget(label)
+			area.setWindowFlags(QtCore.Qt.Window)
+			#label.setScaledContents(True)
+			#label.resize(QtCore.QSize(350, 600))
+			#label.show()
+			area.showMaximized()
+		
+		

@@ -135,6 +135,20 @@ create table lagerstand(
 ) ENGINE=INNODB;
 
 
+create table dokumenttypen (
+	dot_id integer unsigned auto_increment primary key not null,
+	dot_bezeichnung varchar(255) not null
+) ENGINE=INNODB;
+
+
+create table dokumente (
+	dok_id integer unsigned auto_increment primary key not null,
+	dok_dotid int unsigned not null,
+	dok_bezeichnung varchar(255) not null,
+	dok_ocr text null,
+	dok_data blob not null,
+	foreign key dokumente_dokumenttyp_fk (dok_dotid) references dokumenttypen(dot_id)
+) ENGINE=INNODB;
 
 
 create table lieferanten(
@@ -146,11 +160,13 @@ create table lieferungen(
 	lieferung_id integer auto_increment primary key not null,
 	lieferant_id int not null,
 	datum datetime not null,
-	foreign key lieferung_lieferant_fk (lieferant_id) references lieferanten(lieferant_id)
+	lie_dokid int unsigned null,
+	foreign key lieferung_lieferant_fk (lieferant_id) references lieferanten(lieferant_id),
+	foreign key lieferung_dokument_fk (lie_dokid) references dokumente(dok_id)
 ) ENGINE=INNODB;
 
 create table lieferungen_details(
-	lieferung_detail_id integer auto_increment  primary key not null,
+	lieferung_detail_id integer auto_increment primary key not null,
 	lieferung_id int not null,
 	artikel_id int not null,
 	anzahl float not null,
@@ -158,6 +174,10 @@ create table lieferungen_details(
 	foreign key lieferung_detail_lieferung_fk (lieferung_id) references lieferungen(lieferung_id),
 	foreign key lieferung_detail_artikel_fk (artikel_id) references artikel_basis(artikel_id)
 ) ENGINE=INNODB;
+
+
+
+
 
 
 alter table journal_details add index journal_details_artikel_text_idx (detail_artikel_text);
@@ -179,3 +199,11 @@ update journal_daten set daten_periode = 1;
 alter table journal_checkpoints add column checkpoint_periode int null;
 alter table journal_checkpoints add foreign key journal_checkpoints_periode_fk (checkpoint_periode) references perioden(periode_id);
 update journal_checkpoints set checkpoint_periode = 1;
+
+
+
+--20120927
+alter table lieferungen add column lie_dokid int unsigned null;
+alter table lieferungen add foreign key lieferung_dokument_fk (lie_dokid) references dokumente(dok_id);
+insert into dokumenttypen (dot_bezeichnung) values ('Eingangsrechnung');
+
