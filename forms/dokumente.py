@@ -32,23 +32,24 @@ class DokumenteForm(FormBase):
 	def setupUi(self):
 		super(DokumenteForm, self).setupUi()
 		
-		self.masterModel = QtSql.QSqlRelationalTableModel()
-		self.masterModel.setTable('dokumente')
-		self.masterModel.setRelation(self.masterModel.fieldIndex('dok_dotid'), QtSql.QSqlRelation('dokumenttypen', 'dot_id', 'dot_bezeichnung'))
-		self.masterModel.setEditStrategy(QtSql.QSqlTableModel.OnManualSubmit)
-		self.masterModel.setSort(2, QtCore.Qt.AscendingOrder)
-		self.masterModel.select()
+		m = self.masterModel = QtSql.QSqlRelationalTableModel()
+		m.setTable('dokumente')
+		m.setRelation(m.fieldIndex('dok_dotid'), QtSql.QSqlRelation('dokumenttypen', 'dot_id', 'dot_bezeichnung'))
+		m.setEditStrategy(QtSql.QSqlTableModel.OnManualSubmit)
+		m.setSort(m.fieldIndex('dok_datum'), QtCore.Qt.DescendingOrder)
+		m.select()
 		
 		
 		#Master table
 		#------------------------------
 		# column headers
-		self.masterModel.setHeaderData(0, QtCore.Qt.Horizontal, 'ID')
-		self.masterModel.setHeaderData(1, QtCore.Qt.Horizontal, 'Typ')
-		self.masterModel.setHeaderData(2, QtCore.Qt.Horizontal, 'Text')
+		m.setHeaderData(0, QtCore.Qt.Horizontal, 'ID')
+		m.setHeaderData(1, QtCore.Qt.Horizontal, 'Typ')
+		m.setHeaderData(2, QtCore.Qt.Horizontal, 'Text')
+		m.setHeaderData(5, QtCore.Qt.Horizontal, 'Datum')
 		# table view
 		self.masterTableView = self.ui.tableView_documents
-		self.masterTableView.setModel(self.masterModel)
+		self.masterTableView.setModel(m)
 #		self.masterTableView.setItemDelegate(QtSql.QSqlRelationalDelegate(self.masterTableView))
 #		self.masterTableView.setItemDelegateForColumn(2, DateEditDelegate())
 		self.masterTableView.setColumnHidden(3, True)

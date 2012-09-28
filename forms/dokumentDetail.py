@@ -43,8 +43,9 @@ class DokumentDetailForm(FormBase):
 		mapper.setModel(m)
 		mapper.setItemDelegate(QtSql.QSqlRelationalDelegate(m))
 		mapper.addMapping(self.ui.lineEdit_id, m.fieldIndex('dok_id'))
-		mapper.addMapping(self.ui.comboBox_typ, m.fieldIndex('dok_dotid'))
+		mapper.addMapping(self.ui.comboBox_typ, m.fieldIndex('dot_bezeichnung'))
 		mapper.addMapping(self.ui.dateEdit_datum, m.fieldIndex('dok_datum'))
+		mapper.addMapping(self.ui.lineEdit_bezeichnung, m.fieldIndex('dok_bezeichnung'))
 		mapper.setSubmitPolicy(QtGui.QDataWidgetMapper.ManualSubmit)
 		mapper.setCurrentIndex(idx.row())
 		self.mapper = mapper
