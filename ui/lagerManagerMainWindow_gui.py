@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/lagerManagerMainWindow.ui'
 #
-# Created: Thu Sep 27 21:11:48 2012
+# Created: Fri Sep 28 20:15:26 2012
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -120,7 +120,7 @@ class Ui_MainWindow(object):
         self.menu_Einkauf.setTitle(QtGui.QApplication.translate("MainWindow", "&Einkauf", None, QtGui.QApplication.UnicodeUTF8))
         self.menu_Lieferungen.setTitle(QtGui.QApplication.translate("MainWindow", "&Lieferungen", None, QtGui.QApplication.UnicodeUTF8))
         self.menuStammdaten.setTitle(QtGui.QApplication.translate("MainWindow", "&Stammdaten", None, QtGui.QApplication.UnicodeUTF8))
-        self.menu_Dokumente.setTitle(QtGui.QApplication.translate("MainWindow", "&Dokumente", None, QtGui.QApplication.UnicodeUTF8))
+        self.menu_Dokumente.setTitle(QtGui.QApplication.translate("MainWindow", "Do&kumente", None, QtGui.QApplication.UnicodeUTF8))
         self.actionQuit.setText(QtGui.QApplication.translate("MainWindow", "&Beenden", None, QtGui.QApplication.UnicodeUTF8))
         self.action_Lieferungen_Lieferungen.setText(QtGui.QApplication.translate("MainWindow", "&Lieferungen", None, QtGui.QApplication.UnicodeUTF8))
         self.action_Lieferungen_Lieferanten.setText(QtGui.QApplication.translate("MainWindow", "L&ieferanten", None, QtGui.QApplication.UnicodeUTF8))
