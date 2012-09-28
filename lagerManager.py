@@ -139,8 +139,8 @@ class MainWindow(QtGui.QMainWindow):
 		window.show()
 		
 	def openDokumenttypenForm(self):
-		import forms.dokumente
-		form = forms.dokumente.DokumenteForm(self)
+		import forms.dokumenttypen
+		form = forms.dokumenttypen.DokumenttypenForm(self)
 		window = self.ui.mdiArea.addSubWindow(form)
 		window.show()
 						
