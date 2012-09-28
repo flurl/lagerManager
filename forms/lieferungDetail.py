@@ -109,7 +109,7 @@ class LieferungDetailForm(FormBase):
 		
 		query = """insert into lieferungen_details (lieferung_id, artikel_id, anzahl, einkaufspreis) 
 				values 
-				(%s, %s, %s, %s)""" % (lieferungId, artikelId, 1.0, 1.0)
+				(%s, %s, %s, %s)""" % (lieferungId, artikelId, 1.0, 0.0)
 		print query
 		results = self.db.exec_(query)
 		self.db.commit()
