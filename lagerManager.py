@@ -53,6 +53,9 @@ class MainWindow(QtGui.QMainWindow):
 		self.connect(self.ui.action_Lieferungen_Lieferanten, QtCore.SIGNAL('triggered()'), self.openLieferantenForm)
 		self.connect(self.ui.action_Lieferungen_InitialerLagerstand, QtCore.SIGNAL('triggered()'), self.openInitialLagerstandForm)
 		
+		self.connect(self.ui.action_Dokumente_Dokumenttypen, QtCore.SIGNAL('triggered()'), self.openDokumenttypenForm)
+		self.connect(self.ui.action_Dokumente_Dokumente, QtCore.SIGNAL('triggered()'), self.openDokumenteForm)		
+		
 		self.connect(self.ui.action_Stammdaten_Perioden, QtCore.SIGNAL('triggered()'), self.openPeriodenForm)
 		self.connect(self.ui.action_Stammdaten_Import, QtCore.SIGNAL('triggered()'), self.openImportForm)
 
@@ -129,8 +132,17 @@ class MainWindow(QtGui.QMainWindow):
 		window = self.ui.mdiArea.addSubWindow(form)
 		window.show()
 		
+	def openDokumenteForm(self):
+		import forms.dokumente
+		form = forms.dokumente.DokumenteForm(self)
+		window = self.ui.mdiArea.addSubWindow(form)
+		window.show()
 		
-	
+	def openDokumenttypenForm(self):
+		import forms.dokumente
+		form = forms.dokumente.DokumenteForm(self)
+		window = self.ui.mdiArea.addSubWindow(form)
+		window.show()
 						
 				
 				

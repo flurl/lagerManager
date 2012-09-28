@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/lagerManagerMainWindow.ui'
 #
-# Created: Mon Sep  3 23:34:54 2012
+# Created: Thu Sep 27 21:11:48 2012
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1047, 907)
+        MainWindow.resize(1047, 664)
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.horizontalLayout = QtGui.QHBoxLayout(self.centralwidget)
@@ -40,6 +40,8 @@ class Ui_MainWindow(object):
         self.menu_Lieferungen.setObjectName("menu_Lieferungen")
         self.menuStammdaten = QtGui.QMenu(self.menubar)
         self.menuStammdaten.setObjectName("menuStammdaten")
+        self.menu_Dokumente = QtGui.QMenu(self.menubar)
+        self.menu_Dokumente.setObjectName("menu_Dokumente")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtGui.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -76,6 +78,10 @@ class Ui_MainWindow(object):
         self.action_Stammdaten_Import.setObjectName("action_Stammdaten_Import")
         self.action_Report_Einkauf_GesamteLieferungen = QtGui.QAction(MainWindow)
         self.action_Report_Einkauf_GesamteLieferungen.setObjectName("action_Report_Einkauf_GesamteLieferungen")
+        self.action_Dokumente_Dokumenttypen = QtGui.QAction(MainWindow)
+        self.action_Dokumente_Dokumenttypen.setObjectName("action_Dokumente_Dokumenttypen")
+        self.action_Dokumente_Dokumente = QtGui.QAction(MainWindow)
+        self.action_Dokumente_Dokumente.setObjectName("action_Dokumente_Dokumente")
         self.menuFile.addAction(self.actionQuit)
         self.menu_Verbrauch.addAction(self.action_Report_Verbrauch_Artikel)
         self.menu_Umsaetze.addAction(self.action_Report_Umsaetze_UmsatzTag)
@@ -93,9 +99,12 @@ class Ui_MainWindow(object):
         self.menu_Lieferungen.addAction(self.action_Lieferungen_InitialerLagerstand)
         self.menuStammdaten.addAction(self.action_Stammdaten_Perioden)
         self.menuStammdaten.addAction(self.action_Stammdaten_Import)
+        self.menu_Dokumente.addAction(self.action_Dokumente_Dokumenttypen)
+        self.menu_Dokumente.addAction(self.action_Dokumente_Dokumente)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menu_Reports.menuAction())
         self.menubar.addAction(self.menu_Lieferungen.menuAction())
+        self.menubar.addAction(self.menu_Dokumente.menuAction())
         self.menubar.addAction(self.menuStammdaten.menuAction())
 
         self.retranslateUi(MainWindow)
@@ -111,6 +120,7 @@ class Ui_MainWindow(object):
         self.menu_Einkauf.setTitle(QtGui.QApplication.translate("MainWindow", "&Einkauf", None, QtGui.QApplication.UnicodeUTF8))
         self.menu_Lieferungen.setTitle(QtGui.QApplication.translate("MainWindow", "&Lieferungen", None, QtGui.QApplication.UnicodeUTF8))
         self.menuStammdaten.setTitle(QtGui.QApplication.translate("MainWindow", "&Stammdaten", None, QtGui.QApplication.UnicodeUTF8))
+        self.menu_Dokumente.setTitle(QtGui.QApplication.translate("MainWindow", "&Dokumente", None, QtGui.QApplication.UnicodeUTF8))
         self.actionQuit.setText(QtGui.QApplication.translate("MainWindow", "&Beenden", None, QtGui.QApplication.UnicodeUTF8))
         self.action_Lieferungen_Lieferungen.setText(QtGui.QApplication.translate("MainWindow", "&Lieferungen", None, QtGui.QApplication.UnicodeUTF8))
         self.action_Lieferungen_Lieferanten.setText(QtGui.QApplication.translate("MainWindow", "L&ieferanten", None, QtGui.QApplication.UnicodeUTF8))
@@ -129,4 +139,6 @@ class Ui_MainWindow(object):
         self.action_Report_Lager_Inventur.setText(QtGui.QApplication.translate("MainWindow", "&Inventur", None, QtGui.QApplication.UnicodeUTF8))
         self.action_Stammdaten_Import.setText(QtGui.QApplication.translate("MainWindow", "&Import", None, QtGui.QApplication.UnicodeUTF8))
         self.action_Report_Einkauf_GesamteLieferungen.setText(QtGui.QApplication.translate("MainWindow", "&Gesamte Lieferungen", None, QtGui.QApplication.UnicodeUTF8))
+        self.action_Dokumente_Dokumenttypen.setText(QtGui.QApplication.translate("MainWindow", "Dokument&typen", None, QtGui.QApplication.UnicodeUTF8))
+        self.action_Dokumente_Dokumente.setText(QtGui.QApplication.translate("MainWindow", "&Dokumente", None, QtGui.QApplication.UnicodeUTF8))
 

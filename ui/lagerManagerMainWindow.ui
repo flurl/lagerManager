@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1047</width>
-    <height>907</height>
+    <height>664</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -86,9 +86,17 @@
     <addaction name="action_Stammdaten_Perioden"/>
     <addaction name="action_Stammdaten_Import"/>
    </widget>
+   <widget class="QMenu" name="menu_Dokumente">
+    <property name="title">
+     <string>&amp;Dokumente</string>
+    </property>
+    <addaction name="action_Dokumente_Dokumenttypen"/>
+    <addaction name="action_Dokumente_Dokumente"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menu_Reports"/>
    <addaction name="menu_Lieferungen"/>
+   <addaction name="menu_Dokumente"/>
    <addaction name="menuStammdaten"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -176,6 +184,16 @@
   <action name="action_Report_Einkauf_GesamteLieferungen">
    <property name="text">
     <string>&amp;Gesamte Lieferungen</string>
+   </property>
+  </action>
+  <action name="action_Dokumente_Dokumenttypen">
+   <property name="text">
+    <string>Dokument&amp;typen</string>
+   </property>
+  </action>
+  <action name="action_Dokumente_Dokumente">
+   <property name="text">
+    <string>&amp;Dokumente</string>
    </property>
   </action>
  </widget>

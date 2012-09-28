@@ -146,7 +146,7 @@ create table dokumente (
 	dok_dotid int unsigned not null,
 	dok_bezeichnung varchar(255) not null,
 	dok_ocr text null,
-	dok_data blob not null,
+	dok_data longblob not null,
 	dok_datum datetime not null,
 	foreign key dokumente_dokumenttyp_fk (dok_dotid) references dokumenttypen(dot_id)
 ) ENGINE=INNODB;
@@ -211,4 +211,5 @@ insert into dokumenttypen (dot_bezeichnung) values ('Eingangsrechnung');
 
 --20120928
 alter table dokumente add dok_datum datetime not null;
+alter table dokumente modify dok_data longblob not null;
 
