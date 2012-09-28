@@ -147,6 +147,7 @@ create table dokumente (
 	dok_bezeichnung varchar(255) not null,
 	dok_ocr text null,
 	dok_data blob not null,
+	dok_datum datetime not null,
 	foreign key dokumente_dokumenttyp_fk (dok_dotid) references dokumenttypen(dot_id)
 ) ENGINE=INNODB;
 
@@ -206,4 +207,8 @@ update journal_checkpoints set checkpoint_periode = 1;
 alter table lieferungen add column lie_dokid int unsigned null;
 alter table lieferungen add foreign key lieferung_dokument_fk (lie_dokid) references dokumente(dok_id);
 insert into dokumenttypen (dot_bezeichnung) values ('Eingangsrechnung');
+
+
+--20120928
+alter table dokumente add dok_datum datetime not null;
 
