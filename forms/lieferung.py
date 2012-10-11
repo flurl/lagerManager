@@ -106,7 +106,10 @@ class LieferungForm(FormBase):
 		self.editRecord()
 		
 	def editRecord(self, idx=None):
-		if idx is None: idx = self.ui.tableView_lieferungen.selectionModel().currentIndex()#.row()
+		if idx is None: 
+			idx = self.ui.tableView_lieferungen.selectionModel().currentIndex()#.row()
+			idx = self.ui.tableView_lieferungen.model().mapToSource(idx)
+			
 		form = LieferungDetailForm(self)
 		form.setModel(self.masterModel, idx)
 		form.show()

@@ -76,7 +76,10 @@ class DokumenteForm(FormBase):
 		self.editRecord()
 		
 	def editRecord(self, idx=None):
-		if idx is None: idx = self.ui.tableView_documents.selectionModel().currentIndex()#.row()
+		if idx is None: 
+			idx = self.ui.tableView_documents.selectionModel().currentIndex()#.row()
+			idx = self.ui.tableView_documents.model().mapToSource(idx)
+			
 		form = DokumentDetailForm(self)
 		form.setModel(self.masterModel, idx)
 		form.show()
