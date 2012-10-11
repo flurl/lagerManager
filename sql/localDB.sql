@@ -145,7 +145,7 @@ create table dokumente (
 	dok_id integer unsigned auto_increment primary key not null,
 	dok_dotid int unsigned not null,
 	dok_bezeichnung varchar(255) not null,
-	dok_ocr text null,
+	dok_ocr MEDIUMTEXT null,
 	dok_data longblob not null,
 	dok_datum datetime not null,
 	foreign key dokumente_dokumenttyp_fk (dok_dotid) references dokumenttypen(dot_id)
@@ -212,4 +212,7 @@ insert into dokumenttypen (dot_bezeichnung) values ('Eingangsrechnung');
 --20120928
 alter table dokumente add dok_datum datetime not null;
 alter table dokumente modify dok_data longblob not null;
+
+--20121006
+alter table dokumente modify dok_ocr MEDIUMTEXT null;
 

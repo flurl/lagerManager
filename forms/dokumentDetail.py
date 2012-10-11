@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #import datetime
+import codecs
 
 from PyQt4 import QtCore, QtGui, QtSql
 
@@ -46,6 +47,7 @@ class DokumentDetailForm(FormBase):
 		mapper.addMapping(self.ui.comboBox_typ, m.fieldIndex('dot_bezeichnung'))
 		mapper.addMapping(self.ui.dateEdit_datum, m.fieldIndex('dok_datum'))
 		mapper.addMapping(self.ui.lineEdit_bezeichnung, m.fieldIndex('dok_bezeichnung'))
+		mapper.addMapping(self.ui.plainTextEdit_ocr, m.fieldIndex('dok_ocr'))
 		mapper.setSubmitPolicy(QtGui.QDataWidgetMapper.ManualSubmit)
 		mapper.setCurrentIndex(idx.row())
 		self.mapper = mapper
@@ -89,6 +91,14 @@ class DokumentDetailForm(FormBase):
 			f.close()
 			self.docImage = ba
 			self.documentChanged = True
+		
+		#if an .txt with the same name exists, use that as source for the text data
+		try:
+			fileName, ext = os.path.splitext(str(fileName))
+			with codecs.open(fileName+'.txt', 'r', 'utf-8') as f:
+				self.ui.plainTextEdit_ocr.setPlainText(f.read())
+		except IOError as e:
+			print 'No text file found'
 
 
 	def scalePixmap(self, pm):

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/forms/dokumentDetailForm.ui'
 #
-# Created: Fri Sep 28 19:43:13 2012
+# Created: Sat Oct  6 18:00:46 2012
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_DokumentDetailForm(object):
     def setupUi(self, DokumentDetailForm):
         DokumentDetailForm.setObjectName("DokumentDetailForm")
-        DokumentDetailForm.resize(515, 294)
+        DokumentDetailForm.resize(515, 479)
         self.gridLayout = QtGui.QGridLayout(DokumentDetailForm)
         self.gridLayout.setObjectName("gridLayout")
         self.groupBox = QtGui.QGroupBox(DokumentDetailForm)
@@ -43,7 +43,7 @@ class Ui_DokumentDetailForm(object):
         self.formLayout.setWidget(3, QtGui.QFormLayout.FieldRole, self.dateEdit_datum)
         self.label_4 = QtGui.QLabel(self.groupBox)
         self.label_4.setObjectName("label_4")
-        self.formLayout.setWidget(4, QtGui.QFormLayout.LabelRole, self.label_4)
+        self.formLayout.setWidget(5, QtGui.QFormLayout.LabelRole, self.label_4)
         self.horizontalLayout_2 = QtGui.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.pushButton_fileChooser = QtGui.QPushButton(self.groupBox)
@@ -56,13 +56,25 @@ class Ui_DokumentDetailForm(object):
         self.horizontalLayout_2.addWidget(self.pushButton_fileChooser)
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem)
-        self.formLayout.setLayout(4, QtGui.QFormLayout.FieldRole, self.horizontalLayout_2)
+        self.formLayout.setLayout(5, QtGui.QFormLayout.FieldRole, self.horizontalLayout_2)
         self.lineEdit_bezeichnung = QtGui.QLineEdit(self.groupBox)
         self.lineEdit_bezeichnung.setObjectName("lineEdit_bezeichnung")
         self.formLayout.setWidget(2, QtGui.QFormLayout.FieldRole, self.lineEdit_bezeichnung)
         self.label_5 = QtGui.QLabel(self.groupBox)
         self.label_5.setObjectName("label_5")
         self.formLayout.setWidget(2, QtGui.QFormLayout.LabelRole, self.label_5)
+        self.label_6 = QtGui.QLabel(self.groupBox)
+        self.label_6.setObjectName("label_6")
+        self.formLayout.setWidget(4, QtGui.QFormLayout.LabelRole, self.label_6)
+        self.plainTextEdit_ocr = QtGui.QPlainTextEdit(self.groupBox)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.plainTextEdit_ocr.sizePolicy().hasHeightForWidth())
+        self.plainTextEdit_ocr.setSizePolicy(sizePolicy)
+        self.plainTextEdit_ocr.setMinimumSize(QtCore.QSize(0, 200))
+        self.plainTextEdit_ocr.setObjectName("plainTextEdit_ocr")
+        self.formLayout.setWidget(4, QtGui.QFormLayout.FieldRole, self.plainTextEdit_ocr)
         self.gridLayout_2.addLayout(self.formLayout, 0, 0, 1, 1)
         self.label_documentImage = ClickableLabel(self.groupBox)
         self.label_documentImage.setText("")
@@ -89,5 +101,6 @@ class Ui_DokumentDetailForm(object):
         self.label_4.setText(QtGui.QApplication.translate("DokumentDetailForm", "Datei", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_fileChooser.setText(QtGui.QApplication.translate("DokumentDetailForm", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.label_5.setText(QtGui.QApplication.translate("DokumentDetailForm", "Bezeichnung", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_6.setText(QtGui.QApplication.translate("DokumentDetailForm", "Text", None, QtGui.QApplication.UnicodeUTF8))
 
 from lib.ClickableLabel import ClickableLabel
