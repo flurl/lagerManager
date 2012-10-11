@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #import datetime
+import codecs
 
 from PyQt4 import QtCore, QtGui, QtSql
 
@@ -161,16 +162,26 @@ class LieferungDetailForm(FormBase):
 			f.close()
 			self.docImage = ba
 			self.documentChanged = True
+			
+		#if an .txt with the same name exists, use that as source for the text data
+		try:
+			fileName, ext = os.path.splitext(str(fileName))
+			with codecs.open(fileName+'.txt', 'r', 'utf-8') as f:
+				self.ui.plainTextEdit_ocr.setPlainText(f.read())
+		except IOError as e:
+			print 'No text file found'
+			
 
 	def saveDocument(self):
 		if self.documentChanged and self.docImage is not None:
 			#Writing the image into table
 			self.beginTransaction()
 			query = QtSql.QSqlQuery()
-			query.prepare('insert into dokumente (dok_dotid, dok_bezeichnung, dok_data) values (?, ?, ?)')
+			query.prepare('insert into dokumente (dok_dotid, dok_bezeichnung, dok_data, dok_ocr) values (?, ?, ?, ?)')
 			query.addBindValue(EINGANGSRECHNUNGID)
 			query.addBindValue('Lieferung-%s'%(self.getCurrentLieferungId(), ))
 			query.addBindValue(self.docImage)
+			query.addBindValue(self.ui.plainTextEdit_ocr.toPlainText())
 			query.exec_()
 			if query.lastError().isValid():
 				print 'Error inserting image:', query.lastError().text()
@@ -178,13 +189,28 @@ class LieferungDetailForm(FormBase):
 			else:
 				self.commit()
 				self.ui.lineEdit_dokId.setText(query.lastInsertId().toString())
+		
+		#update the document in db if only the text changed
+		elif self.ui.plainTextEdit_ocr.document().isModified() and not self.ui.lineEdit_dokId.text().isEmpty():
+			self.beginTransaction()
+			query = QtSql.QSqlQuery()
+			query.prepare('update dokumente set dok_ocr = ? where dok_id = ?')
+			query.addBindValue(self.ui.plainTextEdit_ocr.toPlainText())
+			query.addBindValue(self.ui.lineEdit_dokId.text().toInt()[0])
+			query.exec_()
+			if query.lastError().isValid():
+				print 'Error updating document:', query.lastError().text()
+				self.rollback()
+			else:
+				self.commit()
+				
 	
 	def displayImageFromDb(self):
 		dokId = self.ui.lineEdit_dokId.text()
 		dokId, ok = dokId.toInt()
 		if ok and dokId > 0:
 			query = QtSql.QSqlQuery()
-			query.prepare('select dok_data from dokumente where dok_id = ?')
+			query.prepare('select dok_data, dok_ocr from dokumente where dok_id = ?')
 			query.addBindValue(dokId)
 			query.exec_()
 			query.next()
@@ -197,6 +223,11 @@ class LieferungDetailForm(FormBase):
 				pic.loadFromData(ba)
 				#Show the image into a QLabel object
 				self.ui.label_document.setPixmap(self.scalePixmap(pic))
+				
+				#set the text
+				text = query.value(1).toString()
+				self.ui.plainTextEdit_ocr.setPlainText(text)
+				
 			
 	def scalePixmap(self, pm):
 		return pm.scaled(200, 200, QtCore.Qt.KeepAspectRatio, QtCore.Qt.FastTransformation)

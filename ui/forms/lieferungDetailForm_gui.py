@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/forms/lieferungDetailForm.ui'
 #
-# Created: Thu Sep 27 18:06:18 2012
+# Created: Thu Oct 11 16:12:57 2012
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -43,7 +43,7 @@ class Ui_LieferungDetailForm(object):
         self.formLayout.setWidget(2, QtGui.QFormLayout.FieldRole, self.dateEdit_datum)
         self.label_4 = QtGui.QLabel(self.groupBox)
         self.label_4.setObjectName("label_4")
-        self.formLayout.setWidget(3, QtGui.QFormLayout.LabelRole, self.label_4)
+        self.formLayout.setWidget(4, QtGui.QFormLayout.LabelRole, self.label_4)
         self.horizontalLayout_2 = QtGui.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.lineEdit_dokId = QtGui.QLineEdit(self.groupBox)
@@ -65,7 +65,13 @@ class Ui_LieferungDetailForm(object):
         self.horizontalLayout_2.addWidget(self.pushButton_fileChooser)
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem)
-        self.formLayout.setLayout(3, QtGui.QFormLayout.FieldRole, self.horizontalLayout_2)
+        self.formLayout.setLayout(4, QtGui.QFormLayout.FieldRole, self.horizontalLayout_2)
+        self.label_5 = QtGui.QLabel(self.groupBox)
+        self.label_5.setObjectName("label_5")
+        self.formLayout.setWidget(3, QtGui.QFormLayout.LabelRole, self.label_5)
+        self.plainTextEdit_ocr = QtGui.QPlainTextEdit(self.groupBox)
+        self.plainTextEdit_ocr.setObjectName("plainTextEdit_ocr")
+        self.formLayout.setWidget(3, QtGui.QFormLayout.FieldRole, self.plainTextEdit_ocr)
         self.gridLayout_2.addLayout(self.formLayout, 0, 0, 1, 1)
         self.label_document = ClickableLabel(self.groupBox)
         self.label_document.setText("")
@@ -110,6 +116,7 @@ class Ui_LieferungDetailForm(object):
         self.label_3.setText(QtGui.QApplication.translate("LieferungDetailForm", "Datum", None, QtGui.QApplication.UnicodeUTF8))
         self.label_4.setText(QtGui.QApplication.translate("LieferungDetailForm", "Dokument", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_fileChooser.setText(QtGui.QApplication.translate("LieferungDetailForm", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_5.setText(QtGui.QApplication.translate("LieferungDetailForm", "Text", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox_2.setTitle(QtGui.QApplication.translate("LieferungDetailForm", "Details", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_newDetail.setText(QtGui.QApplication.translate("LieferungDetailForm", "&Hinzufügen", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_deleteDetail.setText(QtGui.QApplication.translate("LieferungDetailForm", "&Löschen", None, QtGui.QApplication.UnicodeUTF8))
