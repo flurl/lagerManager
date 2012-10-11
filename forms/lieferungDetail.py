@@ -56,6 +56,8 @@ class LieferungDetailForm(FormBase):
 		self.detailTableView.resizeColumnsToContents()
 		self.detailTableView.horizontalHeader().setStretchLastSection(True)
 		
+		self.createContextMenu()
+		
 
 	def setupSignals(self):
 		#super(LieferungDetailForm, self).setupSignals()
@@ -64,6 +66,24 @@ class LieferungDetailForm(FormBase):
 		self.connect(self.ui.pushButton_fileChooser, QtCore.SIGNAL('clicked()'), self.chooseFile)
 		self.connect(self.ui.lineEdit_dokId, QtCore.SIGNAL('textChanged (const QString&)'), self.displayImageFromDb)
 		self.connect(self.ui.label_document, QtCore.SIGNAL('clicked()'), self.showImage)
+		
+		
+	def createContextMenu(self):
+		query = QtSql.QSqlQuery()
+		query.prepare('select sts_bezeichnung, sts_prozent from steuersaetze')
+		query.exec_()
+		if query.lastError().isValid():
+			print 'Error selecting taxes for context menu:', query.lastError().text()
+		else:
+			actions = []
+			while query.next():
+				bez = query.value(0).toString()
+				percent = query.value(1).toFloat()[0]
+				actions.append(QtGui.QAction(bez, self))
+				self.connect(actions[-1], QtCore.SIGNAL('triggered()'), lambda p=percent: self.calcNetPrice(p))
+				self.detailTableView.addAction(actions[-1])
+				
+			self.detailTableView.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 		
 
 	def setModel(self, model, idx):
@@ -249,5 +269,13 @@ class LieferungDetailForm(FormBase):
 			#label.resize(QtCore.QSize(350, 600))
 			#label.show()
 			area.showMaximized()
+		
+	def calcNetPrice(self, percent):
+		idxList = self.detailTableView.selectedIndexes()
+		idx = idxList[0]
+		idx = idx.sibling(idx.row(), 4)
+		value = self.detailModel.data(idx)
+		value = QtCore.QVariant(value.toFloat()[0]/(100+percent)*100)
+		self.detailModel.setData(idx, value)
 		
 		

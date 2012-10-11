@@ -177,6 +177,13 @@ create table lieferungen_details(
 ) ENGINE=INNODB;
 
 
+create table steuersaetze (
+	sts_id int unsigned auto_increment primary key not null,
+	sts_bezeichnung varchar(255) not null,
+	sts_prozent float not null
+) ENGINE=INNODB;
+
+
 
 
 

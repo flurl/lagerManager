@@ -58,6 +58,7 @@ class MainWindow(QtGui.QMainWindow):
 		
 		self.connect(self.ui.action_Stammdaten_Perioden, QtCore.SIGNAL('triggered()'), self.openPeriodenForm)
 		self.connect(self.ui.action_Stammdaten_Import, QtCore.SIGNAL('triggered()'), self.openImportForm)
+		self.connect(self.ui.action_Stammdaten_Steuersaetze, QtCore.SIGNAL('triggered()'), self.openSteuersaetzeForm)
 
 	def openConnectDlg(self):
 		import connectDlg
@@ -141,6 +142,12 @@ class MainWindow(QtGui.QMainWindow):
 	def openDokumenttypenForm(self):
 		import forms.dokumenttypen
 		form = forms.dokumenttypen.DokumenttypenForm(self)
+		window = self.ui.mdiArea.addSubWindow(form)
+		window.show()
+		
+	def openSteuersaetzeForm(self):
+		import forms.steuersaetze
+		form = forms.steuersaetze.SteuersaetzeForm(self)
 		window = self.ui.mdiArea.addSubWindow(form)
 		window.show()
 						

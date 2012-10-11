@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/lagerManagerMainWindow.ui'
 #
-# Created: Fri Sep 28 20:15:26 2012
+# Created: Thu Oct 11 18:51:13 2012
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -82,6 +82,8 @@ class Ui_MainWindow(object):
         self.action_Dokumente_Dokumenttypen.setObjectName("action_Dokumente_Dokumenttypen")
         self.action_Dokumente_Dokumente = QtGui.QAction(MainWindow)
         self.action_Dokumente_Dokumente.setObjectName("action_Dokumente_Dokumente")
+        self.action_Stammdaten_Steuersaetze = QtGui.QAction(MainWindow)
+        self.action_Stammdaten_Steuersaetze.setObjectName("action_Stammdaten_Steuersaetze")
         self.menuFile.addAction(self.actionQuit)
         self.menu_Verbrauch.addAction(self.action_Report_Verbrauch_Artikel)
         self.menu_Umsaetze.addAction(self.action_Report_Umsaetze_UmsatzTag)
@@ -99,6 +101,7 @@ class Ui_MainWindow(object):
         self.menu_Lieferungen.addAction(self.action_Lieferungen_InitialerLagerstand)
         self.menuStammdaten.addAction(self.action_Stammdaten_Perioden)
         self.menuStammdaten.addAction(self.action_Stammdaten_Import)
+        self.menuStammdaten.addAction(self.action_Stammdaten_Steuersaetze)
         self.menu_Dokumente.addAction(self.action_Dokumente_Dokumenttypen)
         self.menu_Dokumente.addAction(self.action_Dokumente_Dokumente)
         self.menubar.addAction(self.menuFile.menuAction())
@@ -141,4 +144,5 @@ class Ui_MainWindow(object):
         self.action_Report_Einkauf_GesamteLieferungen.setText(QtGui.QApplication.translate("MainWindow", "&Gesamte Lieferungen", None, QtGui.QApplication.UnicodeUTF8))
         self.action_Dokumente_Dokumenttypen.setText(QtGui.QApplication.translate("MainWindow", "Dokument&typen", None, QtGui.QApplication.UnicodeUTF8))
         self.action_Dokumente_Dokumente.setText(QtGui.QApplication.translate("MainWindow", "&Dokumente", None, QtGui.QApplication.UnicodeUTF8))
+        self.action_Stammdaten_Steuersaetze.setText(QtGui.QApplication.translate("MainWindow", "&Steuersätze", None, QtGui.QApplication.UnicodeUTF8))
 
