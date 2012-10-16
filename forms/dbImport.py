@@ -250,7 +250,7 @@ class ImportForm(FormBase):
 		##################
 		#lager_einheiten
 		##################
-		print 'importing lager_einheite'
+		print 'importing lager_einheiten'
 		
 		query = QtSql.QSqlQuery()
 		print 'deleting'
