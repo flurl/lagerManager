@@ -67,10 +67,14 @@ class ImportForm(FormBase):
 			query.prepare('delete from journal_checkpoints where checkpoint_periode = ?')
 			query.addBindValue(periodId)
 			query.exec_()
+			if query.lastError().isValid():
+				print 'Error in query:', query.lastError().text()
 			
 		query.prepare('select ifnull(max(checkpoint_id), 0) from journal_checkpoints where checkpoint_periode = ?')
 		query.addBindValue(periodId)
 		query.exec_()
+		if query.lastError().isValid():
+				print 'Error in query:', query.lastError().text()
 		query.next()
 		id_ = query.value(0).toInt()[0]
 		
@@ -90,6 +94,8 @@ class ImportForm(FormBase):
 			query.bindValue(5, row[5])
 			query.bindValue(6, periodId)
 			query.exec_()
+			if query.lastError().isValid():
+				print 'Error in query:', query.lastError().text()
 			
 
 		##################
@@ -104,10 +110,14 @@ class ImportForm(FormBase):
 			query.prepare('delete from journal_daten where daten_periode = ?')
 			query.addBindValue(periodId)
 			query.exec_()
+			if query.lastError().isValid():
+				print 'Error in query:', query.lastError().text()
 			
 		query.prepare('select ifnull(max(daten_rechnung_id), 0) from journal_daten where daten_periode = ?')
 		query.addBindValue(periodId)
 		query.exec_()
+		if query.lastError().isValid():
+				print 'Error in query:', query.lastError().text()
 		query.next()
 		id_ = query.value(0).toInt()[0]
 		
@@ -127,6 +137,8 @@ class ImportForm(FormBase):
 			query.bindValue(4, row[4])
 			query.bindValue(5, periodId)
 			query.exec_()
+			if query.lastError().isValid():
+				print 'Error in query:', query.lastError().text()
 			
 			
 		##################
@@ -140,10 +152,14 @@ class ImportForm(FormBase):
 			query.prepare('delete from journal_details where detail_periode = ?')
 			query.addBindValue(periodId)
 			query.exec_()
+			if query.lastError().isValid():
+				print 'Error in query:', query.lastError().text()
 		
 		query.prepare('select ifnull(max(detail_id), 0) from journal_details where detail_periode = ?')
 		query.addBindValue(periodId)
 		query.exec_()
+		if query.lastError().isValid():
+				print 'Error in query:', query.lastError().text()
 		query.next()
 		id_ = query.value(0).toInt()[0]
 		
@@ -172,6 +188,8 @@ class ImportForm(FormBase):
 			query.bindValue(14, row[14])
 			query.bindValue(15, periodId)
 			query.exec_()
+			if query.lastError().isValid():
+				print 'Error in query:', query.lastError().text()
 
 		
 
@@ -186,10 +204,14 @@ class ImportForm(FormBase):
 			query.prepare('delete from artikel_basis where artikel_periode = ?')
 			query.addBindValue(periodId)
 			query.exec_()
+			if query.lastError().isValid():
+				print 'Error in query:', query.lastError().text()
 		
 		query.prepare('select ifnull(max(artikel_id), 0) from artikel_basis where artikel_periode = ?')
 		query.addBindValue(periodId)
 		query.exec_()
+		if query.lastError().isValid():
+				print 'Error in query:', query.lastError().text()
 		query.next()
 		id_ = query.value(0).toInt()[0]
 		
@@ -211,6 +233,8 @@ class ImportForm(FormBase):
 			query.addBindValue(row[8])
 			query.addBindValue(periodId)
 			query.exec_()
+			if query.lastError().isValid():
+				print 'Error in query:', query.lastError().text()
 			
 		
 		
@@ -224,6 +248,8 @@ class ImportForm(FormBase):
 		query.prepare('delete from lager_artikel where lager_artikel_periode = ?')
 		query.addBindValue(periodId)
 		query.exec_()
+		if query.lastError().isValid():
+				print 'Error in query:', query.lastError().text()
 		
 		s = self.connectToSource()
 		q = """select lager_artikel_lagerartikel, lager_artikel_lieferant, lager_artikel_lieferant_artikel, lager_artikel_artikel, lager_artikel_prioritaet, lager_artikel_einheit, lager_artikel_lager, lager_artikel_flags, lager_artikel_maxStand, lager_artikel_minStand
@@ -245,6 +271,8 @@ class ImportForm(FormBase):
 			query.addBindValue(row[9])
 			query.addBindValue(periodId)
 			query.exec_()
+			if query.lastError().isValid():
+				print 'Error in query:', query.lastError().text()
 			
 			
 		##################
@@ -257,6 +285,8 @@ class ImportForm(FormBase):
 		query.prepare('delete from lager_einheiten where lager_einheit_periode = ?')
 		query.addBindValue(periodId)
 		query.exec_()
+		if query.lastError().isValid():
+				print 'Error in query:', query.lastError().text()
 		
 		s = self.connectToSource()
 		q = """select lager_einheit_id, lager_einheit_name, lager_einheit_multiplizierer, lager_einheit_basis
@@ -271,6 +301,8 @@ class ImportForm(FormBase):
 			query.addBindValue(row[3])
 			query.addBindValue(periodId)
 			query.exec_()
+			if query.lastError().isValid():
+				print 'Error in query:', query.lastError().text()
 
 			
 		##################
@@ -283,6 +315,8 @@ class ImportForm(FormBase):
 		query.prepare('delete from artikel_zutaten where zutate_periode = ?')
 		query.addBindValue(periodId)
 		query.exec_()
+		if query.lastError().isValid():
+				print 'Error in query:', query.lastError().text()
 		
 		s = self.connectToSource()
 		q = """select zutate_master_artikel, zutate_artikel, zutate_menge, zutate_istFixiert, zutate_istZutat, zutate_istRezept, zutate_immerAnzeigen, zutate_istZwangsAbfrage, zutate_preisVerwenden
@@ -302,6 +336,8 @@ class ImportForm(FormBase):
 			query.addBindValue(row[8])
 			query.addBindValue(periodId)
 			query.exec_()
+			if query.lastError().isValid():
+				print 'Error in query:', query.lastError().text()
 			
 			
 		self.commit()
