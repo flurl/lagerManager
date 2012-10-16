@@ -172,8 +172,7 @@ create table lieferungen_details(
 	artikel_id int not null,
 	anzahl float not null,
 	einkaufspreis float not null,
-	foreign key lieferung_detail_lieferung_fk (lieferung_id) references lieferungen(lieferung_id),
-	foreign key lieferung_detail_artikel_fk (artikel_id) references artikel_basis(artikel_id)
+	foreign key lieferung_detail_lieferung_fk (lieferung_id) references lieferungen(lieferung_id)
 ) ENGINE=INNODB;
 
 
@@ -222,4 +221,7 @@ alter table dokumente modify dok_data longblob not null;
 
 --20121006
 alter table dokumente modify dok_ocr MEDIUMTEXT null;
+
+--20121016
+alter table lieferungen_details drop foreign key lieferungen_details_ibfk_2;
 
