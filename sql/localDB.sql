@@ -182,6 +182,11 @@ create table steuersaetze (
 	sts_prozent float not null
 ) ENGINE=INNODB;
 
+create table liefereinheiten (
+	lei_id int unsigned auto_increment primary key not null,
+	lei_bezeichnung varchar(255) not null,
+	lei_menge float not null
+) ENGINE=INNODB;
 
 
 

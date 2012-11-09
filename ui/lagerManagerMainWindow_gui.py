@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/lagerManagerMainWindow.ui'
 #
-# Created: Thu Oct 11 18:51:13 2012
+# Created: Fri Nov  9 17:05:32 2012
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -84,6 +84,8 @@ class Ui_MainWindow(object):
         self.action_Dokumente_Dokumente.setObjectName("action_Dokumente_Dokumente")
         self.action_Stammdaten_Steuersaetze = QtGui.QAction(MainWindow)
         self.action_Stammdaten_Steuersaetze.setObjectName("action_Stammdaten_Steuersaetze")
+        self.action_Stammdaten_Liefereinheiten = QtGui.QAction(MainWindow)
+        self.action_Stammdaten_Liefereinheiten.setObjectName("action_Stammdaten_Liefereinheiten")
         self.menuFile.addAction(self.actionQuit)
         self.menu_Verbrauch.addAction(self.action_Report_Verbrauch_Artikel)
         self.menu_Umsaetze.addAction(self.action_Report_Umsaetze_UmsatzTag)
@@ -102,6 +104,7 @@ class Ui_MainWindow(object):
         self.menuStammdaten.addAction(self.action_Stammdaten_Perioden)
         self.menuStammdaten.addAction(self.action_Stammdaten_Import)
         self.menuStammdaten.addAction(self.action_Stammdaten_Steuersaetze)
+        self.menuStammdaten.addAction(self.action_Stammdaten_Liefereinheiten)
         self.menu_Dokumente.addAction(self.action_Dokumente_Dokumenttypen)
         self.menu_Dokumente.addAction(self.action_Dokumente_Dokumente)
         self.menubar.addAction(self.menuFile.menuAction())
@@ -145,4 +148,5 @@ class Ui_MainWindow(object):
         self.action_Dokumente_Dokumenttypen.setText(QtGui.QApplication.translate("MainWindow", "Dokument&typen", None, QtGui.QApplication.UnicodeUTF8))
         self.action_Dokumente_Dokumente.setText(QtGui.QApplication.translate("MainWindow", "&Dokumente", None, QtGui.QApplication.UnicodeUTF8))
         self.action_Stammdaten_Steuersaetze.setText(QtGui.QApplication.translate("MainWindow", "&Steuersätze", None, QtGui.QApplication.UnicodeUTF8))
+        self.action_Stammdaten_Liefereinheiten.setText(QtGui.QApplication.translate("MainWindow", "&Liefereinheiten", None, QtGui.QApplication.UnicodeUTF8))
 

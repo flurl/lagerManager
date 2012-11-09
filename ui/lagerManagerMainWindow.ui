@@ -86,6 +86,7 @@
     <addaction name="action_Stammdaten_Perioden"/>
     <addaction name="action_Stammdaten_Import"/>
     <addaction name="action_Stammdaten_Steuersaetze"/>
+    <addaction name="action_Stammdaten_Liefereinheiten"/>
    </widget>
    <widget class="QMenu" name="menu_Dokumente">
     <property name="title">
@@ -200,6 +201,11 @@
   <action name="action_Stammdaten_Steuersaetze">
    <property name="text">
     <string>&amp;Steuersätze</string>
+   </property>
+  </action>
+  <action name="action_Stammdaten_Liefereinheiten">
+   <property name="text">
+    <string>&amp;Liefereinheiten</string>
    </property>
   </action>
  </widget>

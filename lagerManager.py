@@ -59,6 +59,7 @@ class MainWindow(QtGui.QMainWindow):
 		self.connect(self.ui.action_Stammdaten_Perioden, QtCore.SIGNAL('triggered()'), self.openPeriodenForm)
 		self.connect(self.ui.action_Stammdaten_Import, QtCore.SIGNAL('triggered()'), self.openImportForm)
 		self.connect(self.ui.action_Stammdaten_Steuersaetze, QtCore.SIGNAL('triggered()'), self.openSteuersaetzeForm)
+		self.connect(self.ui.action_Stammdaten_Liefereinheiten, QtCore.SIGNAL('triggered()'), self.openLiefereinheitenForm)
 
 	def openConnectDlg(self):
 		import connectDlg
@@ -148,6 +149,12 @@ class MainWindow(QtGui.QMainWindow):
 	def openSteuersaetzeForm(self):
 		import forms.steuersaetze
 		form = forms.steuersaetze.SteuersaetzeForm(self)
+		window = self.ui.mdiArea.addSubWindow(form)
+		window.show()
+		
+	def openLiefereinheitenForm(self):
+		import forms.liefereinheiten
+		form = forms.liefereinheiten.LiefereinheitenForm(self)
 		window = self.ui.mdiArea.addSubWindow(form)
 		window.show()
 						
