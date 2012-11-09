@@ -69,6 +69,8 @@ class LieferungDetailForm(FormBase):
 		
 		
 	def createContextMenu(self):
+	
+		#taxes context menu
 		query = QtSql.QSqlQuery()
 		query.prepare('select sts_bezeichnung, sts_prozent from steuersaetze')
 		query.exec_()
@@ -83,7 +85,27 @@ class LieferungDetailForm(FormBase):
 				self.connect(actions[-1], QtCore.SIGNAL('triggered()'), lambda p=percent: self.calcNetPrice(p))
 				self.detailTableView.addAction(actions[-1])
 				
-			self.detailTableView.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+		sep = QtGui.QAction(self)
+		sep.setSeparator(True)
+		self.detailTableView.addAction(sep)
+				
+		#liefereinheiten context menu
+		query = QtSql.QSqlQuery()
+		query.prepare('select lei_bezeichnung, lei_menge from liefereinheiten')
+		query.exec_()
+		if query.lastError().isValid():
+			print 'Error selecting taxes for context menu:', query.lastError().text()
+		else:
+			actions = []
+			while query.next():
+				bez = query.value(0).toString()
+				amount = query.value(1).toFloat()[0]
+				actions.append(QtGui.QAction(bez, self))
+				self.connect(actions[-1], QtCore.SIGNAL('triggered()'), lambda a=amount: self.calcAmountPrice(a))
+				self.detailTableView.addAction(actions[-1])
+				
+				
+		self.detailTableView.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 		
 
 	def setModel(self, model, idx):
@@ -276,6 +298,14 @@ class LieferungDetailForm(FormBase):
 		idx = idx.sibling(idx.row(), 4)
 		value = self.detailModel.data(idx)
 		value = QtCore.QVariant(value.toFloat()[0]/(100+percent)*100)
+		self.detailModel.setData(idx, value)
+		
+	def calcAmountPrice(self, amount):
+		idxList = self.detailTableView.selectedIndexes()
+		idx = idxList[0]
+		idx = idx.sibling(idx.row(), 4)
+		value = self.detailModel.data(idx)
+		value = QtCore.QVariant(value.toFloat()[0]/amount)
 		self.detailModel.setData(idx, value)
 		
 		
