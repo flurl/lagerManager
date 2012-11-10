@@ -10,6 +10,8 @@ from ui.forms.lieferungDetailForm_gui import Ui_LieferungDetailForm
 import config
 from CONSTANTS import *
 
+from lib.NullDelegate import NullDelegate
+
 
 #class DateEditDelegate(QtGui.QItemDelegate):
 	
@@ -35,6 +37,7 @@ class LieferungDetailForm(FormBase):
 		FormBase.__init__(self, parent)
 		self.docImage = None
 		self.documentChanged = False
+		self.newRecord = False
 		
 	def setupUi(self):
 		super(LieferungDetailForm, self).setupUi()
@@ -118,7 +121,7 @@ class LieferungDetailForm(FormBase):
 		
 		mapper = QtGui.QDataWidgetMapper()
 		mapper.setModel(self.model)
-		mapper.setItemDelegate(QtSql.QSqlRelationalDelegate(self.model))
+		mapper.setItemDelegate(NullDelegate(self.model))
 		mapper.addMapping(self.ui.lineEdit_id, 0)
 		mapper.addMapping(self.ui.comboBox_lieferant, 1)
 		mapper.addMapping(self.ui.dateEdit_datum, 2)
@@ -130,8 +133,15 @@ class LieferungDetailForm(FormBase):
 		self.updateDetailFilter()
 		self.detailTableView.resizeColumnsToContents()
 		
+		if self.newRecord:
+			self.ui.comboBox_lieferant.insertSeparator(-1)
+			self.ui.comboBox_lieferant.setCurrentIndex(-1)
+		
 			
 	def accept(self):
+		if self.ui.comboBox_lieferant.currentText().isEmpty():
+			QtGui.QMessageBox.warning(self, u'Lieferanten Fehler', u'Kein Lieferant ausgewählt!')
+			return False
 		self.saveDocument()
 		self.mapper.submit()
 		self.model.submitAll()
@@ -277,7 +287,6 @@ class LieferungDetailForm(FormBase):
 	def showImage(self):
 		print 'clicked'
 		if self.docImage is not None:
-			print 'in if'
 			label = QtGui.QLabel()
 			pic = QtGui.QPixmap()
 			pic.loadFromData(self.docImage)

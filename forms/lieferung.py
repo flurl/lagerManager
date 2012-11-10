@@ -106,11 +106,15 @@ class LieferungForm(FormBase):
 		self.editRecord()
 		
 	def editRecord(self, idx=None):
+		form = LieferungDetailForm(self)
+		
 		if idx is None: 
 			idx = self.ui.tableView_lieferungen.selectionModel().currentIndex()#.row()
 			idx = self.ui.tableView_lieferungen.model().mapToSource(idx)
-			
-		form = LieferungDetailForm(self)
+		else:
+			#idx has been supplied, so we assume, it's a new record from newRecord()'
+			form.newRecord = True
+		
 		form.setModel(self.masterModel, idx)
 		form.show()
 		
