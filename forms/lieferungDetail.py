@@ -149,6 +149,14 @@ class LieferungDetailForm(FormBase):
 		if self.ui.comboBox_lieferant.currentText().isEmpty():
 			QtGui.QMessageBox.warning(self, u'Lieferanten Fehler', u'Kein Lieferant ausgewählt!')
 			return False
+			
+		if self.lieferungForDayExists():
+			answer = QtGui.QMessageBox.question(self, u'Lieferanten Fehler', 
+							u'Es existiert bereits eine Lieferung dieses Lieferanten für diesen Tag!\nTrotzdem fortfahren?',
+							QtGui.QMessageBox.No, QtGui.QMessageBox.Yes)
+			if answer == QtGui.QMessageBox.No:
+				return False
+				
 		self.saveDocument()
 		self.mapper.submit()
 		self.model.submitAll()
@@ -187,6 +195,15 @@ class LieferungDetailForm(FormBase):
 		id_ = self.model.record(self.mapper.currentIndex()).value(0).toInt()[0]
 		#print 'lieferungID: ', id_, self.mapper.currentIndex(), self.model.record(self.mapper.currentIndex()).value(0)
 		return id_
+		
+	def getCurrentLieferantId(self):
+		cb = self.ui.comboBox_lieferant
+		cbModel = cb.model()
+		lieferantId, ok = cbModel.record(cb.currentIndex()).value(0).toInt()
+		if not ok:
+			return -1
+		return lieferantId
+		
 		
 	def updateDetailFilter(self):
 		relModel = self.detailModel.relationModel(2)
@@ -307,6 +324,25 @@ class LieferungDetailForm(FormBase):
 			#label.resize(QtCore.QSize(350, 600))
 			#label.show()
 			area.showMaximized()
+			
+	
+	def lieferungForDayExists(self):
+		
+		
+		query = QtSql.QSqlQuery()
+		query.prepare('select count(*) from lieferungen where lieferant_id = ? and date(datum) = date(?)')
+		query.addBindValue(self.getCurrentLieferantId())
+		query.addBindValue(self.ui.dateEdit_datum.dateTime())
+		query.exec_()
+		if query.lastError().isValid():
+			print 'Error while getting count of lieferungen for that day:', query.lastError().text()
+		query.next()
+		count = query.value(0).toInt()[0]
+		if count != 0:
+			return True
+		else:
+			return False
+	
 		
 	def calcNetPrice(self, percent):
 		idxList = self.detailTableView.selectedIndexes()
