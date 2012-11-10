@@ -107,6 +107,13 @@ class LieferungDetailForm(FormBase):
 				self.connect(actions[-1], QtCore.SIGNAL('triggered()'), lambda a=amount: self.calcAmountPrice(a))
 				self.detailTableView.addAction(actions[-1])
 				
+		sep = QtGui.QAction(self)
+		sep.setSeparator(True)
+		self.detailTableView.addAction(sep)
+		
+		divideAction = QtGui.QAction(u'Durch Anzahl dividieren', self)
+		self.connect(divideAction, QtCore.SIGNAL('triggered()'), self.divideByAmount)
+		self.detailTableView.addAction(divideAction)
 				
 		self.detailTableView.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 		
@@ -316,5 +323,15 @@ class LieferungDetailForm(FormBase):
 		value = self.detailModel.data(idx)
 		value = QtCore.QVariant(value.toFloat()[0]/amount)
 		self.detailModel.setData(idx, value)
+		
+	def divideByAmount(self):
+		idxList = self.detailTableView.selectedIndexes()
+		idx = idxList[0]
+		valueIdx = idx.sibling(idx.row(), 4)
+		amountIdx = idx.sibling(idx.row(), 3)
+		value = self.detailModel.data(valueIdx)
+		amount = self.detailModel.data(amountIdx)
+		value = QtCore.QVariant(value.toFloat()[0]/amount.toFloat()[0])
+		self.detailModel.setData(valueIdx, value)
 		
 		
