@@ -119,7 +119,6 @@ class LieferungDetailForm(FormBase):
 		
 
 	def setModel(self, model, idx):
-		print 'setModel:', model, idx, idx.row()
 		self.index = idx
 		self.model = model
 		relationModel = self.model.relationModel(1)
@@ -206,7 +205,6 @@ class LieferungDetailForm(FormBase):
 		query = """insert into lieferungen_details (lieferung_id, artikel_id, anzahl, einkaufspreis) 
 				values 
 				(%s, %s, %s, %s)""" % (lieferungId, artikelId, 1.0, 0.0)
-		print query
 		results = self.db.exec_(query)
 		self.db.commit()
 		self.detailModel.select()
@@ -221,7 +219,6 @@ class LieferungDetailForm(FormBase):
 		
 	def getCurrentLieferungId(self):
 		id_ = self.model.record(self.mapper.currentIndex()).value(0).toInt()[0]
-		#print 'lieferungID: ', id_, self.mapper.currentIndex(), self.model.record(self.mapper.currentIndex()).value(0)
 		return id_
 		
 	def getCurrentLieferantId(self):
@@ -253,7 +250,6 @@ class LieferungDetailForm(FormBase):
 		
 	def chooseFile(self):
 		fileName = QtGui.QFileDialog.getOpenFileName(self, self.tr("Open Image"), "", self.tr("Image Files (*.png *.jpg *.bmp)"))
-		print fileName
 		image = QtGui.QImage(fileName)
 		pic = QtGui.QPixmap.fromImage(image)
 		self.ui.label_document.setPixmap(self.scalePixmap(pic)) #Put image into QLabel object
@@ -337,7 +333,6 @@ class LieferungDetailForm(FormBase):
 		return pm.scaled(200, 200, QtCore.Qt.KeepAspectRatio, QtCore.Qt.FastTransformation)
 
 	def showImage(self):
-		print 'clicked'
 		if self.docImage is not None:
 			label = QtGui.QLabel()
 			pic = QtGui.QPixmap()
