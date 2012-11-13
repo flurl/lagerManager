@@ -330,9 +330,10 @@ class LieferungDetailForm(FormBase):
 		
 		
 		query = QtSql.QSqlQuery()
-		query.prepare('select count(*) from lieferungen where lieferant_id = ? and date(datum) = date(?)')
+		query.prepare('select count(*) from lieferungen where lieferant_id = ? and date(datum) = date(?) and lieferung_id != ?')
 		query.addBindValue(self.getCurrentLieferantId())
 		query.addBindValue(self.ui.dateEdit_datum.dateTime())
+		query.addBindValue(self.getCurrentLieferungId())
 		query.exec_()
 		if query.lastError().isValid():
 			print 'Error while getting count of lieferungen for that day:', query.lastError().text()
