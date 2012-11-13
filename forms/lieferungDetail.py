@@ -164,6 +164,34 @@ class LieferungDetailForm(FormBase):
 		
 	def reject(self):
 		self.model.revertAll()
+		if self.newRecord:
+			id_ = self.getCurrentLieferungId()
+
+			self.beginTransaction()
+			query = QtSql.QSqlQuery()
+			query.prepare('delete from lieferungen_details where lieferung_id = ?')
+			query.addBindValue(id_)
+			query.exec_()
+			if query.lastError().isValid():
+				self.rollback()
+				print 'Error deleting lieferung details for lieferung with id %s:'%(id_, ), query.lastError().text()
+				QtGui.QMessageBox.warning(self, u'Datenbank Fehler', 
+										'Datensatz konnte nicht gelöscht werden!\nBitte kontaktieren Sie Ihren Administrator.')
+			else:
+				query = QtSql.QSqlQuery()
+				query.prepare('delete from lieferungen where lieferung_id = ?')
+				query.addBindValue(id_)
+				query.exec_()
+				if query.lastError().isValid():
+					self.rollback()
+					print 'Error deleting lieferung with id %s:'%(id_, ), query.lastError().text()
+					QtGui.QMessageBox.warning(self, u'Datenbank Fehler', 
+											'Datensatz konnte nicht gelöscht werden!\nBitte kontaktieren Sie Ihren Administrator.')
+				else:
+					self.commit()
+
+		self.model.select()
+
 		super(LieferungDetailForm, self).reject()
 		
 		
