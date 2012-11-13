@@ -109,8 +109,7 @@ class LieferungForm(FormBase):
 		form = LieferungDetailForm(self)
 		
 		if idx is None: 
-			idx = self.ui.tableView_lieferungen.selectionModel().currentIndex()#.row()
-			idx = self.ui.tableView_lieferungen.model().mapToSource(idx)
+			idx = self.currentSourceIndex()
 		else:
 			#idx has been supplied, so we assume, it's a new record from newRecord()'
 			form.newRecord = True
@@ -146,7 +145,7 @@ class LieferungForm(FormBase):
 		query = "delete from lieferungen_details where lieferung_id = %s" % (id_, )
 		results = self.db.exec_(query)
 		
-		idx = self.ui.tableView_lieferungen.selectionModel().currentIndex()
+		idx = self.currentSourceIndex()
 		self.masterModel.removeRows(idx.row(), 1)
 		self.masterModel.submitAll()
 		
@@ -173,3 +172,9 @@ class LieferungForm(FormBase):
 		except:
 			return False
 		
+		
+	def currentSourceIndex(self):
+		"""maps the current selection to the index of the proxy's current source"""
+		idx = self.ui.tableView_lieferungen.selectionModel().currentIndex()#.row()
+		idx = self.ui.tableView_lieferungen.model().mapToSource(idx)
+		return idx
