@@ -11,6 +11,7 @@ import config
 from CONSTANTS import *
 
 from lib.NullDelegate import NullDelegate
+from lib.ImageViewer import ImageViewer
 
 
 #class DateEditDelegate(QtGui.QItemDelegate):
@@ -334,20 +335,11 @@ class LieferungDetailForm(FormBase):
 
 	def showImage(self):
 		if self.docImage is not None:
-			label = QtGui.QLabel()
 			pic = QtGui.QPixmap()
 			pic.loadFromData(self.docImage)
-			#Show the image into a QLabel object
-			label.setPixmap(pic)
-			
-			area = QtGui.QScrollArea(self)
-			area.setWidget(label)
-			area.setWindowFlags(QtCore.Qt.Window)
-			#label.setScaledContents(True)
-			#label.resize(QtCore.QSize(350, 600))
-			#label.show()
-			area.showMaximized()
-			
+			viewer = ImageViewer(self)
+			viewer.setPixmap(pic)
+			viewer.show()
 	
 	def lieferungForDayExists(self):
 		
