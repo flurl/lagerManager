@@ -194,7 +194,9 @@
    <header>lib.ClickableLabel</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../../lagerManager.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>

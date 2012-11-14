@@ -24,6 +24,7 @@
 #############################################################################
 
 from PyQt4 import QtCore, QtGui
+import lagerManager_rc
 
 
 class ImageViewer(QtGui.QMainWindow):
@@ -136,8 +137,6 @@ class ImageViewer(QtGui.QMainWindow):
 				"print an image.</p>")
 
 	def createActions(self):
-		style = QtGui.QApplication.style()
-		
 		self.openAct = QtGui.QAction("&Open...", self, shortcut="Ctrl+O",
 				triggered=self.open)
 
@@ -147,23 +146,23 @@ class ImageViewer(QtGui.QMainWindow):
 		self.exitAct = QtGui.QAction("E&xit", self, shortcut="Ctrl+Q",
 				triggered=self.close)
 
-		self.zoomInAct = QtGui.QAction(QtGui.QIcon('images/zoom-in.svg'), "Zoom &In (25%)", self,
+		self.zoomInAct = QtGui.QAction(QtGui.QIcon(':/images/zoom-in.svg'), "Zoom &In (25%)", self,
 				shortcut="Ctrl++", enabled=False, triggered=self.zoomIn)
 
-		self.zoomOutAct = QtGui.QAction(QtGui.QIcon('images/zoom-out.svg'), "Zoom &Out (25%)", self,
+		self.zoomOutAct = QtGui.QAction(QtGui.QIcon(':/images/zoom-out.svg'), "Zoom &Out (25%)", self,
 				shortcut="Ctrl+-", enabled=False, triggered=self.zoomOut)
 
-		self.normalSizeAct = QtGui.QAction(QtGui.QIcon('images/zoom-original.svg'), "&Normal Size", self,
+		self.normalSizeAct = QtGui.QAction(QtGui.QIcon(':/images/zoom-original.svg'), "&Normal Size", self,
 				shortcut="Ctrl+S", enabled=False, triggered=self.normalSize)
 
-		self.fitToWindowAct = QtGui.QAction(QtGui.QIcon('images/zoom-best-fit.svg'), "&Fit to Window", self,
+		self.fitToWindowAct = QtGui.QAction(QtGui.QIcon(':/images/zoom-best-fit.svg'), "&Fit to Window", self,
 				enabled=False, checkable=True, shortcut="Ctrl+F",
 				triggered=self.fitToWindow)
 				
-		self.rotateCwAct = QtGui.QAction(QtGui.QIcon('images/rotate-right.svg'), u'90° &im Uhrzeigersinn', self,
+		self.rotateCwAct = QtGui.QAction(QtGui.QIcon(':/images/rotate-right.svg'), u'90° &im Uhrzeigersinn', self,
 				shortcut='Ctrl+i', enabled=True, triggered=self.rotateCw)
 				
-		self.rotateCcwAct = QtGui.QAction(QtGui.QIcon('images/rotate-left.svg'), u'90° &gegen Uhrzeigersinn', self,
+		self.rotateCcwAct = QtGui.QAction(QtGui.QIcon(':/images/rotate-left.svg'), u'90° &gegen Uhrzeigersinn', self,
 				shortcut='Ctrl+g', enabled=True, triggered=self.rotateCcw)
 
 		self.aboutAct = QtGui.QAction("&About", self, triggered=self.about)

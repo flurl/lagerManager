@@ -1,0 +1,10 @@
+<RCC>
+  <qresource>
+    <file>images/rotate-left.svg</file>
+    <file>images/rotate-right.svg</file>
+    <file>images/zoom-best-fit.svg</file>
+    <file>images/zoom-in.svg</file>
+    <file>images/zoom-original.svg</file>
+    <file>images/zoom-out.svg</file>
+  </qresource>
+</RCC>
