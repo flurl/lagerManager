@@ -93,6 +93,7 @@ class LieferungForm(FormBase):
 
 	def setupSignals(self):
 		super(LieferungForm, self).setupSignals()
+		self.connect(self.ui.radioButton_lieferung, QtCore.SIGNAL('toggled (bool)'), self.updateMasterFilter)
 		self.connect(self.ui.pushButton_edit, QtCore.SIGNAL('clicked()'), self.editRecord)
 		self.connect(self.ui.pushButton_new, QtCore.SIGNAL('clicked()'), self.newRecord)
 		self.connect(self.ui.pushButton_delete, QtCore.SIGNAL('clicked()'), self.deleteRecord)
@@ -126,6 +127,7 @@ class LieferungForm(FormBase):
 		record = self.masterModel.record()
 		record.setValue(1, QtCore.QVariant(lieferantId))
 		record.setValue(2, QtCore.QVariant(datetime.datetime.now().strftime('%Y-%m-%d')))
+		record.setValue(self.masterModel.fieldIndex('lie_ist_verbrauch'), QtCore.QVariant(0 if self.ui.radioButton_lieferung.isChecked() else 1))
 		self.masterModel.insertRecord(-1, record)
 		self.masterModel.submitAll()
 		id_ = self.masterModel.query().lastInsertId().toInt()[0]
@@ -150,7 +152,10 @@ class LieferungForm(FormBase):
 		self.masterModel.submitAll()
 		
 		
-		
+	def updateMasterFilter(self):
+		print 'updateMasterFilter'
+		self.masterModel.setFilter('lieferungen.lie_ist_verbrauch = %s'%(0 if self.ui.radioButton_lieferung.isChecked() else 1, ))
+		self.masterModel.select()
 	
 		
 	def updateDetailFilter(self):

@@ -154,7 +154,8 @@ create table dokumente (
 
 create table lieferanten(
 	lieferant_id integer auto_increment primary key not null,
-	lieferant_name varchar(255) not null
+	lieferant_name varchar(255) not null,
+	lft_ist_verbraucher tinyint(1) not null default 0
 ) ENGINE=INNODB;
 
 create table lieferungen(
@@ -162,6 +163,7 @@ create table lieferungen(
 	lieferant_id int not null,
 	datum datetime not null,
 	lie_dokid int unsigned null,
+	lie_ist_verbrauch tinyint(1) not null default 0,
 	foreign key lieferung_lieferant_fk (lieferant_id) references lieferanten(lieferant_id),
 	foreign key lieferung_dokument_fk (lie_dokid) references dokumente(dok_id)
 ) ENGINE=INNODB;
@@ -230,3 +232,6 @@ alter table dokumente modify dok_ocr MEDIUMTEXT null;
 --20121016
 alter table lieferungen_details drop foreign key lieferungen_details_ibfk_2;
 
+--20121119
+alter table lieferungen add column lie_ist_verbrauch tinyint(1) not null default 0;
+alter table lieferanten add column lft_ist_verbraucher tinyint(1) not null default 0;

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/forms/lieferungForm.ui'
 #
-# Created: Mon Sep 10 20:07:03 2012
+# Created: Mon Nov 19 19:22:29 2012
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -20,6 +20,7 @@ class Ui_LieferungForm(object):
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.groupBox = QtGui.QGroupBox(LieferungForm)
+        self.groupBox.setTitle("")
         self.groupBox.setObjectName("groupBox")
         self.gridLayout_2 = QtGui.QGridLayout(self.groupBox)
         self.gridLayout_2.setObjectName("gridLayout_2")
@@ -42,10 +43,22 @@ class Ui_LieferungForm(object):
         self.comboBox_period.setObjectName("comboBox_period")
         self.horizontalLayout_3.addWidget(self.comboBox_period)
         self.verticalLayout_2.addLayout(self.horizontalLayout_3)
-        self.gridLayout_2.addLayout(self.verticalLayout_2, 0, 0, 1, 1)
+        self.gridLayout_2.addLayout(self.verticalLayout_2, 1, 0, 1, 1)
         self.tableView_lieferungen = FilterableTableView(self.groupBox)
         self.tableView_lieferungen.setObjectName("tableView_lieferungen")
-        self.gridLayout_2.addWidget(self.tableView_lieferungen, 1, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.tableView_lieferungen, 2, 0, 1, 1)
+        self.horizontalLayout_4 = QtGui.QHBoxLayout()
+        self.horizontalLayout_4.setObjectName("horizontalLayout_4")
+        self.radioButton_lieferung = QtGui.QRadioButton(self.groupBox)
+        self.radioButton_lieferung.setChecked(True)
+        self.radioButton_lieferung.setObjectName("radioButton_lieferung")
+        self.horizontalLayout_4.addWidget(self.radioButton_lieferung)
+        self.radioButton_verbrauch = QtGui.QRadioButton(self.groupBox)
+        self.radioButton_verbrauch.setObjectName("radioButton_verbrauch")
+        self.horizontalLayout_4.addWidget(self.radioButton_verbrauch)
+        spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_4.addItem(spacerItem1)
+        self.gridLayout_2.addLayout(self.horizontalLayout_4, 0, 0, 1, 1)
         self.horizontalLayout.addWidget(self.groupBox)
         self.verticalLayout.addLayout(self.horizontalLayout)
         self.horizontalLayout_2 = QtGui.QHBoxLayout()
@@ -66,10 +79,11 @@ class Ui_LieferungForm(object):
 
     def retranslateUi(self, LieferungForm):
         LieferungForm.setWindowTitle(QtGui.QApplication.translate("LieferungForm", "Form", None, QtGui.QApplication.UnicodeUTF8))
-        self.groupBox.setTitle(QtGui.QApplication.translate("LieferungForm", "Lieferungen", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_new.setText(QtGui.QApplication.translate("LieferungForm", "&Neu", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_edit.setText(QtGui.QApplication.translate("LieferungForm", "&Bearbeiten", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_delete.setText(QtGui.QApplication.translate("LieferungForm", "&Löschen", None, QtGui.QApplication.UnicodeUTF8))
+        self.radioButton_lieferung.setText(QtGui.QApplication.translate("LieferungForm", "Lieferung", None, QtGui.QApplication.UnicodeUTF8))
+        self.radioButton_verbrauch.setText(QtGui.QApplication.translate("LieferungForm", "Verbrauch", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox_2.setTitle(QtGui.QApplication.translate("LieferungForm", "Details", None, QtGui.QApplication.UnicodeUTF8))
 
 from lib.FilterableTableView import FilterableTableView

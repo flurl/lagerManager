@@ -24,6 +24,7 @@ class LieferantenForm(FormBase):
 		# column headers
 		self.model.setHeaderData(0, QtCore.Qt.Horizontal, 'ID')
 		self.model.setHeaderData(1, QtCore.Qt.Horizontal, 'Name')
+		self.model.setHeaderData(2, QtCore.Qt.Horizontal, 'Verbraucher')
 		
 
 		

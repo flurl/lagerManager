@@ -122,20 +122,27 @@ class LieferungDetailForm(FormBase):
 	def setModel(self, model, idx):
 		self.index = idx
 		self.model = model
+		
+		self.mapper = mapper = QtGui.QDataWidgetMapper()
+		mapper.setModel(self.model)
+		mapper.setCurrentIndex(idx.row())
+		
 		relationModel = self.model.relationModel(1)
+		relationModel.setFilter('lieferanten.lft_ist_verbraucher = %s'%(1 if self.isVerbrauch() else 0,))
 		self.ui.comboBox_lieferant.setModel(relationModel)
 		self.ui.comboBox_lieferant.setModelColumn(relationModel.fieldIndex('lieferant_name'))
 		
-		mapper = QtGui.QDataWidgetMapper()
-		mapper.setModel(self.model)
+		
 		mapper.setItemDelegate(NullDelegate(self.model))
 		mapper.addMapping(self.ui.lineEdit_id, 0)
 		mapper.addMapping(self.ui.comboBox_lieferant, 1)
 		mapper.addMapping(self.ui.dateEdit_datum, 2)
 		mapper.addMapping(self.ui.lineEdit_dokId, self.model.fieldIndex('lie_dokid'))
 		mapper.setSubmitPolicy(QtGui.QDataWidgetMapper.ManualSubmit)
-		mapper.setCurrentIndex(idx.row())
-		self.mapper = mapper
+		
+		
+		
+		
 		
 		self.updateDetailFilter()
 		self.detailTableView.resizeColumnsToContents()
@@ -146,13 +153,31 @@ class LieferungDetailForm(FormBase):
 		
 			
 	def accept(self):
+		if self.isVerbrauch():
+			alreadyAsked = False
+			for row in range(0, self.detailModel.rowCount()):
+				record = self.detailModel.record(row)
+				value = record.value(self.detailModel.fieldIndex('anzahl')).toFloat()[0]
+				if value >= 0.0:
+					if not alreadyAsked:
+						answer = QtGui.QMessageBox.question(self, u'Mengen Fehler', 
+								u'Verbrauch Mengen müssen negativ sein! Alle positiven eingegeben Mengen werden automatisch mit -1 multipliziert.\nFortfahren?',
+								QtGui.QMessageBox.No, QtGui.QMessageBox.Yes)
+						alreadyAsked = True
+						if answer == QtGui.QMessageBox.No:
+							return False
+					
+					record.setValue('anzahl', QtCore.QVariant(value*-1))
+					self.detailModel.setRecord(row, record)
+
+	
 		if self.ui.comboBox_lieferant.currentText().isEmpty():
 			QtGui.QMessageBox.warning(self, u'Lieferanten Fehler', u'Kein Lieferant ausgewählt!')
 			return False
 			
 		if self.lieferungForDayExists():
 			answer = QtGui.QMessageBox.question(self, u'Lieferanten Fehler', 
-							u'Es existiert bereits eine Lieferung dieses Lieferanten für diesen Tag!\nTrotzdem fortfahren?',
+							u'Es existiert bereits eine Lieferung/ein Verbrauch dieses Lieferanten/Verbrauchers für diesen Tag!\nTrotzdem fortfahren?',
 							QtGui.QMessageBox.No, QtGui.QMessageBox.Yes)
 			if answer == QtGui.QMessageBox.No:
 				return False
@@ -230,6 +255,9 @@ class LieferungDetailForm(FormBase):
 			return -1
 		return lieferantId
 		
+	def isVerbrauch(self):
+		istVerbrauch = self.model.record(self.mapper.currentIndex()).value(self.model.fieldIndex('lie_ist_verbrauch')).toInt()[0]
+		return True if istVerbrauch else False
 		
 	def updateDetailFilter(self):
 		relModel = self.detailModel.relationModel(2)
