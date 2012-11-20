@@ -49,6 +49,7 @@ class LieferungForm(FormBase):
 		self.detailModel.setRelation(1, QtSql.QSqlRelation('lieferungen', 'lieferung_id', 'datum'))
 		self.detailModel.setRelation(2, QtSql.QSqlRelation('artikel_basis', 'artikel_id', 'artikel_bezeichnung'))
 		self.detailModel.setEditStrategy(QtSql.QSqlTableModel.OnManualSubmit)
+		self.detailModel.sort(self.detailModel.fieldIndex('lieferung_detail_id'), QtCore.Qt.AscendingOrder)
 		
 		
 		#Master table
