@@ -33,6 +33,16 @@
         </widget>
        </item>
        <item>
+        <widget class="QCheckBox" name="checkBox_highlightNegative">
+         <property name="text">
+          <string>Negative Werte hervorheben</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QSlider" name="slider_minDP">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>

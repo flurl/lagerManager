@@ -126,6 +126,8 @@ class ReportGraphicsViewWidget(QtGui.QWidget):
 		
 		self.connect(self.ui.pushButton_zoomIn, QtCore.SIGNAL('clicked()'), self.zoomIn)
 		self.connect(self.ui.pushButton_zoomOut, QtCore.SIGNAL('clicked()'), self.zoomOut)
+		
+		self.connect(self.ui.checkBox_highlightNegative, QtCore.SIGNAL('stateChanged (int)'), self.onHighlightNegativeChanged)
 	
 	def setDatapoints(self, dp = None):
 		#print 'ReportWidget:setDatapoints', dp
@@ -162,6 +164,7 @@ class ReportGraphicsViewWidget(QtGui.QWidget):
 		min_ = self.ui.slider_minDP.value()
 		max_ = self.ui.slider_maxDP.value()
 		currScaling = self.getCurrentScaling()
+		highlightNegative = self.ui.checkBox_highlightNegative.isChecked()
 		for x in range(len(self.dataPoints)):
 			if x >= min_ and x <= max_:
 				for y in self.dataPoints[x]:
@@ -185,6 +188,14 @@ class ReportGraphicsViewWidget(QtGui.QWidget):
 						pass
 				
 					scene.addItem(rect)
+
+					if highlightNegative and self.dataPoints[x][y]<0:
+						triangle = QtGui.QGraphicsPolygonItem(QtGui.QPolygonF([QtCore.QPointF(coords[0], coords[1]+10*currScaling[1]),
+													QtCore.QPointF(coords[0]+5*currScaling[0], coords[1]+(10+10)*currScaling[1]),
+													QtCore.QPointF(coords[0]-5*currScaling[0], coords[1]+(10+10)*currScaling[1]),
+													QtCore.QPointF(coords[0], coords[1]+10*currScaling[1])]))
+						triangle.setPen(pen)
+						scene.addItem(triangle)
 				
 				
 					if y in oldCoords:
@@ -243,4 +254,7 @@ class ReportGraphicsViewWidget(QtGui.QWidget):
 		min_ = self.ui.slider_minDP.value()
 		if min_ > newVal:
 			self.ui.slider_minDP.setValue(newVal)
+		self.plot()
+		
+	def onHighlightNegativeChanged(self, state):
 		self.plot()
