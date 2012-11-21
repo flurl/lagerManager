@@ -59,10 +59,6 @@ group by checkpoint_info
 order by 1
 			"""
 		return query
-					
-				
-	"""def getCurrPeriode(self):
-		return '2011'"""
 		
 		
 	

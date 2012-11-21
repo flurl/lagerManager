@@ -239,11 +239,7 @@ class LagerstandReport(GraphicsReport):
 				cb.show()
 			else:
 				cb.hide()
-				
-				
-	def getCurrPeriode(self):
-		return '2011'
-		
+
 		
 	def _onRefreshBtnClicked(self):
 		self.setDatapoints(copy.deepcopy(self.dp))
