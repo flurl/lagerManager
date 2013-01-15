@@ -126,6 +126,9 @@ class LieferungForm(FormBase):
 		results.next()
 		lieferantId = results.value(0).toInt()[0]
 		
+		fltr = self.masterModel.filter()
+		self.masterModel.setFilter('')
+		
 		record = self.masterModel.record()
 		record.setValue(1, QtCore.QVariant(lieferantId))
 		record.setValue(2, QtCore.QVariant(datetime.datetime.now().strftime('%Y-%m-%d')))
@@ -136,6 +139,7 @@ class LieferungForm(FormBase):
 		idx = self.masterModel.match(self.masterModel.index(0,0), 0, id_)[0]
 		idx = QtCore.QPersistentModelIndex(idx)
 		self.editRecord(idx)#.row())
+		self.masterModel.setFilter(fltr)
 		
 	
 	def deleteRecord(self):
