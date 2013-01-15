@@ -118,7 +118,7 @@ class LieferungForm(FormBase):
 			form.newRecord = True
 		
 		form.setModel(self.masterModel, idx)
-		form.show()
+		form.exec_()
 		
 	def newRecord(self):
 		query = "select min(lieferant_id) from lieferanten"
@@ -142,6 +142,7 @@ class LieferungForm(FormBase):
 		idx = self.masterModel.match(self.masterModel.index(0,0), 0, id_)[0]
 		idx = QtCore.QPersistentModelIndex(idx)
 		self.editRecord(idx)#.row())
+		print 'reseting filter'
 		self.masterModel.setFilter(fltr)
 		
 	
