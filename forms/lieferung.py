@@ -95,6 +95,7 @@ class LieferungForm(FormBase):
 	def setupSignals(self):
 		super(LieferungForm, self).setupSignals()
 		self.connect(self.ui.radioButton_lieferung, QtCore.SIGNAL('toggled (bool)'), self.updateMasterFilter)
+		self.connect(self.ui.comboBox_period, QtCore.SIGNAL('currentIndexChanged(int)'), self.updateMasterFilter)
 		self.connect(self.ui.pushButton_edit, QtCore.SIGNAL('clicked()'), self.editRecord)
 		self.connect(self.ui.pushButton_new, QtCore.SIGNAL('clicked()'), self.newRecord)
 		self.connect(self.ui.pushButton_delete, QtCore.SIGNAL('clicked()'), self.deleteRecord)
@@ -155,7 +156,13 @@ class LieferungForm(FormBase):
 		
 	def updateMasterFilter(self):
 		print 'updateMasterFilter'
-		self.masterModel.setFilter('lieferungen.lie_ist_verbrauch = %s'%(0 if self.ui.radioButton_lieferung.isChecked() else 1, ))
+		query = QtSql.QSqlQuery()
+		query.prepare("""select periode_start, periode_ende from perioden where periode_id = ?""")
+		query.addBindValue(self.getCurrentPeriodId())
+		query.exec_()
+		query.next()
+		start, ende = query.value(0).toDateTime(), query.value(1).toDateTime()
+		self.masterModel.setFilter("lieferungen.lie_ist_verbrauch = %s and lieferungen.datum between '%s' and '%s'"%(0 if self.ui.radioButton_lieferung.isChecked() else 1, start.toPyDateTime().strftime('%Y-%m-%d %H:%M:%S'), ende.toPyDateTime().strftime('%Y-%m-%d %H:%M:%S')))
 		self.masterModel.select()
 	
 		
