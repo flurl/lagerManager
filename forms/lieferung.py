@@ -129,9 +129,12 @@ class LieferungForm(FormBase):
 		fltr = self.masterModel.filter()
 		self.masterModel.setFilter('')
 		
+		date = datetime.datetime.now()
+		date = date.replace(year=int(str(self.ui.comboBox_period.currentText())))
+		
 		record = self.masterModel.record()
 		record.setValue(1, QtCore.QVariant(lieferantId))
-		record.setValue(2, QtCore.QVariant(datetime.datetime.now().strftime('%Y-%m-%d')))
+		record.setValue(2, QtCore.QVariant(date.strftime('%Y-%m-%d')))
 		record.setValue(self.masterModel.fieldIndex('lie_ist_verbrauch'), QtCore.QVariant(0 if self.ui.radioButton_lieferung.isChecked() else 1))
 		self.masterModel.insertRecord(-1, record)
 		self.masterModel.submitAll()
