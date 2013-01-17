@@ -119,8 +119,8 @@ class MainWindow(QtGui.QMainWindow):
 		window.show()
 		
 	def openInitialLagerstandForm(self):
-		import lagerstandDlg
-		form = lagerstandDlg.LagerstandDialog(self)
+		import forms.lagerstand
+		form = forms.lagerstand.LagerstandForm(self)
 		form.show()
 		
 	def openPeriodenForm(self):
