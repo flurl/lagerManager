@@ -227,6 +227,7 @@ class LagerstandReport(GraphicsReport):
 				and artikel_periode = %(period_id)s
 				and lager_artikel_periode = %(period_id)s
 				and perioden.periode_id = %(period_id)s
+				and lieferungen.datum between periode_start and periode_ende
 				group by datum, artikel_bezeichnung
 		""" % {'period_id': self._getCurrentPeriodId()}
 		
