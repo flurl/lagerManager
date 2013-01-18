@@ -32,32 +32,39 @@ class LagerstandReport(GraphicsReport):
 		
 		self.connect(self.ui.pushButton_refresh, QtCore.SIGNAL('clicked()'), self._onRefreshBtnClicked)
 		self.connect(self.ui.lineEdit_filterArticles, QtCore.SIGNAL('textChanged (const QString&)'), self._onArticleFilterChanged)
+		self.connect(self.ui.checkBox_ignorePrefix, QtCore.SIGNAL('stateChanged (int)'), self.updateData)
 		
 	def updateData(self):
 		self.negativeArticles = Set()
+		ignorePrefix = self.ui.checkBox_ignorePrefix.isChecked()
 		days = []
 		for i in range(370):
 			days.append({})
 		
 		query =  self.mkInvQuery()
 		results = self.db.exec_(query)
-		print query
-		print results.lastError().databaseText()
+		#print query
+		#print results.lastError().databaseText()
 		days[0] = {}
 		while results.next():
 			name = unicode(results.value(0).toString())
+			if ignorePrefix and u'-' in name:
+				name = name.partition(u'-')[2]
 			amount = results.value(1).toFloat()[0]
-			days[0][name] = amount
+			days[0][name] = days[0].get(name, 0.0) + amount
 			
 			
 		query = self.mkConsQuery()
 		results = self.db.exec_(query)
-		print query
-		print results.lastError().databaseText()
+		#print query
+		#print results.lastError().databaseText()
 		while results.next():
 			ckpId = results.value(0).toInt()[0]
 			ckpInfo = results.value(1).toString()
 			article = unicode(results.value(2).toString())
+			if ignorePrefix and u'-' in article:
+				article = article.partition(u'-')[2]
+			
 			amount = results.value(3).toFloat()[0]
 			count = results.value(4).toInt()[0]
 			
@@ -68,11 +75,14 @@ class LagerstandReport(GraphicsReport):
 			
 		query = self.mkDelQuery()
 		results = self.db.exec_(query)
-		print query
-		print results.lastError().databaseText()
+		#print query
+		#print results.lastError().databaseText()
 		while results.next():
 			date = results.value(0).toDateTime().toPyDateTime()
 			article = unicode(results.value(1).toString())
+			if ignorePrefix and u'-' in article:
+				article = article.partition(u'-')[2]
+				
 			amount = results.value(2).toFloat()[0]
 			
 			
