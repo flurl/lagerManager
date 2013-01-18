@@ -2,6 +2,7 @@
 import time
 import datetime
 import copy
+from sets import Set
 
 from PyQt4 import QtCore, QtGui, QtSql
 
@@ -33,6 +34,7 @@ class LagerstandReport(GraphicsReport):
 		self.connect(self.ui.lineEdit_filterArticles, QtCore.SIGNAL('textChanged (const QString&)'), self._onArticleFilterChanged)
 		
 	def updateData(self):
+		self.negativeArticles = Set()
 		days = []
 		for i in range(370):
 			days.append({})
@@ -46,6 +48,7 @@ class LagerstandReport(GraphicsReport):
 			name = unicode(results.value(0).toString())
 			amount = results.value(1).toFloat()[0]
 			days[0][name] = amount
+			
 			
 		query = self.mkConsQuery()
 		results = self.db.exec_(query)
@@ -92,6 +95,8 @@ class LagerstandReport(GraphicsReport):
 				else:
 					#print 'adding', i, articles.get(article, 0.0)
 					dp[i][article] = dp[i-1].get(article, 0.0) + articles.get(article, 0.0)
+				if dp[i][article] < 0.0:
+					self.negativeArticles.add(article)
 		
 		#print dp
 		self.dp = copy.deepcopy(dp)
@@ -130,6 +135,10 @@ class LagerstandReport(GraphicsReport):
 		cb = QtGui.QCheckBox('Alle')
 		layout.addWidget(cb)
 		self.connect(cb, QtCore.SIGNAL('stateChanged(int)'), self._onCheckAllChanged)
+		
+		cb = QtGui.QCheckBox('Alle mit negativen Werten')
+		layout.addWidget(cb)
+		self.connect(cb, QtCore.SIGNAL('stateChanged(int)'), self.onCheckAllNegativeChanged)
 		
 		for a in sorted(list(articles)):
 			cb = QtGui.QCheckBox(a)
@@ -250,6 +259,12 @@ class LagerstandReport(GraphicsReport):
 	def _onCheckAllChanged(self, state):
 		for cb in self.articleCheckboxes:
 			cb.setCheckState(state)
+			
+	
+	def onCheckAllNegativeChanged(self, state):
+		for cb in self.articleCheckboxes:
+			if unicode(cb.text()) in self.negativeArticles:
+				cb.setCheckState(state)
 			
 			
 	def _onArticleFilterChanged(self, newText):
