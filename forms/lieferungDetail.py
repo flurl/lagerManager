@@ -229,6 +229,10 @@ class LieferungDetailForm(FormBase):
 		results.next()
 		artikelId = results.value(0).toInt()[0]
 		
+		if not artikelId:
+			QtGui.QMessageBox.warning(self, u'Lagerartikel Fehler', u'Kein Lagerartikel für die gewählte Periode gefunden!')
+			return False
+		
 		query = """insert into lieferungen_details (lieferung_id, artikel_id, anzahl, einkaufspreis) 
 				values 
 				(%s, %s, %s, %s)""" % (lieferungId, artikelId, 1.0, 0.0)
