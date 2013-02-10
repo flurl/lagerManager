@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'ui/reports/verbrauchReport.ui'
 #
-# Created: Thu Sep  6 04:17:29 2012
-#      by: PyQt4 UI code generator 4.9.1
+# Created: Sun Feb 10 18:58:41 2013
+#      by: PyQt4 UI code generator 4.9.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -43,6 +43,9 @@ class Ui_Verbrauch(object):
         self.lineEdit_filterArticles.setSizePolicy(sizePolicy)
         self.lineEdit_filterArticles.setObjectName(_fromUtf8("lineEdit_filterArticles"))
         self.verticalLayout_2.addWidget(self.lineEdit_filterArticles)
+        self.checkBox_ignorePrefix = QtGui.QCheckBox(Verbrauch)
+        self.checkBox_ignorePrefix.setObjectName(_fromUtf8("checkBox_ignorePrefix"))
+        self.verticalLayout_2.addWidget(self.checkBox_ignorePrefix)
         self.scrollArea_articleSelection = QtGui.QScrollArea(Verbrauch)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -52,7 +55,7 @@ class Ui_Verbrauch(object):
         self.scrollArea_articleSelection.setWidgetResizable(True)
         self.scrollArea_articleSelection.setObjectName(_fromUtf8("scrollArea_articleSelection"))
         self.scrollAreaWidgetContents = QtGui.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 426, 474))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 426, 439))
         self.scrollAreaWidgetContents.setObjectName(_fromUtf8("scrollAreaWidgetContents"))
         self.scrollArea_articleSelection.setWidget(self.scrollAreaWidgetContents)
         self.verticalLayout_2.addWidget(self.scrollArea_articleSelection)
@@ -68,5 +71,6 @@ class Ui_Verbrauch(object):
     def retranslateUi(self, Verbrauch):
         Verbrauch.setWindowTitle(QtGui.QApplication.translate("Verbrauch", "Verbrauch", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_refresh.setText(QtGui.QApplication.translate("Verbrauch", "Aktualisieren", None, QtGui.QApplication.UnicodeUTF8))
+        self.checkBox_ignorePrefix.setText(QtGui.QApplication.translate("Verbrauch", "Prefix ignorieren", None, QtGui.QApplication.UnicodeUTF8))
 
 from reports.reportGraphicsViewWidget import ReportGraphicsViewWidget

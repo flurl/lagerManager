@@ -56,6 +56,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QCheckBox" name="checkBox_ignorePrefix">
+         <property name="text">
+          <string>Prefix ignorieren</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QScrollArea" name="scrollArea_articleSelection">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
@@ -72,7 +79,7 @@
             <x>0</x>
             <y>0</y>
             <width>426</width>
-            <height>474</height>
+            <height>439</height>
            </rect>
           </property>
          </widget>
