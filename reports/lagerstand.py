@@ -68,7 +68,10 @@ class LagerstandReport(GraphicsReport):
 			amount = results.value(3).toFloat()[0]
 			count = results.value(4).toInt()[0]
 			
-			yday = time.strptime(ckpInfo, '%d.%m.%Y').tm_yday
+			date = time.strptime(ckpInfo, '%d.%m.%Y')
+			yday = date.tm_yday
+			if str(date.tm_year) != self.getCurrPeriode():
+				continue
 
 			days[yday][article] = days[yday].get(article, 0.0) + amount*-1.0
 			
@@ -230,7 +233,7 @@ class LagerstandReport(GraphicsReport):
 				group by checkpoint_id, checkpoint_info, a.artikel_bezeichnung
 				order by 1
 				""" % {'period_id': self._getCurrentPeriodId()}
-		#print query
+		print query
 		return query
 		
 		
