@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import collections
 
 from PyQt4 import QtCore
@@ -47,12 +48,12 @@ class TextReport(ReportBase):
 		"""override this method for custom data set, otherwise supply a query"""
 		if isinstance(data, basestring): 
 			results = self.db.exec_(data)
-			self.data = []
+			self.__data = []
 			while results.next():
 				record = results.record()
-				self.data.append([record.value(i).toString() for i in range(record.count())])
+				self.__data.append([record.value(i).toString() for i in range(record.count())])
 		elif isinstance(data, collections.Iterable): 
-			self.data = data
+			self.__data = data
 		else:
 			raise
 		
@@ -69,10 +70,17 @@ class TextReport(ReportBase):
 	def processData(self):
 		output = u''
 		output += u'<table border="1">'
-		for row in self.data:
+		for row in self.__data:
 			output += u'<tr>'
 			for cell in row:
-				output += u'<td>%s</td>' % (cell,)
+				if cell is None:
+					output += u'<td>'+u'☭'*10+u'</td>'
+				else:
+					#apply formating
+					if type(cell) is list or type(cell) is tuple:
+						if cell[1] == 'strong':
+							cell = u'<strong>' + unicode(cell[0]) + u'</strong>'
+					output += u'<td>%s</td>' % (cell,)
 			output += u'</tr>'
 		output += u'</table>'
 		return output

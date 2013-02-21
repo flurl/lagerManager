@@ -34,6 +34,7 @@ class ImportForm(FormBase):
 		user = unicode(self.ui.lineEdit_user.text())
 		pw = unicode(self.ui.lineEdit_password.text())
 		con = pymssql.connect(host=host,user=user,password=pw,database=db,charset='cp1252')
+		print "con:", con
 		return con
 	
 	def runQuery(self, query, values = None, db = None):
@@ -51,6 +52,7 @@ class ImportForm(FormBase):
 		print "syncing"
 		s = self.connectToSource()
 		periodId = self.getCurrentPeriodId()
+		checkpointId = self.getCheckpointIdForPeriod(periodId)
 		initialImport = self.ui.checkBox_initialImport.isChecked()
 		
 		self.beginTransaction()
@@ -70,13 +72,19 @@ class ImportForm(FormBase):
 			if query.lastError().isValid():
 				print 'Error in query:', query.lastError().text()
 			
-		query.prepare('select ifnull(max(checkpoint_id), 0) from journal_checkpoints where checkpoint_periode = ?')
-		query.addBindValue(periodId)
+		#query.prepare('select ifnull(max(checkpoint_id), 0) from journal_checkpoints where checkpoint_periode = ?')
+		#query.addBindValue(periodId)
+		query.prepare('select ifnull(max(checkpoint_id), 0) from journal_checkpoints')
 		query.exec_()
 		if query.lastError().isValid():
 				print 'Error in query:', query.lastError().text()
 		query.next()
 		id_ = query.value(0).toInt()[0]
+		
+		"""if id_ == 0 and not checkpointId:
+			q = "select ifnull(max(checkpoint_id), 0) from journal_checkpoints where checkpoint_typ = 3"
+			res = self.runQuery(q, db=s)
+			id_ = res[0][0]"""
 		
 		q = "select * from journal_checkpoints where checkpoint_id > %s order by checkpoint_id" % (id_, )
 		res = self.runQuery(q, db=s)
@@ -113,8 +121,9 @@ class ImportForm(FormBase):
 			if query.lastError().isValid():
 				print 'Error in query:', query.lastError().text()
 			
-		query.prepare('select ifnull(max(daten_rechnung_id), 0) from journal_daten where daten_periode = ?')
-		query.addBindValue(periodId)
+		#query.prepare('select ifnull(max(daten_rechnung_id), 0) from journal_daten where daten_periode = ?')
+		#query.addBindValue(periodId)
+		query.prepare('select ifnull(max(daten_rechnung_id), 0) from journal_daten')
 		query.exec_()
 		if query.lastError().isValid():
 				print 'Error in query:', query.lastError().text()
@@ -155,8 +164,9 @@ class ImportForm(FormBase):
 			if query.lastError().isValid():
 				print 'Error in query:', query.lastError().text()
 		
-		query.prepare('select ifnull(max(detail_id), 0) from journal_details where detail_periode = ?')
-		query.addBindValue(periodId)
+		#query.prepare('select ifnull(max(detail_id), 0) from journal_details where detail_periode = ?')
+		#query.addBindValue(periodId)
+		query.prepare('select ifnull(max(detail_id), 0) from journal_details')
 		query.exec_()
 		if query.lastError().isValid():
 				print 'Error in query:', query.lastError().text()
@@ -175,7 +185,7 @@ class ImportForm(FormBase):
 			query.bindValue(1, row[1])
 			query.bindValue(2, row[2])
 			query.bindValue(3, row[3])
-			query.bindValue(4, row[4])
+			query.bindValue(4, float(row[4]))
 			query.bindValue(5, row[5])
 			query.bindValue(6, row[6])
 			query.bindValue(7, row[7])
