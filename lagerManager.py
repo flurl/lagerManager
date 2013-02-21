@@ -47,6 +47,7 @@ class MainWindow(QtGui.QMainWindow):
 		self.connect(self.ui.action_Report_Lager_Inventur, QtCore.SIGNAL('triggered()'), self.openInventurReport)
 		self.connect(self.ui.action_Report_Verbrauch_Artikel, QtCore.SIGNAL('triggered()'), self.openArtikelVerbrauchReport)
 		self.connect(self.ui.action_Report_Umsaetze_UmsatzAufwand, QtCore.SIGNAL('triggered()'), self.openUmsatzAufwandReport)
+		self.connect(self.ui.action_Report_Umsaetze_AufwanddetailsProTag, QtCore.SIGNAL('triggered()'), self.openAufwanddetailsProTagReport)
 		self.connect(self.ui.action_Report_Einkauf_GesamteLieferungen, QtCore.SIGNAL('triggered()'), self.openGesamteLieferungenReport)
 		
 		self.connect(self.ui.action_Lieferungen_Lieferungen, QtCore.SIGNAL('triggered()'), self.openLieferungenForm)
@@ -87,6 +88,12 @@ class MainWindow(QtGui.QMainWindow):
 	def openUmsatzAufwandReport(self):
 		import reports.umsatzAufwand
 		report = reports.umsatzAufwand.UmsatzAufwandReport()
+		window = self.ui.mdiArea.addSubWindow(report)
+		window.show()
+		
+	def openAufwanddetailsProTagReport(self):
+		import reports.aufwandDetailsProTag
+		report = reports.aufwandDetailsProTag.AufwandDetailsProTagReport()
 		window = self.ui.mdiArea.addSubWindow(report)
 		window.show()
 		

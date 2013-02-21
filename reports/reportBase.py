@@ -17,8 +17,8 @@ class ReportBase(QtGui.QWidget):
 		self.ui = self.uiClass()
 		self.ui.setupUi(self)
 		
-		self.connect(self.ui.comboBox_period, QtCore.SIGNAL('currentIndexChanged(int)'), lambda: self.updatePeriod(self._getCurrentPeriodId()))
 		self.populatePeriodCB()
+		self.connect(self.ui.comboBox_period, QtCore.SIGNAL('currentIndexChanged(int)'), lambda: self.updatePeriod(self._getCurrentPeriodId()))
 
 		
 	def connectToDb(self):

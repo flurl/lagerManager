@@ -26,7 +26,7 @@
      <x>0</x>
      <y>0</y>
      <width>1047</width>
-     <height>25</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -51,6 +51,7 @@
      </property>
      <addaction name="action_Report_Umsaetze_UmsatzTag"/>
      <addaction name="action_Report_Umsaetze_UmsatzAufwand"/>
+     <addaction name="action_Report_Umsaetze_AufwanddetailsProTag"/>
     </widget>
     <widget class="QMenu" name="menu_Lagerstand">
      <property name="title">
@@ -206,6 +207,11 @@
   <action name="action_Stammdaten_Liefereinheiten">
    <property name="text">
     <string>&amp;Liefereinheiten</string>
+   </property>
+  </action>
+  <action name="action_Report_Umsaetze_AufwanddetailsProTag">
+   <property name="text">
+    <string>Aufwanddetails/Tag</string>
    </property>
   </action>
  </widget>

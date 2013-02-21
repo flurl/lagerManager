@@ -76,3 +76,7 @@ class TextReport(ReportBase):
 			output += u'</tr>'
 		output += u'</table>'
 		return output
+	
+	def updatePeriod(self, periodId):
+		self.updateData()
+		self.process()
