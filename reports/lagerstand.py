@@ -149,7 +149,7 @@ class LagerstandReport(GraphicsReport):
 		layout.addWidget(cb)
 		self.connect(cb, QtCore.SIGNAL('stateChanged(int)'), self._onCheckAllChanged)
 		
-		cb = QtGui.QCheckBox('Alle mit negativen Werten')
+		cb = QtGui.QCheckBox('Mit negativen Werten hevorheben')
 		layout.addWidget(cb)
 		self.connect(cb, QtCore.SIGNAL('stateChanged(int)'), self.onCheckAllNegativeChanged)
 		
@@ -277,7 +277,14 @@ class LagerstandReport(GraphicsReport):
 	def onCheckAllNegativeChanged(self, state):
 		for cb in self.articleCheckboxes:
 			if unicode(cb.text()) in self.negativeArticles:
-				cb.setCheckState(state)
+				if state == QtCore.Qt.Checked:
+					p = cb.palette()
+					p.setColor(QtGui.QPalette.Active, QtGui.QPalette.WindowText, QtGui.QColor('red'))
+				#cb.setCheckState(state)
+				else:
+					p = self.ui.checkBox_ignorePrefix.palette()
+					
+				cb.setPalette(p)
 			
 			
 	def _onArticleFilterChanged(self, newText):
