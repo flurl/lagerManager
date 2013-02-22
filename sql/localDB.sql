@@ -164,6 +164,7 @@ create table lieferungen(
 	datum datetime not null,
 	lie_dokid int unsigned null,
 	lie_ist_verbrauch tinyint(1) not null default 0,
+	lie_kommentar MEDIUMTEXT null,
 	foreign key lieferung_lieferant_fk (lieferant_id) references lieferanten(lieferant_id),
 	foreign key lieferung_dokument_fk (lie_dokid) references dokumente(dok_id)
 ) ENGINE=INNODB;
@@ -198,7 +199,7 @@ alter table journal_details add index journal_details_artikel_text_idx (detail_a
 alter table journal_details add index journal_details_journal_idx (detail_journal);
 alter table journal_daten add index journal_daten_rechnung_idx (daten_rechnung_id);
 alter table journal_daten add index journal_daten_tag_idx (daten_checkpoint_tag);
-alter table journal_checkpoints add index journal_checkpoints_id_idx (checkpoint_id);
+alter table journal_checkpoints add index journal_checkpointMEDIUMTEXT null,s_id_idx (checkpoint_id);
 
 
 --20120831
@@ -235,3 +236,6 @@ alter table lieferungen_details drop foreign key lieferungen_details_ibfk_2;
 --20121119
 alter table lieferungen add column lie_ist_verbrauch tinyint(1) not null default 0;
 alter table lieferanten add column lft_ist_verbraucher tinyint(1) not null default 0;
+
+--20130222
+alter table lieferungen add column lie_kommentar MEDIUMTEXT null;

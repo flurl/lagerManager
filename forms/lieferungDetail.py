@@ -139,6 +139,7 @@ class LieferungDetailForm(FormBase):
 		mapper.addMapping(self.ui.comboBox_lieferant, 1)
 		mapper.addMapping(self.ui.dateEdit_datum, 2)
 		mapper.addMapping(self.ui.lineEdit_dokId, self.model.fieldIndex('lie_dokid'))
+		mapper.addMapping(self.ui.plainTextEdit_comment, self.model.fieldIndex('lie_kommentar'))
 		mapper.setSubmitPolicy(QtGui.QDataWidgetMapper.ManualSubmit)
 		
 		
