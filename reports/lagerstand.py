@@ -278,13 +278,12 @@ class LagerstandReport(GraphicsReport):
 		for cb in self.articleCheckboxes:
 			if unicode(cb.text()) in self.negativeArticles:
 				if state == QtCore.Qt.Checked:
-					p = cb.palette()
-					p.setColor(QtGui.QPalette.Active, QtGui.QPalette.WindowText, QtGui.QColor('red'))
+					ss = "QCheckBox {color: red; background-color: #fff;}"
 				#cb.setCheckState(state)
 				else:
-					p = self.ui.checkBox_ignorePrefix.palette()
+					ss = self.ui.checkBox_ignorePrefix.styleSheet()
 					
-				cb.setPalette(p)
+				cb.setStyleSheet(ss)
 			
 			
 	def _onArticleFilterChanged(self, newText):
