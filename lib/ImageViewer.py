@@ -23,6 +23,8 @@
 ##
 #############################################################################
 
+import math
+
 from PyQt4 import QtCore, QtGui
 import lagerManager_rc
 
@@ -50,7 +52,12 @@ class ImageViewer(QtGui.QMainWindow):
 		self.createToolbar()
 
 		self.setWindowTitle("Image Viewer")
-		self.resize(500, 400)
+		#VERHÄLTNIS der din formate (zb. A4) ist 1:sqrt(2)
+		width = 600
+		height = int(round(width*math.sqrt(2)))
+		self.resize(width, height) #TODO: doesn't work yet. has to be investigated
+		self.fitToWindowAct.setChecked(True)
+		self.fitToWindow()
 
 	def open(self):
 		fileName = QtGui.QFileDialog.getOpenFileName(self, "Open File",
