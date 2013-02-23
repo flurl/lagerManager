@@ -27,6 +27,7 @@ class AufwandDetailsProTagReport(TextReport):
 		self.connect(self.ui.lineEdit_filterArticles, QtCore.SIGNAL('editingFinished ()'), self.onArticleFilterChanged)
 		self.connect(self.ui.dateEdit_from, QtCore.SIGNAL('const QDate&'), self.onArticleFilterChanged)
 		self.connect(self.ui.dateEdit_till, QtCore.SIGNAL('const QDate&'), self.onArticleFilterChanged)
+		self.connect(self.ui.checkBox_zeroBonierungen, QtCore.SIGNAL('stateChanged (int)'), self.onZeroBonierungenChanged)
 		
 	def updateData(self):
 		data = []
@@ -108,6 +109,12 @@ class AufwandDetailsProTagReport(TextReport):
 		self.ui.dateEdit_till.setDate(pEnd)
 		
 		self.onArticleFilterChanged()
+		
+	
+	def onZeroBonierungenChanged(self, state):
+		print "0bons changed"
+		self.updateData()
+		self.process()
 	
 		
 	def mkQuery(self):
@@ -116,13 +123,20 @@ class AufwandDetailsProTagReport(TextReport):
 				select checkpoint_info, detail_artikel_text, sum(detail_absmenge), sum(detail_absmenge*detail_preis)
 from journal_details, journal_daten, journal_checkpoints
 where 1=1
-and detail_istUmsatz = 0
+and {0}
 and detail_journal = daten_rechnung_id
 and daten_checkpoint_tag = checkpoint_id
-and detail_periode = %s
-group by checkpoint_info, detail_artikel_text
-order by str_to_date(checkpoint_info, '%%d.%%m.%%Y') desc, detail_artikel_text
-		""" % (self._getCurrentPeriodId(), )
+and detail_periode = {1}
+group by checkpoint_info, detail_artikel_text, detail_istUmsatz
+order by str_to_date(checkpoint_info, '%d.%m.%Y') desc, detail_artikel_text
+		""" 
 		
+		if not self.ui.checkBox_zeroBonierungen.isChecked():
+			whereClause = "detail_istUmsatz = 0"
+		else:
+			whereClause = "(detail_istUmsatz = 0 or detail_preis = 0.0)"
+		
+		query = query.format(whereClause, self._getCurrentPeriodId())
+		print query
 		return query
 	

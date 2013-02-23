@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/reports/aufwandDetailsProTag.ui'
 #
-# Created: Thu Feb 21 12:48:26 2013
+# Created: Sat Feb 23 22:58:44 2013
 #      by: PyQt4 UI code generator 4.9.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -70,6 +70,12 @@ class Ui_AufwandDetailsProTagReport(object):
         self.dateEdit_till.setObjectName(_fromUtf8("dateEdit_till"))
         self.horizontalLayout_3.addWidget(self.dateEdit_till)
         self.verticalLayout_2.addLayout(self.horizontalLayout_3)
+        self.horizontalLayout_4 = QtGui.QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(_fromUtf8("horizontalLayout_4"))
+        self.checkBox_zeroBonierungen = QtGui.QCheckBox(AufwandDetailsProTagReport)
+        self.checkBox_zeroBonierungen.setObjectName(_fromUtf8("checkBox_zeroBonierungen"))
+        self.horizontalLayout_4.addWidget(self.checkBox_zeroBonierungen)
+        self.verticalLayout_2.addLayout(self.horizontalLayout_4)
         spacerItem1 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.verticalLayout_2.addItem(spacerItem1)
         self.horizontalLayout_2.addLayout(self.verticalLayout_2)
@@ -85,5 +91,6 @@ class Ui_AufwandDetailsProTagReport(object):
         AufwandDetailsProTagReport.setWindowTitle(QtGui.QApplication.translate("AufwandDetailsProTagReport", "Report", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("AufwandDetailsProTagReport", "von", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("AufwandDetailsProTagReport", "bis", None, QtGui.QApplication.UnicodeUTF8))
+        self.checkBox_zeroBonierungen.setText(QtGui.QApplication.translate("AufwandDetailsProTagReport", "0€ Bonierungen berücksichtigen", None, QtGui.QApplication.UnicodeUTF8))
 
 from reports.reportTextViewWidget import ReportTextViewWidget
