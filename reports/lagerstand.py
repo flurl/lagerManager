@@ -122,6 +122,7 @@ class LagerstandReport(GraphicsReport):
 		
 	def setDatapoints(self, dp):
 		activeArticles = []
+		modifiers = []
 		for cb in self.articleCheckboxes:
 			if cb.isChecked():
 				#print 'active:', unicode(cb.text())
@@ -135,6 +136,11 @@ class LagerstandReport(GraphicsReport):
 						del dp[i][key]
 					except KeyError:
 						pass
+				else:
+					mod = unicode(self.articleMods[key][0].text())
+					if mod != u'':
+						dp[i][key] += float(mod)
+					
 					
 		super(LagerstandReport, self).setDatapoints(dp)
 		
@@ -142,6 +148,7 @@ class LagerstandReport(GraphicsReport):
 		
 	def populateArticleSelection(self, articles):
 		self.articleCheckboxes = []
+		self.articleMods = {}
 		widget = QtGui.QWidget()
 		layout = QtGui.QVBoxLayout()
 		
@@ -154,13 +161,31 @@ class LagerstandReport(GraphicsReport):
 		self.connect(cb, QtCore.SIGNAL('stateChanged(int)'), self.onCheckAllNegativeChanged)
 		
 		for a in sorted(list(articles)):
+			vl = QtGui.QVBoxLayout()
+			
 			cb = QtGui.QCheckBox(a)
-			layout.addWidget(cb)
+			vl.addWidget(cb, 0)
+			
+			lineEdit = QtGui.QLineEdit()
+			vl.addWidget(lineEdit, 0)
+			lineEdit.hide()
+			
+			layout.addLayout(vl)
+			
+			func = lambda i, le=lineEdit: le.show()
+			self.connect(cb, QtCore.SIGNAL('stateChanged (int)'), func)
+			
 			self.articleCheckboxes.append(cb)
+			self.articleMods[a] = (lineEdit, ) #we use a tuple, perhaps somewhen additional modifiers are needed (perhaps a start date for the modifiers or so)
 			
 		
 		widget.setLayout(layout)
 		self.ui.scrollArea_articleSelection.setWidget(widget)
+		
+		#adjust line edits width
+		#for key, mod in self.articleMods.iteritems():
+		#	le = mod[0]
+		#	le.setFixedSize(50, lineEdit.height())
 		
 		
 		
