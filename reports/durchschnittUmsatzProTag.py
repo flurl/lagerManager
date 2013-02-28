@@ -29,7 +29,7 @@ class DurchschnittUmsatzProTagReport(TextReport):
 		"""return the query"""
 		query = """
 				select date_format(str_to_date(checkpoint_info, '%d.%m.%Y'), "%W") as Wochentag, 
-sum(detail_absmenge*detail_preis)/(select count(*) from journal_checkpoints as b where date_format(str_to_date(a.checkpoint_info, '%d.%m.%Y'), "%w") = date_format(str_to_date(b.checkpoint_info, '%d.%m.%Y'), "%w") and b.checkpoint_periode = {0}) as Durchschnitt
+round(sum(detail_absmenge*detail_preis)/(select count(*) from journal_checkpoints as b where date_format(str_to_date(a.checkpoint_info, '%d.%m.%Y'), "%w") = date_format(str_to_date(b.checkpoint_info, '%d.%m.%Y'), "%w") and b.checkpoint_periode = {0}), 2) as Durchschnitt
 from journal_details, journal_daten, journal_checkpoints as a
 where 1=1
 and daten_checkpoint_tag = checkpoint_id
