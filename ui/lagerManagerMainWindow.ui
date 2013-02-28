@@ -52,6 +52,7 @@
      <addaction name="action_Report_Umsaetze_UmsatzTag"/>
      <addaction name="action_Report_Umsaetze_UmsatzAufwand"/>
      <addaction name="action_Report_Umsaetze_AufwanddetailsProTag"/>
+     <addaction name="action_Report_Umsaetze_DurchschUmsatzWochentag"/>
     </widget>
     <widget class="QMenu" name="menu_Lagerstand">
      <property name="title">
@@ -211,7 +212,12 @@
   </action>
   <action name="action_Report_Umsaetze_AufwanddetailsProTag">
    <property name="text">
-    <string>Aufwanddetails/Tag</string>
+    <string>Aufwanddetails/&amp;Tag</string>
+   </property>
+  </action>
+  <action name="action_Report_Umsaetze_DurchschUmsatzWochentag">
+   <property name="text">
+    <string>&amp;Durchsch. Umsatz/Wochentag</string>
    </property>
   </action>
  </widget>

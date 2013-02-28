@@ -48,6 +48,7 @@ class MainWindow(QtGui.QMainWindow):
 		self.connect(self.ui.action_Report_Verbrauch_Artikel, QtCore.SIGNAL('triggered()'), self.openArtikelVerbrauchReport)
 		self.connect(self.ui.action_Report_Umsaetze_UmsatzAufwand, QtCore.SIGNAL('triggered()'), self.openUmsatzAufwandReport)
 		self.connect(self.ui.action_Report_Umsaetze_AufwanddetailsProTag, QtCore.SIGNAL('triggered()'), self.openAufwanddetailsProTagReport)
+		self.connect(self.ui.action_Report_Umsaetze_DurchschUmsatzWochentag, QtCore.SIGNAL('triggered()'), self.openDurchschnittUmsatzProWochentagReport)		
 		self.connect(self.ui.action_Report_Einkauf_GesamteLieferungen, QtCore.SIGNAL('triggered()'), self.openGesamteLieferungenReport)
 		
 		self.connect(self.ui.action_Lieferungen_Lieferungen, QtCore.SIGNAL('triggered()'), self.openLieferungenForm)
@@ -94,6 +95,12 @@ class MainWindow(QtGui.QMainWindow):
 	def openAufwanddetailsProTagReport(self):
 		import reports.aufwandDetailsProTag
 		report = reports.aufwandDetailsProTag.AufwandDetailsProTagReport()
+		window = self.ui.mdiArea.addSubWindow(report)
+		window.show()
+		
+	def openDurchschnittUmsatzProWochentagReport(self):
+		import reports.durchschnittUmsatzProTag
+		report = reports.durchschnittUmsatzProTag.DurchschnittUmsatzProTagReport()
 		window = self.ui.mdiArea.addSubWindow(report)
 		window.show()
 		

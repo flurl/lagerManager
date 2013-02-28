@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/lagerManagerMainWindow.ui'
 #
-# Created: Thu Feb 14 15:30:19 2013
+# Created: Thu Feb 28 20:42:19 2013
 #      by: PyQt4 UI code generator 4.9.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -93,11 +93,14 @@ class Ui_MainWindow(object):
         self.action_Stammdaten_Liefereinheiten.setObjectName(_fromUtf8("action_Stammdaten_Liefereinheiten"))
         self.action_Report_Umsaetze_AufwanddetailsProTag = QtGui.QAction(MainWindow)
         self.action_Report_Umsaetze_AufwanddetailsProTag.setObjectName(_fromUtf8("action_Report_Umsaetze_AufwanddetailsProTag"))
+        self.action_Report_Umsaetze_DurchschUmsatzWochentag = QtGui.QAction(MainWindow)
+        self.action_Report_Umsaetze_DurchschUmsatzWochentag.setObjectName(_fromUtf8("action_Report_Umsaetze_DurchschUmsatzWochentag"))
         self.menuFile.addAction(self.actionQuit)
         self.menu_Verbrauch.addAction(self.action_Report_Verbrauch_Artikel)
         self.menu_Umsaetze.addAction(self.action_Report_Umsaetze_UmsatzTag)
         self.menu_Umsaetze.addAction(self.action_Report_Umsaetze_UmsatzAufwand)
         self.menu_Umsaetze.addAction(self.action_Report_Umsaetze_AufwanddetailsProTag)
+        self.menu_Umsaetze.addAction(self.action_Report_Umsaetze_DurchschUmsatzWochentag)
         self.menu_Lagerstand.addAction(self.action_Report_Lager_Lagerstand)
         self.menu_Lagerstand.addAction(self.action_Report_Lager_MinimumLagerstand)
         self.menu_Lagerstand.addAction(self.action_Report_Lager_Inventur)
@@ -157,5 +160,6 @@ class Ui_MainWindow(object):
         self.action_Dokumente_Dokumente.setText(QtGui.QApplication.translate("MainWindow", "&Dokumente", None, QtGui.QApplication.UnicodeUTF8))
         self.action_Stammdaten_Steuersaetze.setText(QtGui.QApplication.translate("MainWindow", "&Steuersätze", None, QtGui.QApplication.UnicodeUTF8))
         self.action_Stammdaten_Liefereinheiten.setText(QtGui.QApplication.translate("MainWindow", "&Liefereinheiten", None, QtGui.QApplication.UnicodeUTF8))
-        self.action_Report_Umsaetze_AufwanddetailsProTag.setText(QtGui.QApplication.translate("MainWindow", "Aufwanddetails/Tag", None, QtGui.QApplication.UnicodeUTF8))
+        self.action_Report_Umsaetze_AufwanddetailsProTag.setText(QtGui.QApplication.translate("MainWindow", "Aufwanddetails/&Tag", None, QtGui.QApplication.UnicodeUTF8))
+        self.action_Report_Umsaetze_DurchschUmsatzWochentag.setText(QtGui.QApplication.translate("MainWindow", "&Durchsch. Umsatz/Wochentag", None, QtGui.QApplication.UnicodeUTF8))
 
