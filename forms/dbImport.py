@@ -99,7 +99,7 @@ class ImportForm(FormBase):
 			if checkpointId is None:
 				q = "select * from journal_checkpoints where checkpoint_id > %s order by checkpoint_id" % (id_, )
 			else:
-				q = "select * from journal_checkpoints where checkpoint_id > %s and checkpoint_id < %s order by checkpoint_id" % (id_, checkpointId)
+				q = "select * from journal_checkpoints where checkpoint_id > %s and checkpoint_id <= %s order by checkpoint_id" % (id_, checkpointId)
 			print q
 			res = self.runQuery(q, db=s)
 			
