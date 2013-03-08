@@ -24,6 +24,7 @@ class InventurReport(TextReport):
 
 		query =  self.mkInvQuery()
 		results = self.db.exec_(query)
+		print query
 		while results.next():
 			name = unicode(results.value(0).toString())
 			amount = results.value(1).toFloat()[0]
@@ -52,10 +53,19 @@ class InventurReport(TextReport):
 			amount = results.value(2).toFloat()[0]
 			articles[article] = articles.get(article, 0.0) + amount
 		
+		
+		query = self.mkValueQuery()
+		results = self.db.exec_(query)
+		print query
+		print results.lastError().databaseText()
+		values = {}
+		while results.next():
+			values[unicode(results.value(0).toString())] = results.value(1).toFloat()[0]		
+		
 		i = 0
 		data = []
 		for k in sorted(articles.keys()):
-			data.append([k, articles[k]])
+			data.append([k, articles[k], values.get(k, 0.0), values.get(k, 0.0)*articles[k]])
 		
 		self.setData(data)
 		self.process()
@@ -151,3 +161,20 @@ class InventurReport(TextReport):
 		
 		return query
 	
+	
+	def mkValueQuery(self):
+		pStart, pEnd = self._getCurrentPeriodStartEnd()
+		pId = self._getCurrentPeriodId()
+		
+		query = """select artikel_bezeichnung, sum(anzahl*einkaufspreis)/sum(anzahl) 
+				from artikel_basis, lieferungen_details, lieferungen
+				where 1=1 
+				and lieferungen_details.lieferung_id = lieferungen.lieferung_id
+				and lieferungen_details.artikel_id = artikel_basis.artikel_id  
+				and lieferungen.datum between '{0}' and '{1}'
+				and artikel_basis.artikel_periode = {2}
+				group by artikel_bezeichnung"""
+				
+		query = query.format(pStart, pEnd, pId)
+		
+		return query
