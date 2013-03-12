@@ -153,6 +153,11 @@ class LieferungDetailForm(FormBase):
 			self.ui.comboBox_lieferant.insertSeparator(-1)
 			self.ui.comboBox_lieferant.setCurrentIndex(-1)
 		
+		#update the UI if this is a Verbrauch and not a lieferung
+		if self.isVerbrauch():
+			self.ui.groupBox_lieferung.setTitle(self.tr('Verbrauch'))
+			self.ui.label_lieferant.setText(self.tr('Verbraucher'))
+		
 			
 	def accept(self):
 		if self.isVerbrauch():
