@@ -1,5 +1,6 @@
 import random
 import math
+import copy
 
 from PyQt4 import QtCore, QtGui
 
@@ -24,6 +25,7 @@ class Rect(QtGui.QGraphicsRectItem):
 		self.extraData = []
 		self.dataFormatter = formatter
 		self.dataLines = 1
+		self.seriesId = None
 
 	def type(self):
 		return Rect.Type
@@ -33,6 +35,9 @@ class Rect(QtGui.QGraphicsRectItem):
 		
 	def setExtraData(self, data):
 		self.extraData = data
+		
+	def setSeriesId(self, id_):
+		self.seriesId = id_
 
 	def paint(self, painter, option, widget):
 		QtGui.QGraphicsRectItem.paint(self, painter, option, widget)
@@ -108,6 +113,18 @@ class Rect(QtGui.QGraphicsRectItem):
 		if lines < 5: lines = 5
 		rect = QtGui.QGraphicsRectItem.boundingRect(self)
 		return QtCore.QRectF(rect.x(), rect.y(), rect.width()+INFOPOPUPWIDTH*currScaling[0]+INFOPOPUPSPACING*2, rect.height()+INFOPOPUPLINEHEIGHT+INFOPOPUPSPACING*2*lines*currScaling[1])
+	
+	def contextMenuEvent(self, event):
+		print "context menu"
+		menu = QtGui.QMenu()
+		showOnlyAction = menu.addAction('Nur diese Datenreihe anzeigen')
+		showAllAction = menu.addAction('Alle Datenreihen anzeigen')
+		action = menu.exec_(QtCore.QPoint(event.screenPos()))
+		gvw = self.scene().views()[0].parent()
+		if action == showOnlyAction:
+			gvw.onlyShowSeries(self.seriesId)
+		elif action == showAllAction:
+			gvw.showAllSeries()
 
 
 
@@ -123,6 +140,7 @@ class ReportGraphicsViewWidget(QtGui.QWidget):
 		self.dataFormatter = []
 		self.markingData = []
 		self.maxXCoord = 0
+		self.dpFilter = []
 		
 		self.connect(self.ui.slider_minDP, QtCore.SIGNAL('valueChanged (int)'), self._onMinDpSliderChanged)
 		self.connect(self.ui.slider_maxDP, QtCore.SIGNAL('valueChanged (int)'), self._onMaxDpSliderChanged)
@@ -133,6 +151,8 @@ class ReportGraphicsViewWidget(QtGui.QWidget):
 		self.connect(self.ui.checkBox_highlightNegative, QtCore.SIGNAL('stateChanged (int)'), self.onHighlightNegativeChanged)
 		
 		self.connect(self.ui.checkBox_showMarkings, QtCore.SIGNAL('stateChanged(int)'), self.onShowMarkingsChanged)
+		
+		self.connect(self.ui.checkBox_filterActivated, QtCore.SIGNAL('stateChanged(int)'), self.onFilterActivatedChanged)
 	
 	def setDatapoints(self, dp = None):
 		#print 'ReportWidget:setDatapoints', dp
@@ -154,11 +174,14 @@ class ReportGraphicsViewWidget(QtGui.QWidget):
 		scene.setItemIndexMethod(QtGui.QGraphicsScene.NoIndex)
 		
 		maxY = 0
-		#for x in self.dataPoints:
-		for x in range(len(self.dataPoints)):
-			for y in self.dataPoints[x]:
-				if maxY < self.dataPoints[x][y]:
-					maxY = self.dataPoints[x][y]
+		
+		dp = self.filterDp()
+		
+		#for x in dp:
+		for x in range(len(dp)):
+			for y in dp[x]:
+				if maxY < dp[x][y]:
+					maxY = dp[x][y]
 		if maxY != 0:
 			yScalingFactor = 10**(4/maxY) #this makes reports with small y values more readable
 		else:
@@ -171,25 +194,26 @@ class ReportGraphicsViewWidget(QtGui.QWidget):
 		currScaling = self.getCurrentScaling()
 		highlightNegative = self.ui.checkBox_highlightNegative.isChecked()
 		self.maxXCoord = 0
-		for x in range(len(self.dataPoints)):
+		for x in range(len(dp)):
 			if x >= min_ and x <= max_:
-				for y in self.dataPoints[x]:
+				for y in dp[x]:
 					if y not in colors.keys():
 						colors[y] = QtGui.QColor(random.randint(0,255),	random.randint(0,255),random.randint(0,255))
 					color = colors[y]
 					pen = QtGui.QPen(color)
-					coords = (LEGENDWIDTH+x*200, (maxY - self.dataPoints[x][y])*yScalingFactor)
+					coords = (LEGENDWIDTH+x*200, (maxY - dp[x][y])*yScalingFactor)
 					if self.maxXCoord < coords[0]:
 						self.maxXCoord = coords[0]
 				
-					#print y, x, self.dataPoints[x][y]
+					#print y, x, dp[x][y]
 					rect = Rect(self.dataFormatter, QtCore.QRectF(coords[0], coords[1], 5*currScaling[0], 5*currScaling[1]))
 		
 					rect.setPen(pen)
 					rect.setBrush(color)
 					rect.setAcceptHoverEvents(True)
 					#rect.setZValue(100)
-					rect.setData([y, x, self.dataPoints[x][y]])
+					rect.setSeriesId(y)
+					rect.setData([y, x, dp[x][y]])
 					try:
 						rect.setExtraData(self.extraData[x][y])
 					except IndexError:
@@ -197,7 +221,7 @@ class ReportGraphicsViewWidget(QtGui.QWidget):
 				
 					scene.addItem(rect)
 
-					if highlightNegative and self.dataPoints[x][y]<0:
+					if highlightNegative and dp[x][y]<0:
 						triangle = QtGui.QGraphicsPolygonItem(QtGui.QPolygonF([QtCore.QPointF(coords[0], coords[1]+10*currScaling[1]),
 													QtCore.QPointF(coords[0]+5*currScaling[0], coords[1]+(10+10)*currScaling[1]),
 													QtCore.QPointF(coords[0]-5*currScaling[0], coords[1]+(10+10)*currScaling[1]),
@@ -310,5 +334,33 @@ class ReportGraphicsViewWidget(QtGui.QWidget):
 
 					scene.addItem(textItem)
 				
+	def onlyShowSeries(self, seriesId):
+		self.dpFilter.append(seriesId)
+		cb = self.ui.checkBox_filterActivated
+		cb.setChecked(QtCore.Qt.Checked)
+		cb.setEnabled(True)
+		self.plot()
 		
+	def showAllSeries(self):
+		self.dpFilter = []
+		cb = self.ui.checkBox_filterActivated
+		cb.setChecked(QtCore.Qt.Unchecked)
+		cb.setEnabled(False)
+		self.plot()
 		
+	def filterDp(self):
+		if len(self.dpFilter) > 0:
+			dp = []
+			for f in self.dpFilter:
+				for x in range(len(self.dataPoints)):
+					dp.append({})
+					for y in self.dataPoints[x]:
+						if y in f:
+							dp[x][y] = self.dataPoints[x][y]
+			return dp
+		else:
+			return copy.deepcopy(self.dataPoints)
+		
+	def onFilterActivatedChanged(self, state):
+		if len(self.dpFilter) > 0 and state == QtCore.Qt.Unchecked:
+			self.showAllSeries()

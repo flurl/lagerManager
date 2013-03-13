@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/reports/reportGraphicsView.ui'
 #
-# Created: Wed Mar 13 15:46:48 2013
+# Created: Wed Mar 13 19:15:09 2013
 #      by: PyQt4 UI code generator 4.9.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -38,6 +38,10 @@ class Ui_ReportGraphicsView(object):
         self.checkBox_showMarkings.setChecked(True)
         self.checkBox_showMarkings.setObjectName(_fromUtf8("checkBox_showMarkings"))
         self.horizontalLayout.addWidget(self.checkBox_showMarkings)
+        self.checkBox_filterActivated = QtGui.QCheckBox(ReportGraphicsView)
+        self.checkBox_filterActivated.setEnabled(False)
+        self.checkBox_filterActivated.setObjectName(_fromUtf8("checkBox_filterActivated"))
+        self.horizontalLayout.addWidget(self.checkBox_filterActivated)
         self.slider_minDP = QtGui.QSlider(ReportGraphicsView)
         self.slider_minDP.setOrientation(QtCore.Qt.Horizontal)
         self.slider_minDP.setObjectName(_fromUtf8("slider_minDP"))
@@ -73,4 +77,5 @@ class Ui_ReportGraphicsView(object):
         self.pushButton_zoomOut.setText(QtGui.QApplication.translate("ReportGraphicsView", "-", None, QtGui.QApplication.UnicodeUTF8))
         self.checkBox_highlightNegative.setText(QtGui.QApplication.translate("ReportGraphicsView", "Negative markieren", None, QtGui.QApplication.UnicodeUTF8))
         self.checkBox_showMarkings.setText(QtGui.QApplication.translate("ReportGraphicsView", "Beschriftung anzeigen", None, QtGui.QApplication.UnicodeUTF8))
+        self.checkBox_filterActivated.setText(QtGui.QApplication.translate("ReportGraphicsView", "Filter aktiv", None, QtGui.QApplication.UnicodeUTF8))
 

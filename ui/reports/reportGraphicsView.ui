@@ -53,6 +53,16 @@
         </widget>
        </item>
        <item>
+        <widget class="QCheckBox" name="checkBox_filterActivated">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>Filter aktiv</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QSlider" name="slider_minDP">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
