@@ -21,14 +21,16 @@ class UmsatzAufwandReport(GraphicsReport):
 		
 		self.setDataFormatter(formatter)
 		self.updateData()
-		self.plot()
+		#self.plot()
 				
 	def updateData(self):
 		dp = []
 		extraData = []
+		markingData = []
 		self.days = []
 		
 		query =  self.mkUmsatzQuery()
+		print query
 		results = self.db.exec_(query)
 
 		while results.next():
@@ -38,12 +40,15 @@ class UmsatzAufwandReport(GraphicsReport):
 			aufwand = results.value(3).toFloat()[0]
 			dp.append({'ratio': ratio})
 			extraData.append({'ratio': [revenue, aufwand]})
+			markingData.append(date)
 			self.days.append(date)
 
 		#print dp
 		self.dp = copy.deepcopy(dp)
-		self.setDatapoints(dp)
+		self.setDatapoints(copy.deepcopy(dp))
+		self.setMarkingData(markingData)
 		self.setExtraData(extraData)
+		self.plot()
 		
 			
 		
@@ -55,9 +60,15 @@ from journal_details, journal_daten, journal_checkpoints
 where 1=1
 and detail_journal = daten_rechnung_id
 and daten_checkpoint_tag = checkpoint_id
+and checkpoint_periode = {period_id}
+and daten_periode = {period_id}
+and detail_periode = {period_id}
 group by checkpoint_info
 order by 1
 			"""
+			
+		query = query.format(period_id=self._getCurrentPeriodId())
+		
 		return query
 		
 		

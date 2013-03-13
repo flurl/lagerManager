@@ -1,4 +1,5 @@
 import random
+import math
 
 from PyQt4 import QtCore, QtGui
 
@@ -120,6 +121,8 @@ class ReportGraphicsViewWidget(QtGui.QWidget):
 		self.dataPoints = []
 		self.extraData = []
 		self.dataFormatter = []
+		self.markingData = []
+		self.maxXCoord = 0
 		
 		self.connect(self.ui.slider_minDP, QtCore.SIGNAL('valueChanged (int)'), self._onMinDpSliderChanged)
 		self.connect(self.ui.slider_maxDP, QtCore.SIGNAL('valueChanged (int)'), self._onMaxDpSliderChanged)
@@ -128,6 +131,8 @@ class ReportGraphicsViewWidget(QtGui.QWidget):
 		self.connect(self.ui.pushButton_zoomOut, QtCore.SIGNAL('clicked()'), self.zoomOut)
 		
 		self.connect(self.ui.checkBox_highlightNegative, QtCore.SIGNAL('stateChanged (int)'), self.onHighlightNegativeChanged)
+		
+		self.connect(self.ui.checkBox_showMarkings, QtCore.SIGNAL('stateChanged(int)'), self.onShowMarkingsChanged)
 	
 	def setDatapoints(self, dp = None):
 		#print 'ReportWidget:setDatapoints', dp
@@ -165,6 +170,7 @@ class ReportGraphicsViewWidget(QtGui.QWidget):
 		max_ = self.ui.slider_maxDP.value()
 		currScaling = self.getCurrentScaling()
 		highlightNegative = self.ui.checkBox_highlightNegative.isChecked()
+		self.maxXCoord = 0
 		for x in range(len(self.dataPoints)):
 			if x >= min_ and x <= max_:
 				for y in self.dataPoints[x]:
@@ -173,6 +179,8 @@ class ReportGraphicsViewWidget(QtGui.QWidget):
 					color = colors[y]
 					pen = QtGui.QPen(color)
 					coords = (LEGENDWIDTH+x*200, (maxY - self.dataPoints[x][y])*yScalingFactor)
+					if self.maxXCoord < coords[0]:
+						self.maxXCoord = coords[0]
 				
 					#print y, x, self.dataPoints[x][y]
 					rect = Rect(self.dataFormatter, QtCore.QRectF(coords[0], coords[1], 5*currScaling[0], 5*currScaling[1]))
@@ -219,6 +227,8 @@ class ReportGraphicsViewWidget(QtGui.QWidget):
 		gv.setRenderHint(QtGui.QPainter.Antialiasing)
 		gv.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)
 		gv.setResizeAnchor(QtGui.QGraphicsView.AnchorViewCenter)
+		
+		self.updateMarking()
 	
 	
 	def getCurrentScaling(self):
@@ -235,6 +245,9 @@ class ReportGraphicsViewWidget(QtGui.QWidget):
 	
 	def setExtraData(self, data):
 		self.extraData = data
+		
+	def setMarkingData(self, markingData):
+		self.markingData = markingData
 
 	def zoomIn(self):
 		self.ui.graphicsView.scale(ZOOMINFACTOR, ZOOMINFACTOR)
@@ -258,3 +271,44 @@ class ReportGraphicsViewWidget(QtGui.QWidget):
 		
 	def onHighlightNegativeChanged(self, state):
 		self.plot()
+		
+	def onShowMarkingsChanged(self, state):
+		self.plot()
+		
+	def updateMarking(self):
+		if self.ui.checkBox_showMarkings.isChecked():
+			scene = self.ui.graphicsView.scene()
+			
+			currScaling = self.getCurrentScaling()
+			textGapFactor = math.floor(currScaling[0]/12)+1
+			coords = (0,scene.height())
+			
+			#width = scene.width()
+			width = self.maxXCoord
+			
+			#rect = QtGui.QGraphicsRectItem(QtCore.QRectF(coords[0]+LEGENDWIDTH, coords[1], width-(LEGENDWIDTH), 50*currScaling[1]))
+			
+			color = QtGui.QColor(0xdd,	0xdd, 0xdd)
+			pen = QtGui.QPen(color)
+			#scene.addItem(rect)
+			
+			for x in range(len(self.dataPoints)):
+				if x%textGapFactor == 0:
+					dpCoords = (LEGENDWIDTH+x*200,coords[1])
+					scene.addLine(dpCoords[0], dpCoords[1]-150*currScaling[1], dpCoords[0], dpCoords[1]-100*currScaling[1], pen)
+					textItem = QtGui.QGraphicsTextItem()
+					textItem.setPos(dpCoords[0]-15*currScaling[0],dpCoords[1])
+					
+					try:
+						text = self.markingData[x]
+					except IndexError:
+						text = x
+					
+					textItem.setPlainText(unicode(text))
+					textItem.rotate(270)
+					textItem.setScale(currScaling[0])
+
+					scene.addItem(textItem)
+				
+		
+		

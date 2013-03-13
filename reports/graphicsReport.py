@@ -18,6 +18,9 @@ class GraphicsReport(ReportBase):
 	def setExtraData(self, extraData=None):
 		self.ui.graphicsView.setExtraData(extraData)
 		
+	def setMarkingData(self, markingData=[]):
+		self.ui.graphicsView.setMarkingData(markingData)
+		
 	def plot(self):
 		self.ui.graphicsView.plot()
 		

@@ -38,6 +38,7 @@ class LagerstandReport(GraphicsReport):
 		self.negativeArticles = Set()
 		ignorePrefix = self.ui.checkBox_ignorePrefix.isChecked()
 		days = []
+		markingData = []
 		for i in range(370):
 			days.append({})
 		
@@ -102,6 +103,7 @@ class LagerstandReport(GraphicsReport):
 		for i in range(len(days)):
 			dp[i] = {}
 			articles = days[i]
+			markingData.append((datetime.datetime(int(self.getCurrPeriode()), 1, 1) + datetime.timedelta(int(i) - 1)).strftime('%d.%m.%Y'))
 			for article in allArticles:
 				if i == 0:
 					dp[i][article] = articles.get(article, 0.0)
@@ -116,6 +118,7 @@ class LagerstandReport(GraphicsReport):
 		
 		self.populateArticleSelection(allArticles)
 		self.setDatapoints(dp)
+		self.setMarkingData(markingData)
 		self.plot()
 		
 		
