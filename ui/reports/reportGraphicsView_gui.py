@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/reports/reportGraphicsView.ui'
 #
-# Created: Wed Mar 13 19:15:09 2013
+# Created: Thu Mar 14 17:44:14 2013
 #      by: PyQt4 UI code generator 4.9.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -59,7 +59,7 @@ class Ui_ReportGraphicsView(object):
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
         self.verticalLayout.addLayout(self.horizontalLayout)
-        self.graphicsView = QtGui.QGraphicsView(ReportGraphicsView)
+        self.graphicsView = LMGraphicsView(ReportGraphicsView)
         self.graphicsView.setObjectName(_fromUtf8("graphicsView"))
         self.verticalLayout.addWidget(self.graphicsView)
         self.gridLayout.addLayout(self.verticalLayout, 0, 0, 1, 1)
@@ -79,3 +79,4 @@ class Ui_ReportGraphicsView(object):
         self.checkBox_showMarkings.setText(QtGui.QApplication.translate("ReportGraphicsView", "Beschriftung anzeigen", None, QtGui.QApplication.UnicodeUTF8))
         self.checkBox_filterActivated.setText(QtGui.QApplication.translate("ReportGraphicsView", "Filter aktiv", None, QtGui.QApplication.UnicodeUTF8))
 
+from reports.LMGraphicsView import LMGraphicsView

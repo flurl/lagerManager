@@ -98,12 +98,19 @@
       </layout>
      </item>
      <item>
-      <widget class="QGraphicsView" name="graphicsView"/>
+      <widget class="LMGraphicsView" name="graphicsView"/>
      </item>
     </layout>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>LMGraphicsView</class>
+   <extends>QGraphicsView</extends>
+   <header>reports.LMGraphicsView</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>

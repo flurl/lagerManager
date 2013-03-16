@@ -115,7 +115,6 @@ class Rect(QtGui.QGraphicsRectItem):
 		return QtCore.QRectF(rect.x(), rect.y(), rect.width()+INFOPOPUPWIDTH*currScaling[0]+INFOPOPUPSPACING*2, rect.height()+INFOPOPUPLINEHEIGHT+INFOPOPUPSPACING*2*lines*currScaling[1])
 	
 	def contextMenuEvent(self, event):
-		print "context menu"
 		menu = QtGui.QMenu()
 		showOnlyAction = menu.addAction('Nur diese Datenreihe anzeigen')
 		showAllAction = menu.addAction('Alle Datenreihen anzeigen')
@@ -125,6 +124,7 @@ class Rect(QtGui.QGraphicsRectItem):
 			gvw.onlyShowSeries(self.seriesId)
 		elif action == showAllAction:
 			gvw.showAllSeries()
+			
 
 
 
@@ -249,8 +249,8 @@ class ReportGraphicsViewWidget(QtGui.QWidget):
 		gv.setScene(scene)
 		gv.setCacheMode(QtGui.QGraphicsView.CacheBackground)
 		gv.setRenderHint(QtGui.QPainter.Antialiasing)
-		gv.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)
-		gv.setResizeAnchor(QtGui.QGraphicsView.AnchorViewCenter)
+		#gv.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)
+		#gv.setResizeAnchor(QtGui.QGraphicsView.AnchorViewCenter)
 		
 		self.updateMarking()
 	
