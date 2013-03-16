@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 from PyQt4 import QtCore, QtGui, QtSql
 
-#from ui.reports.lagerstandReport_gui import Ui_Lagerstand
-#from graphicsReport import GraphicsReport
-
+from CONSTANTS import *
 
 class LMGraphicsView(QtGui.QGraphicsView):
 	
@@ -156,13 +154,12 @@ class LMGraphicsView(QtGui.QGraphicsView):
 			screenCenter = self.GetCenter() #self.CurrentCenterPoint; //(visRect.center());
 
 			#Scale the view ie. do the zoom
-			scaleFactor = 1.15 #How fast we zoom
 			if event.delta() > 0:
 				#Zoom in
-				self.scale(scaleFactor, scaleFactor)
+				self.scale(ZOOMINFACTOR, ZOOMINFACTOR)
 			else:
 				#Zooming out
-				self.scale(1.0 / scaleFactor, 1.0 / scaleFactor)
+				self.scale(ZOOMOUTFACTOR, ZOOMOUTFACTOR)
 
 			#Get the position after scaling, in scene coords
 			pointAfterScale = QtCore.QPointF(self.mapToScene(event.pos()))
