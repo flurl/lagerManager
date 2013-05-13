@@ -28,6 +28,11 @@ class LieferungForm(FormBase):
 	uiClass = Ui_LieferungForm
 	ident = 'lieferung'
 	
+	def __init__(self, parent):
+		super(LieferungForm, self).__init__(parent)
+		self.updateMasterFilter()
+		self.updateDetailFilter()
+	
 	def setupUi(self):
 		super(LieferungForm, self).setupUi()
 		
@@ -98,7 +103,7 @@ class LieferungForm(FormBase):
 		self.detailTableView.horizontalHeader().setStretchLastSection(True)
 		self.detailTableView.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
 		
-		self.updateDetailFilter()
+		
 		
 
 	def setupSignals(self):
@@ -110,6 +115,8 @@ class LieferungForm(FormBase):
 		self.connect(self.ui.pushButton_delete, QtCore.SIGNAL('clicked()'), self.deleteRecord)
 		self.connect(self.masterTableView.selectionModel(), QtCore.SIGNAL('selectionChanged(const QItemSelection&,const QItemSelection&)'), self._onMasterTableViewSelectionChanged)
 		self.connect(self.masterTableView.tv, QtCore.SIGNAL('doubleClicked (const QModelIndex&)'), self._onMasterTableViewDoubleClicked)
+		
+		
 		
 	def _onMasterTableViewSelectionChanged(self, newSelection, oldSelection):
 		self.updateDetailFilter()
@@ -172,7 +179,6 @@ class LieferungForm(FormBase):
 		
 		
 	def updateMasterFilter(self):
-		print 'updateMasterFilter'
 		query = QtSql.QSqlQuery()
 		query.prepare("""select periode_start, periode_ende from perioden where periode_id = ?""")
 		query.addBindValue(self.getCurrentPeriodId())
