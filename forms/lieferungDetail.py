@@ -246,6 +246,7 @@ class LieferungDetailForm(FormBase):
 		self.db.commit()
 		self.detailModel.select()
 		self.detailTableView.resizeColumnsToContents()
+		self.ui.tableView_details.scrollToBottom()
 		
 		
 	def deleteDetail(self):
