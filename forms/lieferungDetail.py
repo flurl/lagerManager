@@ -12,6 +12,7 @@ from CONSTANTS import *
 
 from lib.NullDelegate import NullDelegate
 from lib.ImageViewer import ImageViewer
+from lib.ClickableLabel import ClickableLabel
 
 
 #class DateEditDelegate(QtGui.QItemDelegate):
@@ -36,7 +37,7 @@ class LieferungDetailForm(FormBase):
 	
 	def __init__(self, parent):
 		FormBase.__init__(self, parent)
-		self.docImage = None
+		self.docImages = []
 		self.documentChanged = False
 		self.newRecord = False
 		
@@ -68,9 +69,9 @@ class LieferungDetailForm(FormBase):
 		#super(LieferungDetailForm, self).setupSignals()
 		self.connect(self.ui.pushButton_newDetail, QtCore.SIGNAL('clicked()'), self.addDetail)
 		self.connect(self.ui.pushButton_deleteDetail, QtCore.SIGNAL('clicked()'), self.deleteDetail)
-		self.connect(self.ui.pushButton_fileChooser, QtCore.SIGNAL('clicked()'), self.chooseFile)
-		self.connect(self.ui.lineEdit_dokId, QtCore.SIGNAL('textChanged (const QString&)'), self.displayImageFromDb)
-		self.connect(self.ui.label_document, QtCore.SIGNAL('clicked()'), self.showImage)
+		self.connect(self.ui.pushButton_addDocument, QtCore.SIGNAL('clicked()'), self.chooseFile)
+		#self.connect(self.ui.lineEdit_dokId, QtCore.SIGNAL('textChanged (const QString&)'), self.displayImageFromDb)
+		#self.connect(self.ui.label_document, QtCore.SIGNAL('clicked()'), self.showImage)
 		
 		
 	def createContextMenu(self):
@@ -138,7 +139,7 @@ class LieferungDetailForm(FormBase):
 		mapper.addMapping(self.ui.lineEdit_id, 0)
 		mapper.addMapping(self.ui.comboBox_lieferant, 1)
 		mapper.addMapping(self.ui.dateEdit_datum, 2)
-		mapper.addMapping(self.ui.lineEdit_dokId, self.model.fieldIndex('lie_dokid'))
+		#mapper.addMapping(self.ui.lineEdit_dokId, self.model.fieldIndex('lie_dokid'))
 		mapper.addMapping(self.ui.plainTextEdit_comment, self.model.fieldIndex('lie_kommentar'))
 		mapper.setSubmitPolicy(QtGui.QDataWidgetMapper.ManualSubmit)
 		
@@ -148,6 +149,7 @@ class LieferungDetailForm(FormBase):
 		
 		self.updateDetailFilter()
 		self.detailTableView.resizeColumnsToContents()
+		self.setupDocuments()
 		
 		if self.newRecord:
 			self.ui.comboBox_lieferant.insertSeparator(-1)
@@ -189,7 +191,7 @@ class LieferungDetailForm(FormBase):
 			if answer == QtGui.QMessageBox.No:
 				return False
 				
-		self.saveDocument()
+		self.saveDocuments()
 		self.mapper.submit()
 		self.model.submitAll()
 		super(LieferungDetailForm, self).accept()
@@ -291,9 +293,10 @@ class LieferungDetailForm(FormBase):
 		
 	def chooseFile(self):
 		fileName = QtGui.QFileDialog.getOpenFileName(self, self.tr("Open Image"), "", self.tr("Image Files (*.png *.jpg *.bmp)"))
-		image = QtGui.QImage(fileName)
+		"""image = QtGui.QImage(fileName)
 		pic = QtGui.QPixmap.fromImage(image)
 		self.ui.label_document.setPixmap(self.scalePixmap(pic)) #Put image into QLabel object
+		"""
 		
 		#load image to bytearray
 		ba = QtCore.QByteArray()
@@ -301,89 +304,130 @@ class LieferungDetailForm(FormBase):
 		if f.open(QtCore.QIODevice.ReadOnly):
 			ba = f.readAll()
 			f.close()
-			self.docImage = ba
+			#self.docImage = ba
+			
+			#if an .txt with the same name exists, use that as source for the text data
+			try:
+				fileName, ext = os.path.splitext(str(fileName))
+				with codecs.open(fileName+'.txt', 'r', 'utf-8') as f:
+					ocr = f.read()
+			except IOError as e:
+				print 'No text file found'
+			
+			doc = {'id': None, 'status': 'new', 'byteArray': ba, 'ocr': ocr}
+			self.docImages.append(doc)
+			self.addDocumentLayout(doc)
 			self.documentChanged = True
 			
-		#if an .txt with the same name exists, use that as source for the text data
-		try:
-			fileName, ext = os.path.splitext(str(fileName))
-			with codecs.open(fileName+'.txt', 'r', 'utf-8') as f:
-				self.ui.plainTextEdit_ocr.setPlainText(f.read())
-		except IOError as e:
-			print 'No text file found'
 			
+	def setupDocuments(self):
+		query = QtSql.QSqlQuery()
+		query.prepare('select dok_id from dokumente where dok_lieferung_id = ?')
+		query.addBindValue(self.getCurrentLieferungId())
+		query.exec_()
+		if query.lastError().isValid():
+			print 'Error while selecting documents'
+		else:
+			while query.next():
+				dokId, ok = query.value(0).toInt()
+				if ok and dokId > 0:
+					self.displayImageFromDb(dokId)
 
-	def saveDocument(self):
-		if self.documentChanged and self.docImage is not None:
-			#Writing the image into table
-			self.beginTransaction()
-			query = QtSql.QSqlQuery()
-			query.prepare('insert into dokumente (dok_dotid, dok_bezeichnung, dok_data, dok_ocr) values (?, ?, ?, ?)')
-			query.addBindValue(EINGANGSRECHNUNGID)
-			query.addBindValue('Lieferung-%s'%(self.getCurrentLieferungId(), ))
-			query.addBindValue(self.docImage)
-			query.addBindValue(self.ui.plainTextEdit_ocr.toPlainText())
-			query.exec_()
-			if query.lastError().isValid():
-				print 'Error inserting image:', query.lastError().text()
-				self.rollback()
-			else:
-				self.commit()
-				self.ui.lineEdit_dokId.setText(query.lastInsertId().toString())
-		
-		#update the document in db if only the text changed
-		elif self.ui.plainTextEdit_ocr.document().isModified() and not self.ui.lineEdit_dokId.text().isEmpty():
-			self.beginTransaction()
-			query = QtSql.QSqlQuery()
-			query.prepare('update dokumente set dok_ocr = ? where dok_id = ?')
-			query.addBindValue(self.ui.plainTextEdit_ocr.toPlainText())
-			query.addBindValue(self.ui.lineEdit_dokId.text().toInt()[0])
-			query.exec_()
-			if query.lastError().isValid():
-				print 'Error updating document:', query.lastError().text()
-				self.rollback()
-			else:
-				self.commit()
+	def saveDocuments(self):
+		if self.documentChanged:
+			for imgStruct in self.docImages:
+				if imgStruct['status'] == 'new':
+					#Writing the image into table
+					self.beginTransaction()
+					query = QtSql.QSqlQuery()
+					query.prepare('insert into dokumente (dok_dotid, dok_bezeichnung, dok_data, dok_ocr, dok_lieferung_id) values (?, ?, ?, ?, ?)')
+					query.addBindValue(EINGANGSRECHNUNGID)
+					query.addBindValue('Lieferung-%s'%(self.getCurrentLieferungId(), ))
+					query.addBindValue(imgStruct['byteArray'])
+					query.addBindValue(imgStruct['ocr'])
+					query.addBindValue(self.getCurrentLieferungId())
+					query.exec_()
+					if query.lastError().isValid():
+						print 'Error inserting image:', query.lastError().text()
+						self.rollback()
+					else:
+						self.commit()
+						#self.ui.lineEdit_dokId.setText(query.lastInsertId().toString())
+			
+				#update the document in db if only the text changed
+				elif imgStruct['status'] == 'removed':
+					self.beginTransaction()
+					query = QtSql.QSqlQuery()
+					query.prepare('update dokumente set dok_lieferung_id = null where dok_id = ?')
+					query.addBindValue(imgStruct['id'])
+					query.exec_()
+					if query.lastError().isValid():
+						print 'Error removing document:', query.lastError().text()
+						self.rollback()
+					else:
+						self.commit()
+				
+				
+	def removeDocument(self, doc, layout):
+		doc['status'] = 'removed'
+		for i in range(layout.count()): layout.itemAt(i).widget().close()
+		self.documentChanged = True
 				
 	
-	def displayImageFromDb(self):
-		dokId = self.ui.lineEdit_dokId.text()
-		dokId, ok = dokId.toInt()
-		if ok and dokId > 0:
-			query = QtSql.QSqlQuery()
-			query.prepare('select dok_data, dok_ocr from dokumente where dok_id = ?')
-			query.addBindValue(dokId)
-			query.exec_()
-			query.next()
-			if query.lastError().isValid():
-				print 'Error retrieving document:', query.lastError().text()
-			else:
-				ba = query.value(0).toByteArray()
-				self.docImage = ba
-				pic = QtGui.QPixmap()
-				pic.loadFromData(ba)
-				#Show the image into a QLabel object
-				self.ui.label_document.setPixmap(self.scalePixmap(pic))
-				
-				#set the text
-				text = query.value(1).toString()
-				self.ui.plainTextEdit_ocr.setPlainText(text)
-				
+	def displayImageFromDb(self, dokId):
+		query = QtSql.QSqlQuery()
+		query.prepare('select dok_data, dok_ocr from dokumente where dok_id = ?')
+		query.addBindValue(dokId)
+		query.exec_()
+		query.next()
+		if query.lastError().isValid():
+			print 'Error retrieving document:', query.lastError().text()
+		else:
+			doc = {'id': dokId, 'status': 'unmodified', 'ocr': query.value(1).toString(), 'byteArray': query.value(0).toByteArray()}
+			self.docImages.append(doc)
+			self.addDocumentLayout(doc)
+			
+			
+	def addDocumentLayout(self, doc):
+		docLayout = self.ui.layout_documents
+		
+		layout = QtGui.QVBoxLayout()
+		
+		label = ClickableLabel()
+		
+		#ba = query.value(0).toByteArray()
+		ba = doc['byteArray']
+		pic = QtGui.QPixmap()
+		pic.loadFromData(ba)
+		
+		#Show the image into a QLabel object
+		label.setPixmap(self.scalePixmap(pic))
+		self.connect(label, QtCore.SIGNAL('clicked()'), lambda ba=ba: self.showImage(ba))
+		
+		delBtn = QtGui.QPushButton(u'löschen')
+		self.connect(delBtn, QtCore.SIGNAL('clicked()'), lambda doc=doc, l=layout: self.removeDocument(doc, layout))
+		
+		layout.addWidget(label)
+		layout.addWidget(delBtn)
+		
+		docLayout.addLayout(layout)
+		
+		#set the text
+		#text = query.value(1).toString()
+		#self.ui.plainTextEdit_ocr.setPlainText(text)
 			
 	def scalePixmap(self, pm):
 		return pm.scaled(200, 200, QtCore.Qt.KeepAspectRatio, QtCore.Qt.FastTransformation)
 
-	def showImage(self):
-		if self.docImage is not None:
+	def showImage(self, byteArray):
+		if byteArray is not None:
 			pic = QtGui.QPixmap()
-			pic.loadFromData(self.docImage)
+			pic.loadFromData(byteArray)
 			viewer = ImageViewer(self)
 			viewer.setPixmap(pic)
 			viewer.show()
 	
 	def lieferungForDayExists(self):
-		
-		
 		query = QtSql.QSqlQuery()
 		query.prepare('select count(*) from lieferungen where lieferant_id = ? and date(datum) = date(?) and lieferung_id != ?')
 		query.addBindValue(self.getCurrentLieferantId())

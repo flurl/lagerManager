@@ -49,60 +49,18 @@
         <item row="7" column="0">
          <widget class="QLabel" name="label_4">
           <property name="text">
-           <string>Dokument</string>
+           <string>Dokumente</string>
           </property>
          </widget>
         </item>
         <item row="7" column="1">
-         <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <layout class="QHBoxLayout" name="layout_documents">
           <item>
-           <widget class="QLineEdit" name="lineEdit_dokId">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_fileChooser">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
+           <widget class="QPushButton" name="pushButton_addDocument">
             <property name="text">
-             <string>...</string>
+             <string>+</string>
             </property>
            </widget>
-          </item>
-          <item>
-           <widget class="ClickableLabel" name="label_document">
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPlainTextEdit" name="plainTextEdit_ocr"/>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
           </item>
          </layout>
         </item>
@@ -201,13 +159,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>ClickableLabel</class>
-   <extends>QLabel</extends>
-   <header>lib.ClickableLabel</header>
-  </customwidget>
- </customwidgets>
  <resources>
   <include location="../../lagerManager.qrc"/>
  </resources>

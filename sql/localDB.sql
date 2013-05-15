@@ -141,16 +141,6 @@ create table dokumenttypen (
 ) ENGINE=INNODB;
 
 
-create table dokumente (
-	dok_id integer unsigned auto_increment primary key not null,
-	dok_dotid int unsigned not null,
-	dok_bezeichnung varchar(255) not null,
-	dok_ocr MEDIUMTEXT null,
-	dok_data longblob not null,
-	dok_datum datetime not null,
-	foreign key dokumente_dokumenttyp_fk (dok_dotid) references dokumenttypen(dot_id)
-) ENGINE=INNODB;
-
 
 create table lieferanten(
 	lieferant_id integer auto_increment primary key not null,
@@ -159,14 +149,12 @@ create table lieferanten(
 ) ENGINE=INNODB;
 
 create table lieferungen(
-	lieferung_id integer auto_increment primary key not null,
+	lieferung_id integer unsigned auto_increment primary key not null,
 	lieferant_id int not null,
 	datum datetime not null,
-	lie_dokid int unsigned null,
 	lie_ist_verbrauch tinyint(1) not null default 0,
 	lie_kommentar MEDIUMTEXT null,
-	foreign key lieferung_lieferant_fk (lieferant_id) references lieferanten(lieferant_id),
-	foreign key lieferung_dokument_fk (lie_dokid) references dokumente(dok_id)
+	foreign key lieferung_lieferant_fk (lieferant_id) references lieferanten(lieferant_id)
 ) ENGINE=INNODB;
 
 create table lieferungen_details(
@@ -176,6 +164,19 @@ create table lieferungen_details(
 	anzahl float not null,
 	einkaufspreis float not null,
 	foreign key lieferung_detail_lieferung_fk (lieferung_id) references lieferungen(lieferung_id)
+) ENGINE=INNODB;
+
+
+create table dokumente (
+	dok_id integer unsigned auto_increment primary key not null,
+	dok_dotid int unsigned not null,
+	dok_bezeichnung varchar(255) not null,
+	dok_ocr MEDIUMTEXT null,
+	dok_data longblob not null,
+	dok_datum datetime not null,
+	dok_lieferung_id integer null,
+	foreign key dokumente_dokumenttyp_fk (dok_dotid) references dokumenttypen(dot_id),
+	foreign key dokumente_lieferung_fk (dok_lieferung_id) references lieferungen(lieferung_id)
 ) ENGINE=INNODB;
 
 
@@ -239,3 +240,12 @@ alter table lieferanten add column lft_ist_verbraucher tinyint(1) not null defau
 
 --20130222
 alter table lieferungen add column lie_kommentar MEDIUMTEXT null;
+
+--20130513
+alter table dokumente add column dok_lieferung_id integer null;
+alter table dokumente add foreign key dokumente_lieferung_fk (dok_lieferung_id) references lieferungen(lieferung_id);
+update dokumente set dok_lieferung_id = (select lieferung_id from lieferungen where lie_dokid = dok_id);
+alter table lieferungen drop foreign key lieferungen_ibfk_2;
+alter table lieferungen drop column lie_dokid;
+
+

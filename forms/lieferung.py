@@ -63,9 +63,9 @@ class LieferungForm(FormBase):
 		self.masterModel.setHeaderData(0, QtCore.Qt.Horizontal, 'ID')
 		self.masterModel.setHeaderData(1, QtCore.Qt.Horizontal, 'Lieferant')
 		self.masterModel.setHeaderData(2, QtCore.Qt.Horizontal, 'Datum')
-		self.masterModel.setHeaderData(3, QtCore.Qt.Horizontal, 'Dokument')
-		self.masterModel.setHeaderData(4, QtCore.Qt.Horizontal, 'Ist Verbrauch')
-		self.masterModel.setHeaderData(5, QtCore.Qt.Horizontal, 'Kommentar')
+		#self.masterModel.setHeaderData(3, QtCore.Qt.Horizontal, 'Dokument')
+		self.masterModel.setHeaderData(3, QtCore.Qt.Horizontal, 'Ist Verbrauch')
+		self.masterModel.setHeaderData(4, QtCore.Qt.Horizontal, 'Kommentar')
 		
 		# table view
 		self.masterTableView = self.ui.tableView_lieferungen
