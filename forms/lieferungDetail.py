@@ -308,6 +308,7 @@ class LieferungDetailForm(FormBase):
 			
 			#if an .txt with the same name exists, use that as source for the text data
 			try:
+				ocr = ''
 				fileName, ext = os.path.splitext(str(fileName))
 				with codecs.open(fileName+'.txt', 'r', 'utf-8') as f:
 					ocr = f.read()
