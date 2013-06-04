@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/forms/lieferungDetailForm.ui'
 #
-# Created: Tue May 14 11:03:44 2013
+# Created: Fri May 17 22:18:13 2013
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -96,6 +96,9 @@ class Ui_LieferungDetailForm(object):
         self.pushButton_deleteDetail = QtGui.QPushButton(self.groupBox_2)
         self.pushButton_deleteDetail.setObjectName(_fromUtf8("pushButton_deleteDetail"))
         self.horizontalLayout.addWidget(self.pushButton_deleteDetail)
+        self.pushButton_selectArticles = QtGui.QPushButton(self.groupBox_2)
+        self.pushButton_selectArticles.setObjectName(_fromUtf8("pushButton_selectArticles"))
+        self.horizontalLayout.addWidget(self.pushButton_selectArticles)
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
         self.verticalLayout.addLayout(self.horizontalLayout)
@@ -121,5 +124,6 @@ class Ui_LieferungDetailForm(object):
         self.groupBox_2.setTitle(_translate("LieferungDetailForm", "Details", None))
         self.pushButton_newDetail.setText(_translate("LieferungDetailForm", "&Hinzufügen", None))
         self.pushButton_deleteDetail.setText(_translate("LieferungDetailForm", "&Löschen", None))
+        self.pushButton_selectArticles.setText(_translate("LieferungDetailForm", "&Artikelauswahl", None))
 
 import lagerManager_rc

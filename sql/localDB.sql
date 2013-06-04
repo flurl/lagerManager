@@ -94,6 +94,22 @@ CREATE TABLE artikel_basis(
 ) ENGINE=INNODB;
 
 
+CREATE TABLE artikel_gruppen(
+	artikel_gruppe_id int NOT NULL,
+	artikel_gruppe_parent_id int NULL,
+	artikel_gruppe_name varchar(50) NOT NULL,
+	artikel_gruppe_standard_gangfolge int NOT NULL,
+	artikel_gruppe_bontyp int NULL,
+	artikel_gruppe_istUmsatz bit NOT NULL,
+	artikel_gruppe_zeigeAufRechnung bit NOT NULL,
+	artikel_gruppe_druckeRezeptur bit NOT NULL,
+	artikel_gruppe_keinStorno bit NOT NULL,
+	artikel_gruppe_periode int not null,
+	index (artikel_gruppe_id),
+	foreign key artikel_gruppe_periode_fk (artikel_gruppe_periode) references perioden(periode_id)
+) ENGINE=INNODB;
+
+
 CREATE TABLE lager_artikel(
 	lager_artikel_lagerartikel int NOT NULL,
 	lager_artikel_lieferant int NOT NULL,
@@ -190,6 +206,15 @@ create table liefereinheiten (
 	lei_id int unsigned auto_increment primary key not null,
 	lei_bezeichnung varchar(255) not null,
 	lei_menge float not null
+) ENGINE=INNODB;
+
+
+create table bilder (
+	bil_id int unsigned auto_increment primary key not null,
+	bil_ocr MEDIUMTEXT null,
+	bil_data longblob not null,
+	bil_dokid integer unsigned not null,
+	foreign key bilder_dokument_fk (bil_dokid) references dokumente(dok_id)
 ) ENGINE=INNODB;
 
 

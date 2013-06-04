@@ -336,6 +336,43 @@ class ImportForm(FormBase):
 				query.exec_()
 				if query.lastError().isValid():
 					print 'Error in query:', query.lastError().text()
+					
+					
+			##################
+			#artikel_gruppen
+			##################
+			print 'importing artikel_gruppen'
+			
+			query = QtSql.QSqlQuery()
+			print 'deleting'
+			query.prepare('delete from artikel_gruppen where artikel_gruppe_periode = ?')
+			query.addBindValue(periodId)
+			query.exec_()
+			if query.lastError().isValid():
+					print 'Error in query:', query.lastError().text()
+			
+			s = self.connectToSource()
+			q = """	select artikel_gruppe_id, artikel_gruppe_parent_id, artikel_gruppe_name, artikel_gruppe_standard_gangfolge, 
+					artikel_gruppe_bontyp, artikel_gruppe_istUmsatz, artikel_gruppe_zeigeAufRechnung, artikel_gruppe_druckeRezeptur,
+					artikel_gruppe_keinStorno
+					from artikel_gruppen"""
+			res = self.runQuery(q, db=s)
+			
+			for row in res:
+				query.prepare("insert into artikel_gruppen (artikel_gruppe_id, artikel_gruppe_parent_id, artikel_gruppe_name, artikel_gruppe_standard_gangfolge, artikel_gruppe_bontyp, artikel_gruppe_istUmsatz, artikel_gruppe_zeigeAufRechnung, artikel_gruppe_druckeRezeptur, artikel_gruppe_keinStorno, artikel_gruppe_periode) values (?, ?, ?, ?, ?,?, ?, ?, ?, ?)")
+				query.addBindValue(row[0])
+				query.addBindValue(row[1])
+				query.addBindValue(row[2])
+				query.addBindValue(row[3])
+				query.addBindValue(row[4])
+				query.addBindValue(row[5])
+				query.addBindValue(row[6])
+				query.addBindValue(row[7])
+				query.addBindValue(row[8])
+				query.addBindValue(periodId)
+				query.exec_()
+				if query.lastError().isValid():
+					print 'Error in query:', query.lastError().text()
 
 				
 			##################

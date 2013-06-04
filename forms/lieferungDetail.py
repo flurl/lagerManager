@@ -9,6 +9,7 @@ from ui.forms.lieferungDetailForm_gui import Ui_LieferungDetailForm
 
 import config
 from CONSTANTS import *
+import DBConnection
 
 from lib.NullDelegate import NullDelegate
 from lib.ImageViewer import ImageViewer
@@ -70,6 +71,7 @@ class LieferungDetailForm(FormBase):
 		self.connect(self.ui.pushButton_newDetail, QtCore.SIGNAL('clicked()'), self.addDetail)
 		self.connect(self.ui.pushButton_deleteDetail, QtCore.SIGNAL('clicked()'), self.deleteDetail)
 		self.connect(self.ui.pushButton_addDocument, QtCore.SIGNAL('clicked()'), self.chooseFile)
+		self.connect(self.ui.pushButton_selectArticles, QtCore.SIGNAL('clicked()'), self.openArticleSelection)
 		#self.connect(self.ui.lineEdit_dokId, QtCore.SIGNAL('textChanged (const QString&)'), self.displayImageFromDb)
 		#self.connect(self.ui.label_document, QtCore.SIGNAL('clicked()'), self.showImage)
 		
@@ -100,7 +102,7 @@ class LieferungDetailForm(FormBase):
 		query.prepare('select lei_bezeichnung, lei_menge from liefereinheiten')
 		query.exec_()
 		if query.lastError().isValid():
-			print 'Error selecting taxes for context menu:', query.lastError().text()
+			print 'Error selecting delivery units for context menu:', query.lastError().text()
 		else:
 			actions = []
 			while query.next():
@@ -274,8 +276,19 @@ class LieferungDetailForm(FormBase):
 		return True if istVerbrauch else False
 		
 	def updateDetailFilter(self):
+		try:
+			excludeArticles = config.config['connection'][DBConnection.connName]['period'][unicode(self.getCurrentPeriodId())]['exclude_articles']
+		except KeyError:
+			excludeArticles = []
+		#in the config they are saved as strings
+		excludeArticles = [int(a) for a in excludeArticles]	
+		
+		excludeArticles.insert(0,-1)
+		excludeArticles.append(-1)
+		excludeArticles = tuple(excludeArticles)
+		
 		relModel = self.detailModel.relationModel(2)
-		relModel.setFilter('artikel_id in (select lager_artikel_artikel from lager_artikel where lager_artikel_periode = %(perId)s) and artikel_periode = %(perId)s'% {'perId':self.getCurrentPeriodId()})
+		relModel.setFilter('artikel_id in (select lager_artikel_artikel from lager_artikel where lager_artikel_periode = %(perId)s and lager_artikel_artikel not in %(excludeArticles)s) and artikel_periode = %(perId)s'% {'perId':self.getCurrentPeriodId(), 'excludeArticles': excludeArticles})
 		relModel.sort(1, QtCore.Qt.AscendingOrder)
 	
 		self.detailModel.setFilter('lieferungen_details.lieferung_id=%s and artikel_periode = %s'%(self.getCurrentLieferungId(), self.getCurrentPeriodId()))
@@ -471,4 +484,9 @@ class LieferungDetailForm(FormBase):
 		value = QtCore.QVariant(value.toFloat()[0]/amount.toFloat()[0])
 		self.detailModel.setData(valueIdx, value)
 		
+		
+	def openArticleSelection(self):
+		import forms.lagerartikelAuswahl
+		form = forms.lagerartikelAuswahl.LagerartikelAuswahlForm(self)
+		form.exec_()
 		
