@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/forms/lieferungDetailForm.ui'
 #
-# Created: Fri May 17 22:18:13 2013
+# Created: Wed Jun  5 16:35:31 2013
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -79,11 +79,6 @@ class Ui_LieferungDetailForm(object):
         self.formLayout.setWidget(1, QtGui.QFormLayout.LabelRole, self.label_lieferant)
         self.gridLayout_2.addLayout(self.formLayout, 0, 0, 1, 1)
         self.gridLayout.addWidget(self.groupBox_lieferung, 0, 0, 1, 1)
-        self.buttonBox = QtGui.QDialogButtonBox(LieferungDetailForm)
-        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
-        self.buttonBox.setObjectName(_fromUtf8("buttonBox"))
-        self.gridLayout.addWidget(self.buttonBox, 3, 0, 1, 1)
         self.groupBox_2 = QtGui.QGroupBox(LieferungDetailForm)
         self.groupBox_2.setObjectName(_fromUtf8("groupBox_2"))
         self.verticalLayout = QtGui.QVBoxLayout(self.groupBox_2)
@@ -106,6 +101,17 @@ class Ui_LieferungDetailForm(object):
         self.tableView_details.setObjectName(_fromUtf8("tableView_details"))
         self.verticalLayout.addWidget(self.tableView_details)
         self.gridLayout.addWidget(self.groupBox_2, 2, 0, 1, 1)
+        self.horizontalLayout_2 = QtGui.QHBoxLayout()
+        self.horizontalLayout_2.setObjectName(_fromUtf8("horizontalLayout_2"))
+        self.label_unit = QtGui.QLabel(LieferungDetailForm)
+        self.label_unit.setObjectName(_fromUtf8("label_unit"))
+        self.horizontalLayout_2.addWidget(self.label_unit)
+        self.buttonBox = QtGui.QDialogButtonBox(LieferungDetailForm)
+        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
+        self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
+        self.buttonBox.setObjectName(_fromUtf8("buttonBox"))
+        self.horizontalLayout_2.addWidget(self.buttonBox)
+        self.gridLayout.addLayout(self.horizontalLayout_2, 4, 0, 1, 1)
 
         self.retranslateUi(LieferungDetailForm)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("accepted()")), LieferungDetailForm.accept)
@@ -125,5 +131,6 @@ class Ui_LieferungDetailForm(object):
         self.pushButton_newDetail.setText(_translate("LieferungDetailForm", "&Hinzufügen", None))
         self.pushButton_deleteDetail.setText(_translate("LieferungDetailForm", "&Löschen", None))
         self.pushButton_selectArticles.setText(_translate("LieferungDetailForm", "&Artikelauswahl", None))
+        self.label_unit.setText(_translate("LieferungDetailForm", "TextLabel", None))
 
 import lagerManager_rc

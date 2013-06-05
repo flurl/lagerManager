@@ -74,6 +74,8 @@ class LieferungDetailForm(FormBase):
 		self.connect(self.ui.pushButton_selectArticles, QtCore.SIGNAL('clicked()'), self.openArticleSelection)
 		#self.connect(self.ui.lineEdit_dokId, QtCore.SIGNAL('textChanged (const QString&)'), self.displayImageFromDb)
 		#self.connect(self.ui.label_document, QtCore.SIGNAL('clicked()'), self.showImage)
+		self.connect(self.detailModel, QtCore.SIGNAL('dataChanged(const QModelIndex&,const QModelIndex&)'), self.articleChanged)
+		self.connect(self.ui.tableView_details.selectionModel(), QtCore.SIGNAL('selectionChanged(QItemSelection, QItemSelection)'), self.detailSelectionChanged)
 		
 		
 	def createContextMenu(self):
@@ -489,4 +491,41 @@ class LieferungDetailForm(FormBase):
 		import forms.lagerartikelAuswahl
 		form = forms.lagerartikelAuswahl.LagerartikelAuswahlForm(self)
 		form.exec_()
+		
+		
+	def articleChanged(self, topLeft, topRight):
+		self.updateUnitDisplay(topLeft)
+		
+	def detailSelectionChanged(self, selected, deselected):
+		indexes = selected.indexes()
+		if len(indexes) > 0:
+			index = indexes[0]
+			self.updateUnitDisplay(index)
+		
+	def updateUnitDisplay(self, index):
+		model = index.model()
+		detailId = model.data(model.index(index.row(), 0)).toInt()[0]
+		
+		query = QtSql.QSqlQuery()
+		query.prepare("""select lager_einheit_name 
+						from lieferungen_details, lager_artikel, lager_einheiten 
+						where 1=1
+						and lieferungen_details.artikel_id = lager_artikel.lager_artikel_artikel
+						and lager_artikel_einheit = lager_einheit_id
+						and lieferung_detail_id = %(detailId)s
+						and lager_artikel_periode = %(perId)s
+						and lager_einheit_periode = %(perId)s""" % {'detailId': detailId, 'perId':self.getCurrentPeriodId()})
+		#query.addBindValue(self.getCurrentLieferantId())
+		#query.addBindValue(self.ui.dateEdit_datum.dateTime())
+		#query.addBindValue(self.getCurrentLieferungId())
+		query.exec_()
+		if query.lastError().isValid():
+			print 'Error while getting count of lieferungen for that day:', query.lastError().text()
+		query.next()
+		unit = query.value(0).toString()
+		self.ui.label_unit.setText('Einheit: '+unit)
+		
+		
+	
+		
 		
