@@ -133,8 +133,8 @@ class LieferungForm(FormBase):
 			#idx has been supplied, so we assume, it's a new record from newRecord()'
 			form.newRecord = True
 		
-		form.setModel(self.masterModel, idx)
 		form.currentPeriod = self.getCurrentPeriodId()
+		form.setModel(self.masterModel, idx)
 		form.exec_()
 		
 	def newRecord(self):
