@@ -187,6 +187,13 @@ class LieferungDetailForm(FormBase):
 		if self.ui.comboBox_lieferant.currentText().isEmpty():
 			QtGui.QMessageBox.warning(self, u'Lieferanten Fehler', u'Kein Lieferant ausgewählt!')
 			return False
+		
+		pStart, pEnd = self.getCurrentPeriodStartEnd()
+		date = self.ui.dateEdit_datum.date().toPyDate()
+		if pStart > date or date > pEnd:
+			QtGui.QMessageBox.warning(self, u'Perioden Fehler', u'Das Lieferungsdatum liegt nicht innerhalb der gewählten Periode!')
+			return False
+			
 			
 		if self.lieferungForDayExists():
 			answer = QtGui.QMessageBox.question(self, u'Lieferanten Fehler', 
@@ -297,13 +304,7 @@ class LieferungDetailForm(FormBase):
 		self.detailModel.select()
 		
 	def getCurrentPeriodId(self):
-		query = QtSql.QSqlQuery()
-		query.prepare('select periode_id from perioden where ? between periode_start and periode_ende' )
-		query.addBindValue(QtCore.QVariant(self.ui.dateEdit_datum.date()))
-		query.exec_()
-		query.next()
-		periodeId = query.value(0).toInt()[0]
-		return periodeId
+		return self.currentPeriod
 		
 		
 	def chooseFile(self):

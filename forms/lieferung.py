@@ -134,6 +134,7 @@ class LieferungForm(FormBase):
 			form.newRecord = True
 		
 		form.setModel(self.masterModel, idx)
+		form.currentPeriod = self.getCurrentPeriodId()
 		form.exec_()
 		
 	def newRecord(self):

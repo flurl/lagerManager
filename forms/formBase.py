@@ -52,6 +52,21 @@ class FormBase(QtGui.QDialog):
 			return None
 		else:
 			return id_.toInt()[0]
+		
+		
+	def getCurrentPeriodStartEnd(self):
+		query = QtSql.QSqlQuery()
+		
+		query.prepare("select periode_start, periode_ende from perioden where periode_id = ?")
+		query.bindValue(0, self.getCurrentPeriodId())
+		
+		query.exec_()
+	
+		query.next()
+		start = query.value(0).toDate().toPyDate()
+		end = query.value(1).toDate().toPyDate()
+			
+		return start, end
 			
 			
 			
