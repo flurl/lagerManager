@@ -16,18 +16,28 @@ class LagerartikelAuswahlForm(FormBase):
 	
 	def __init__(self, parent):
 		super(LagerartikelAuswahlForm, self).__init__(parent)
-		self.populateTable()
-		self.populateGruppenCombobox()
+		
 	
 	def setupUi(self):
 		super(LagerartikelAuswahlForm, self).setupUi()
+		
+		
+	def setupSignals(self):
+		self.connect(self.ui.comboBox_period, QtCore.SIGNAL('currentIndexChanged(int)'), self.setupArticleTable)
+		super(LagerartikelAuswahlForm, self).setupSignals()
 		self.connect(self.ui.pushButton_checkAll, QtCore.SIGNAL('clicked()'), self.checkArtikelGruppe)
 		self.connect(self.ui.pushButton_uncheckAll, QtCore.SIGNAL('clicked()'), self.uncheckArtikelGruppe)
 		self.connect(self.ui.buttonBox, QtCore.SIGNAL('accepted()'), self.accept)
 		self.connect(self.ui.buttonBox, QtCore.SIGNAL('rejected()'), self.reject)
+		
+		
+	
+	def setupArticleTable(self):
+		self.populateTable()
+		self.populateGruppenCombobox()
+	
 	
 	def populateTable(self):
-		
 		try:
 			excludeArticles = config.config['connection'][DBConnection.connName]['period'][unicode(self.getCurrentPeriodId())]['exclude_articles']
 		except KeyError:
@@ -98,8 +108,10 @@ class LagerartikelAuswahlForm(FormBase):
 				from lager_artikel, artikel_basis 
 				where 1=1
 				and lager_artikel_artikel = artikel_id
-				and lager_artikel_periode = %s
-				and artikel_periode = %s)""" % (self.getCurrentPeriodId(), self.getCurrentPeriodId())
+				and lager_artikel_periode = %(perId)s
+				and artikel_periode = %(perId)s)
+				and artikel_gruppe_periode = %(perId)s""" % {'perId':self.getCurrentPeriodId()}
+				
 		
 		self.artikelGruppenModel.setFilter(where)
 		self.artikelGruppenModel.select()
