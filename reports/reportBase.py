@@ -12,11 +12,15 @@ class ReportBase(QtGui.QWidget):
 		
 		self.connectToDb()
 		self.setupUi()
+		self.setupSignals()
+		
 	
 	def setupUi(self):
 		self.ui = self.uiClass()
 		self.ui.setupUi(self)
 		
+		
+	def setupSignals(self):
 		self.populatePeriodCB()
 		self.connect(self.ui.comboBox_period, QtCore.SIGNAL('currentIndexChanged(int)'), lambda: self.updatePeriod(self._getCurrentPeriodId()))
 
