@@ -26,7 +26,7 @@
      <x>0</x>
      <y>0</y>
      <width>1047</width>
-     <height>26</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -39,11 +39,12 @@
     <property name="title">
      <string>&amp;Reports</string>
     </property>
-    <widget class="QMenu" name="menu_Verbrauch">
+    <widget class="QMenu" name="menu_Einkauf">
      <property name="title">
-      <string>&amp;Verbrauch</string>
+      <string>&amp;Einkauf</string>
      </property>
-     <addaction name="action_Report_Verbrauch_Artikel"/>
+     <addaction name="action_Report_Einkauf_GesamteLieferungen"/>
+     <addaction name="action_Report_Einkauf_Verprobung"/>
     </widget>
     <widget class="QMenu" name="menu_Umsaetze">
      <property name="title">
@@ -54,6 +55,12 @@
      <addaction name="action_Report_Umsaetze_AufwanddetailsProTag"/>
      <addaction name="action_Report_Umsaetze_DurchschUmsatzWochentag"/>
     </widget>
+    <widget class="QMenu" name="menu_Verbrauch">
+     <property name="title">
+      <string>&amp;Verbrauch</string>
+     </property>
+     <addaction name="action_Report_Verbrauch_Artikel"/>
+    </widget>
     <widget class="QMenu" name="menu_Lagerstand">
      <property name="title">
       <string>&amp;Lager</string>
@@ -61,12 +68,6 @@
      <addaction name="action_Report_Lager_Lagerstand"/>
      <addaction name="action_Report_Lager_MinimumLagerstand"/>
      <addaction name="action_Report_Lager_Inventur"/>
-    </widget>
-    <widget class="QMenu" name="menu_Einkauf">
-     <property name="title">
-      <string>&amp;Einkauf</string>
-     </property>
-     <addaction name="action_Report_Einkauf_GesamteLieferungen"/>
     </widget>
     <addaction name="menu_Lagerstand"/>
     <addaction name="menu_Verbrauch"/>
@@ -218,6 +219,11 @@
   <action name="action_Report_Umsaetze_DurchschUmsatzWochentag">
    <property name="text">
     <string>&amp;Durchsch. Umsatz/Wochentag</string>
+   </property>
+  </action>
+  <action name="action_Report_Einkauf_Verprobung">
+   <property name="text">
+    <string>&amp;Verprobung</string>
    </property>
   </action>
  </widget>

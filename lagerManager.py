@@ -48,8 +48,9 @@ class MainWindow(QtGui.QMainWindow):
 		self.connect(self.ui.action_Report_Verbrauch_Artikel, QtCore.SIGNAL('triggered()'), self.openArtikelVerbrauchReport)
 		self.connect(self.ui.action_Report_Umsaetze_UmsatzAufwand, QtCore.SIGNAL('triggered()'), self.openUmsatzAufwandReport)
 		self.connect(self.ui.action_Report_Umsaetze_AufwanddetailsProTag, QtCore.SIGNAL('triggered()'), self.openAufwanddetailsProTagReport)
-		self.connect(self.ui.action_Report_Umsaetze_DurchschUmsatzWochentag, QtCore.SIGNAL('triggered()'), self.openDurchschnittUmsatzProWochentagReport)		
+		self.connect(self.ui.action_Report_Umsaetze_DurchschUmsatzWochentag, QtCore.SIGNAL('triggered()'), self.openDurchschnittUmsatzProWochentagReport)
 		self.connect(self.ui.action_Report_Einkauf_GesamteLieferungen, QtCore.SIGNAL('triggered()'), self.openGesamteLieferungenReport)
+		self.connect(self.ui.action_Report_Einkauf_Verprobung, QtCore.SIGNAL('triggered()'), self.openVerprobungReport)
 		
 		self.connect(self.ui.action_Lieferungen_Lieferungen, QtCore.SIGNAL('triggered()'), self.openLieferungenForm)
 		self.connect(self.ui.action_Lieferungen_Lieferanten, QtCore.SIGNAL('triggered()'), self.openLieferantenForm)
@@ -113,6 +114,12 @@ class MainWindow(QtGui.QMainWindow):
 	def openGesamteLieferungenReport(self):
 		import reports.gesamteLieferungen
 		report = reports.gesamteLieferungen.GesamteLieferungenReport()
+		window = self.ui.mdiArea.addSubWindow(report)
+		window.show()
+		
+	def openVerprobungReport(self):
+		import reports.verprobung
+		report = reports.verprobung.VerprobungReport()
 		window = self.ui.mdiArea.addSubWindow(report)
 		window.show()
 

@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'ui/lagerManagerMainWindow.ui'
 #
-# Created: Thu Feb 28 20:42:19 2013
-#      by: PyQt4 UI code generator 4.9.3
+# Created: Thu Jun 13 21:41:32 2013
+#      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,7 +12,16 @@ from PyQt4 import QtCore, QtGui
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
-    _fromUtf8 = lambda s: s
+    def _fromUtf8(s):
+        return s
+
+try:
+    _encoding = QtGui.QApplication.UnicodeUTF8
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig, _encoding)
+except AttributeError:
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -27,20 +36,20 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.mdiArea)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1047, 26))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1047, 25))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         self.menuFile = QtGui.QMenu(self.menubar)
         self.menuFile.setObjectName(_fromUtf8("menuFile"))
         self.menu_Reports = QtGui.QMenu(self.menubar)
         self.menu_Reports.setObjectName(_fromUtf8("menu_Reports"))
-        self.menu_Verbrauch = QtGui.QMenu(self.menu_Reports)
-        self.menu_Verbrauch.setObjectName(_fromUtf8("menu_Verbrauch"))
-        self.menu_Umsaetze = QtGui.QMenu(self.menu_Reports)
-        self.menu_Umsaetze.setObjectName(_fromUtf8("menu_Umsaetze"))
-        self.menu_Lagerstand = QtGui.QMenu(self.menu_Reports)
-        self.menu_Lagerstand.setObjectName(_fromUtf8("menu_Lagerstand"))
         self.menu_Einkauf = QtGui.QMenu(self.menu_Reports)
         self.menu_Einkauf.setObjectName(_fromUtf8("menu_Einkauf"))
+        self.menu_Umsaetze = QtGui.QMenu(self.menu_Reports)
+        self.menu_Umsaetze.setObjectName(_fromUtf8("menu_Umsaetze"))
+        self.menu_Verbrauch = QtGui.QMenu(self.menu_Reports)
+        self.menu_Verbrauch.setObjectName(_fromUtf8("menu_Verbrauch"))
+        self.menu_Lagerstand = QtGui.QMenu(self.menu_Reports)
+        self.menu_Lagerstand.setObjectName(_fromUtf8("menu_Lagerstand"))
         self.menu_Lieferungen = QtGui.QMenu(self.menubar)
         self.menu_Lieferungen.setObjectName(_fromUtf8("menu_Lieferungen"))
         self.menuStammdaten = QtGui.QMenu(self.menubar)
@@ -95,16 +104,19 @@ class Ui_MainWindow(object):
         self.action_Report_Umsaetze_AufwanddetailsProTag.setObjectName(_fromUtf8("action_Report_Umsaetze_AufwanddetailsProTag"))
         self.action_Report_Umsaetze_DurchschUmsatzWochentag = QtGui.QAction(MainWindow)
         self.action_Report_Umsaetze_DurchschUmsatzWochentag.setObjectName(_fromUtf8("action_Report_Umsaetze_DurchschUmsatzWochentag"))
+        self.action_Report_Einkauf_Verprobung = QtGui.QAction(MainWindow)
+        self.action_Report_Einkauf_Verprobung.setObjectName(_fromUtf8("action_Report_Einkauf_Verprobung"))
         self.menuFile.addAction(self.actionQuit)
-        self.menu_Verbrauch.addAction(self.action_Report_Verbrauch_Artikel)
+        self.menu_Einkauf.addAction(self.action_Report_Einkauf_GesamteLieferungen)
+        self.menu_Einkauf.addAction(self.action_Report_Einkauf_Verprobung)
         self.menu_Umsaetze.addAction(self.action_Report_Umsaetze_UmsatzTag)
         self.menu_Umsaetze.addAction(self.action_Report_Umsaetze_UmsatzAufwand)
         self.menu_Umsaetze.addAction(self.action_Report_Umsaetze_AufwanddetailsProTag)
         self.menu_Umsaetze.addAction(self.action_Report_Umsaetze_DurchschUmsatzWochentag)
+        self.menu_Verbrauch.addAction(self.action_Report_Verbrauch_Artikel)
         self.menu_Lagerstand.addAction(self.action_Report_Lager_Lagerstand)
         self.menu_Lagerstand.addAction(self.action_Report_Lager_MinimumLagerstand)
         self.menu_Lagerstand.addAction(self.action_Report_Lager_Inventur)
-        self.menu_Einkauf.addAction(self.action_Report_Einkauf_GesamteLieferungen)
         self.menu_Reports.addAction(self.menu_Lagerstand.menuAction())
         self.menu_Reports.addAction(self.menu_Verbrauch.menuAction())
         self.menu_Reports.addAction(self.menu_Umsaetze.menuAction())
@@ -128,38 +140,39 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "MainWindow", None, QtGui.QApplication.UnicodeUTF8))
-        self.menuFile.setTitle(QtGui.QApplication.translate("MainWindow", "&Datei", None, QtGui.QApplication.UnicodeUTF8))
-        self.menu_Reports.setTitle(QtGui.QApplication.translate("MainWindow", "&Reports", None, QtGui.QApplication.UnicodeUTF8))
-        self.menu_Verbrauch.setTitle(QtGui.QApplication.translate("MainWindow", "&Verbrauch", None, QtGui.QApplication.UnicodeUTF8))
-        self.menu_Umsaetze.setTitle(QtGui.QApplication.translate("MainWindow", "&Umsätze", None, QtGui.QApplication.UnicodeUTF8))
-        self.menu_Lagerstand.setTitle(QtGui.QApplication.translate("MainWindow", "&Lager", None, QtGui.QApplication.UnicodeUTF8))
-        self.menu_Einkauf.setTitle(QtGui.QApplication.translate("MainWindow", "&Einkauf", None, QtGui.QApplication.UnicodeUTF8))
-        self.menu_Lieferungen.setTitle(QtGui.QApplication.translate("MainWindow", "&Lieferungen", None, QtGui.QApplication.UnicodeUTF8))
-        self.menuStammdaten.setTitle(QtGui.QApplication.translate("MainWindow", "&Stammdaten", None, QtGui.QApplication.UnicodeUTF8))
-        self.menu_Dokumente.setTitle(QtGui.QApplication.translate("MainWindow", "Do&kumente", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionQuit.setText(QtGui.QApplication.translate("MainWindow", "&Beenden", None, QtGui.QApplication.UnicodeUTF8))
-        self.action_Lieferungen_Lieferungen.setText(QtGui.QApplication.translate("MainWindow", "&Lieferungen", None, QtGui.QApplication.UnicodeUTF8))
-        self.action_Lieferungen_Lieferanten.setText(QtGui.QApplication.translate("MainWindow", "L&ieferanten", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionZoomIn.setText(QtGui.QApplication.translate("MainWindow", "&Vergrößern", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionZoomIn.setToolTip(QtGui.QApplication.translate("MainWindow", "Vergrößern", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionZoomOut.setText(QtGui.QApplication.translate("MainWindow", "Verkleinern", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionZoomOut.setToolTip(QtGui.QApplication.translate("MainWindow", "Verkleinern", None, QtGui.QApplication.UnicodeUTF8))
-        self.action_Report_Lager_Lagerstand.setText(QtGui.QApplication.translate("MainWindow", "&Lagerstand", None, QtGui.QApplication.UnicodeUTF8))
-        self.action_Report_Lager_MinimumLagerstand.setText(QtGui.QApplication.translate("MainWindow", "&Minimum erreicht", None, QtGui.QApplication.UnicodeUTF8))
-        self.action_Stammdaten_Perioden.setText(QtGui.QApplication.translate("MainWindow", "&Perioden", None, QtGui.QApplication.UnicodeUTF8))
-        self.action_Lieferungen_InitialerLagerstand.setText(QtGui.QApplication.translate("MainWindow", "Initialer Lager&stand", None, QtGui.QApplication.UnicodeUTF8))
-        self.action_Report_Verbrauch_Artikel.setText(QtGui.QApplication.translate("MainWindow", "&Artikel", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionAuf_wand.setText(QtGui.QApplication.translate("MainWindow", "Auf&wand", None, QtGui.QApplication.UnicodeUTF8))
-        self.action_Report_Umsaetze_UmsatzTag.setText(QtGui.QApplication.translate("MainWindow", "&Umsatz/Tag", None, QtGui.QApplication.UnicodeUTF8))
-        self.action_Report_Umsaetze_UmsatzAufwand.setText(QtGui.QApplication.translate("MainWindow", "Umsatz:&Aufwand", None, QtGui.QApplication.UnicodeUTF8))
-        self.action_Report_Lager_Inventur.setText(QtGui.QApplication.translate("MainWindow", "&Inventur", None, QtGui.QApplication.UnicodeUTF8))
-        self.action_Stammdaten_Import.setText(QtGui.QApplication.translate("MainWindow", "&Import", None, QtGui.QApplication.UnicodeUTF8))
-        self.action_Report_Einkauf_GesamteLieferungen.setText(QtGui.QApplication.translate("MainWindow", "&Gesamte Lieferungen", None, QtGui.QApplication.UnicodeUTF8))
-        self.action_Dokumente_Dokumenttypen.setText(QtGui.QApplication.translate("MainWindow", "Dokument&typen", None, QtGui.QApplication.UnicodeUTF8))
-        self.action_Dokumente_Dokumente.setText(QtGui.QApplication.translate("MainWindow", "&Dokumente", None, QtGui.QApplication.UnicodeUTF8))
-        self.action_Stammdaten_Steuersaetze.setText(QtGui.QApplication.translate("MainWindow", "&Steuersätze", None, QtGui.QApplication.UnicodeUTF8))
-        self.action_Stammdaten_Liefereinheiten.setText(QtGui.QApplication.translate("MainWindow", "&Liefereinheiten", None, QtGui.QApplication.UnicodeUTF8))
-        self.action_Report_Umsaetze_AufwanddetailsProTag.setText(QtGui.QApplication.translate("MainWindow", "Aufwanddetails/&Tag", None, QtGui.QApplication.UnicodeUTF8))
-        self.action_Report_Umsaetze_DurchschUmsatzWochentag.setText(QtGui.QApplication.translate("MainWindow", "&Durchsch. Umsatz/Wochentag", None, QtGui.QApplication.UnicodeUTF8))
+        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
+        self.menuFile.setTitle(_translate("MainWindow", "&Datei", None))
+        self.menu_Reports.setTitle(_translate("MainWindow", "&Reports", None))
+        self.menu_Einkauf.setTitle(_translate("MainWindow", "&Einkauf", None))
+        self.menu_Umsaetze.setTitle(_translate("MainWindow", "&Umsätze", None))
+        self.menu_Verbrauch.setTitle(_translate("MainWindow", "&Verbrauch", None))
+        self.menu_Lagerstand.setTitle(_translate("MainWindow", "&Lager", None))
+        self.menu_Lieferungen.setTitle(_translate("MainWindow", "&Lieferungen", None))
+        self.menuStammdaten.setTitle(_translate("MainWindow", "&Stammdaten", None))
+        self.menu_Dokumente.setTitle(_translate("MainWindow", "Do&kumente", None))
+        self.actionQuit.setText(_translate("MainWindow", "&Beenden", None))
+        self.action_Lieferungen_Lieferungen.setText(_translate("MainWindow", "&Lieferungen", None))
+        self.action_Lieferungen_Lieferanten.setText(_translate("MainWindow", "L&ieferanten", None))
+        self.actionZoomIn.setText(_translate("MainWindow", "&Vergrößern", None))
+        self.actionZoomIn.setToolTip(_translate("MainWindow", "Vergrößern", None))
+        self.actionZoomOut.setText(_translate("MainWindow", "Verkleinern", None))
+        self.actionZoomOut.setToolTip(_translate("MainWindow", "Verkleinern", None))
+        self.action_Report_Lager_Lagerstand.setText(_translate("MainWindow", "&Lagerstand", None))
+        self.action_Report_Lager_MinimumLagerstand.setText(_translate("MainWindow", "&Minimum erreicht", None))
+        self.action_Stammdaten_Perioden.setText(_translate("MainWindow", "&Perioden", None))
+        self.action_Lieferungen_InitialerLagerstand.setText(_translate("MainWindow", "Initialer Lager&stand", None))
+        self.action_Report_Verbrauch_Artikel.setText(_translate("MainWindow", "&Artikel", None))
+        self.actionAuf_wand.setText(_translate("MainWindow", "Auf&wand", None))
+        self.action_Report_Umsaetze_UmsatzTag.setText(_translate("MainWindow", "&Umsatz/Tag", None))
+        self.action_Report_Umsaetze_UmsatzAufwand.setText(_translate("MainWindow", "Umsatz:&Aufwand", None))
+        self.action_Report_Lager_Inventur.setText(_translate("MainWindow", "&Inventur", None))
+        self.action_Stammdaten_Import.setText(_translate("MainWindow", "&Import", None))
+        self.action_Report_Einkauf_GesamteLieferungen.setText(_translate("MainWindow", "&Gesamte Lieferungen", None))
+        self.action_Dokumente_Dokumenttypen.setText(_translate("MainWindow", "Dokument&typen", None))
+        self.action_Dokumente_Dokumente.setText(_translate("MainWindow", "&Dokumente", None))
+        self.action_Stammdaten_Steuersaetze.setText(_translate("MainWindow", "&Steuersätze", None))
+        self.action_Stammdaten_Liefereinheiten.setText(_translate("MainWindow", "&Liefereinheiten", None))
+        self.action_Report_Umsaetze_AufwanddetailsProTag.setText(_translate("MainWindow", "Aufwanddetails/&Tag", None))
+        self.action_Report_Umsaetze_DurchschUmsatzWochentag.setText(_translate("MainWindow", "&Durchsch. Umsatz/Wochentag", None))
+        self.action_Report_Einkauf_Verprobung.setText(_translate("MainWindow", "&Verprobung", None))
 
