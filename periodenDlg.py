@@ -65,10 +65,9 @@ class PeriodenDialog(QtGui.QDialog):
 		
 		
 	def _onDeleteRecordBtnClicked(self):
-		selected = self.tableView.selectionModel().selectedIndexes();
-		for i in range(len(selected)-1):
-			print 'deleting'
-			self.model.removeRows(selected[i].row(), 1);
+		selected = self.tableView.selectionModel().selectedRows(0)
+		for i in range(len(selected)):
+			self.model.removeRows(selected[i].row(), 1)
 		self.model.submitAll()
 			
 			
