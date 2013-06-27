@@ -67,6 +67,15 @@ class FormBase(QtGui.QDialog):
 		end = query.value(1).toDate().toPyDate()
 			
 		return start, end
+	
+	
+	def getPKForCombobox(self, combo, pkName):
+		model = combo.model()
+		row = combo.currentIndex()
+		col = model.fieldIndex(pkName)
+		index = model.index(row, col)
+		pk = model.data(index).toInt()[0]
+		return pk
 			
 			
 			

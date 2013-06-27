@@ -32,6 +32,7 @@ class LieferungForm(FormBase):
 		super(LieferungForm, self).__init__(parent)
 		self.updateMasterFilter()
 		self.updateDetailFilter()
+		self.updateFilterArticleFilter()
 	
 	def setupUi(self):
 		super(LieferungForm, self).setupUi()
@@ -104,17 +105,26 @@ class LieferungForm(FormBase):
 		self.detailTableView.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
 		
 		
+		self.filterArticleModel = QtSql.QSqlTableModel()
+		self.filterArticleModel.setTable('artikel_basis')
+		self.filterArticleModel.sort(self.filterArticleModel.fieldIndex('artikel_bezeichnung'), QtCore.Qt.AscendingOrder)
+		self.ui.comboBox_filterArticle.setModel(self.filterArticleModel)
+		self.ui.comboBox_filterArticle.setModelColumn(self.filterArticleModel.fieldIndex('artikel_bezeichnung'))
+		
 		
 
 	def setupSignals(self):
 		super(LieferungForm, self).setupSignals()
 		self.connect(self.ui.radioButton_lieferung, QtCore.SIGNAL('toggled (bool)'), self.updateMasterFilter)
 		self.connect(self.ui.comboBox_period, QtCore.SIGNAL('currentIndexChanged(int)'), self.updateMasterFilter)
+		self.connect(self.ui.comboBox_period, QtCore.SIGNAL('currentIndexChanged(int)'), self.updateFilterArticleFilter)
 		self.connect(self.ui.pushButton_edit, QtCore.SIGNAL('clicked()'), self.editRecord)
 		self.connect(self.ui.pushButton_new, QtCore.SIGNAL('clicked()'), self.newRecord)
 		self.connect(self.ui.pushButton_delete, QtCore.SIGNAL('clicked()'), self.deleteRecord)
 		self.connect(self.masterTableView.selectionModel(), QtCore.SIGNAL('selectionChanged(const QItemSelection&,const QItemSelection&)'), self._onMasterTableViewSelectionChanged)
 		self.connect(self.masterTableView.tv, QtCore.SIGNAL('doubleClicked (const QModelIndex&)'), self._onMasterTableViewDoubleClicked)
+		self.connect(self.ui.checkBox_activateFilter, QtCore.SIGNAL('stateChanged(int)'), self.updateMasterFilter)
+		self.connect(self.ui.comboBox_filterArticle, QtCore.SIGNAL('currentIndexChanged(int)'), lambda i: self.ui.checkBox_activateFilter.isChecked()and self.updateMasterFilter())
 		
 		
 		
@@ -186,7 +196,13 @@ class LieferungForm(FormBase):
 		query.exec_()
 		query.next()
 		start, ende = query.value(0).toDateTime(), query.value(1).toDateTime()
-		self.masterModel.setFilter("lieferungen.lie_ist_verbrauch = %s and lieferungen.datum between '%s' and '%s'"%(0 if self.ui.radioButton_lieferung.isChecked() else 1, start.toPyDateTime().strftime('%Y-%m-%d %H:%M:%S'), ende.toPyDateTime().strftime('%Y-%m-%d %H:%M:%S')))
+		
+		filterStr = "lieferungen.lie_ist_verbrauch = %s and lieferungen.datum between '%s' and '%s' "%(0 if self.ui.radioButton_lieferung.isChecked() else 1, start.toPyDateTime().strftime('%Y-%m-%d %H:%M:%S'), ende.toPyDateTime().strftime('%Y-%m-%d %H:%M:%S'))
+		
+		if self.ui.checkBox_activateFilter.isChecked():
+			filterStr += " and lieferungen.lieferung_id in (select lieferungen_details.lieferung_id from lieferungen_details where lieferungen_details.artikel_id = %s)" % (self.getPKForCombobox(self.ui.comboBox_filterArticle, 'artikel_id'),)
+		
+		self.masterModel.setFilter(filterStr)
 		self.masterModel.select()
 	
 		
@@ -197,6 +213,12 @@ class LieferungForm(FormBase):
 		relModel.sort(1, QtCore.Qt.AscendingOrder)
 		self.detailModel.select()
 		self.detailTableView.resizeColumnsToContents()
+		
+		
+	def updateFilterArticleFilter(self):
+		self.filterArticleModel.setFilter('artikel_periode = %s and artikel_id in (select lager_artikel_artikel from lager_artikel where lager_artikel_periode = %s)'%(self.getCurrentPeriodId(), self.getCurrentPeriodId()))
+		self.filterArticleModel.select()
+		
 		
 	def getCurrentLieferungId(self):
 		try:
