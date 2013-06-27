@@ -20,7 +20,7 @@ class GesamteLieferungenReport(TextReport):
 		self.process()
 		
 	def updateData(self):
-		articles = {}
+		"""articles = {}
 
 		query =  self.mkQuery()
 		results = self.db.exec_(query)
@@ -34,16 +34,29 @@ class GesamteLieferungenReport(TextReport):
 		for k in sorted(articles.keys()):
 			data.append([k, articles[k]])
 		
-		self.setData(data)
+		self.setData(data)"""
+		self.setData(self.mkQuery())
 		
 		
 	
 		
 	def mkQuery(self):
 		"""return the query"""
+		begin, end = self._getCurrentPeriodStartEnd()
+		perId = self._getCurrentPeriodId()
 		query = """
-				select artikel_bezeichnung, sum(anzahl) from artikel_basis, lieferungen_details where artikel_basis.artikel_id = lieferungen_details.artikel_id group by artikel_bezeichnung order by 1
-		"""
-		
+				select artikel_bezeichnung, sum(anzahl), lager_einheit_name
+				from artikel_basis, lieferungen_details, lieferungen, lager_artikel, lager_einheiten
+				where 1=1 
+				and artikel_basis.artikel_id = lieferungen_details.artikel_id 
+				and lieferungen_details.lieferung_id = lieferungen.lieferung_id
+				and lager_artikel.lager_artikel_artikel = artikel_basis.artikel_id
+				and lager_einheit_id = lager_artikel_einheit
+				and lieferungen.datum between '%s' and '%s'
+				and lager_artikel_periode = %s
+				and lager_einheit_periode = %s
+				group by artikel_bezeichnung, lager_einheit_name order by 1
+		""" % (begin.strftime('%Y-%m-%d %H:%M:%S'), end.strftime('%Y-%m-%d %H:%M:%S'), perId, perId)
+
 		return query
 	
