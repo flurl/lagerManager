@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/reports/verprobungReport.ui'
 #
-# Created: Sun Jun 16 17:32:20 2013
+# Created: Thu Jun 27 15:55:52 2013
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -40,6 +40,23 @@ class Ui_Verprobung(object):
         self.comboBox_period.setObjectName(_fromUtf8("comboBox_period"))
         self.horizontalLayout.addWidget(self.comboBox_period)
         self.verticalLayout.addLayout(self.horizontalLayout)
+        self.horizontalLayout_5 = QtGui.QHBoxLayout()
+        self.horizontalLayout_5.setObjectName(_fromUtf8("horizontalLayout_5"))
+        self.label = QtGui.QLabel(Verprobung)
+        self.label.setObjectName(_fromUtf8("label"))
+        self.horizontalLayout_5.addWidget(self.label)
+        self.comboBox = QtGui.QComboBox(Verprobung)
+        self.comboBox.setObjectName(_fromUtf8("comboBox"))
+        self.horizontalLayout_5.addWidget(self.comboBox)
+        spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_5.addItem(spacerItem1)
+        self.lineEdit = QtGui.QLineEdit(Verprobung)
+        self.lineEdit.setObjectName(_fromUtf8("lineEdit"))
+        self.horizontalLayout_5.addWidget(self.lineEdit)
+        self.pushButton = QtGui.QPushButton(Verprobung)
+        self.pushButton.setObjectName(_fromUtf8("pushButton"))
+        self.horizontalLayout_5.addWidget(self.pushButton)
+        self.verticalLayout.addLayout(self.horizontalLayout_5)
         self.horizontalLayout_2 = QtGui.QHBoxLayout()
         self.horizontalLayout_2.setObjectName(_fromUtf8("horizontalLayout_2"))
         self.groupBox = QtGui.QGroupBox(Verprobung)
@@ -118,8 +135,10 @@ class Ui_Verprobung(object):
         QtCore.QMetaObject.connectSlotsByName(Verprobung)
 
     def retranslateUi(self, Verprobung):
-        Verprobung.setWindowTitle(_translate("Verprobung", "Lagerstand", None))
+        Verprobung.setWindowTitle(_translate("Verprobung", "Verprobung", None))
         self.pushButton_refresh.setText(_translate("Verprobung", "Aktualisieren", None))
+        self.label.setText(_translate("Verprobung", "Voreinstellung", None))
+        self.pushButton.setText(_translate("Verprobung", "Voreinstellung &speichern", None))
         self.groupBox.setTitle(_translate("Verprobung", "Einkauf", None))
         self.pushButton_purchasesCheckAll.setText(_translate("Verprobung", "Auswählen", None))
         self.pushButton_purchasesUncheckAll.setText(_translate("Verprobung", "Abwählen", None))
