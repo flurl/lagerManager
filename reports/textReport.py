@@ -33,16 +33,23 @@ class TextReport(ReportBase):
 	
 	def __init__(self, parent):
 		ReportBase.__init__(self, parent)
-		self.setHeader('')
-		self.setFooter('')
+		
+		self.__header = u''
+		self.__footer = u''
+		self.__tableHeaders = []
+		
 		self.setData([])
 
 		
 	def setHeader(self, header):
-		self.header = header
+		self.__header = header
 		
 	def setFooter(self, footer):
-		self.footer = footer
+		self.__footer = footer
+		
+	def setTableHeaders(self, headers):
+		"""@headers a list of table headers"""
+		self.__tableHeaders = headers
 		
 	def setData(self, data):
 		"""override this method for custom data set, otherwise supply a query"""
@@ -60,9 +67,9 @@ class TextReport(ReportBase):
 		
 	def process(self):
 		elements = []
-		elements.append(Heading(self.header))
+		elements.append(Heading(self.__header))
 		elements.append(self.processData())
-		elements.append(Footer(self.footer))
+		elements.append(Footer(self.__footer))
 		
 		self.ui.textView.setText(''.join(unicode(e) for e in elements))
 		
@@ -70,6 +77,13 @@ class TextReport(ReportBase):
 	def processData(self):
 		output = u''
 		output += u'<table border="1">'
+		
+		if len(self.__tableHeaders) > 0:
+			output += u'<tr>'
+			for h in self.__tableHeaders:
+				output += u'<th>%s</th>' % (h, )
+			output += u'</tr>'
+		
 		for row in self.__data:
 			output += u'<tr>'
 			for cell in row:
