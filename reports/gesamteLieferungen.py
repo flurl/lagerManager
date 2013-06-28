@@ -45,7 +45,7 @@ class GesamteLieferungenReport(TextReport):
 		begin, end = self._getCurrentPeriodStartEnd()
 		perId = self._getCurrentPeriodId()
 		query = """
-				select artikel_bezeichnung, sum(anzahl), lager_einheit_name
+				select artikel_bezeichnung, sum(anzahl), lager_einheit_name, sum(anzahl*einkaufspreis)
 				from artikel_basis, lieferungen_details, lieferungen, lager_artikel, lager_einheiten
 				where 1=1 
 				and artikel_basis.artikel_id = lieferungen_details.artikel_id 
@@ -55,8 +55,9 @@ class GesamteLieferungenReport(TextReport):
 				and lieferungen.datum between '%s' and '%s'
 				and lager_artikel_periode = %s
 				and lager_einheit_periode = %s
+				and artikel_basis.artikel_periode = %s
 				group by artikel_bezeichnung, lager_einheit_name order by 1
-		""" % (begin.strftime('%Y-%m-%d %H:%M:%S'), end.strftime('%Y-%m-%d %H:%M:%S'), perId, perId)
+		""" % (begin.strftime('%Y-%m-%d %H:%M:%S'), end.strftime('%Y-%m-%d %H:%M:%S'), perId, perId, perId)
 
 		return query
 	
