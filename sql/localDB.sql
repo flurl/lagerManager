@@ -279,6 +279,13 @@ create table dienste_vorlagen (
 	foreign key dienst_arbeitsplatz_fk (div_arpid) references arbeitsplaetze(arp_id)
 ) ENGINE=INNODB;
 
+
+create table buchungskonten (
+	buk_id int unsigned auto_increment primary key not null,
+	buk_nummer varchar(255) not null,
+	buk_bezeichnung varchar(255) not null
+) ENGINE=INNODB;
+
 	
 
 

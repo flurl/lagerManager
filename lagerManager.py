@@ -70,6 +70,7 @@ class MainWindow(QtGui.QMainWindow):
 		self.connect(self.ui.action_Stammdaten_Steuersaetze, QtCore.SIGNAL('triggered()'), self.openSteuersaetzeForm)
 		self.connect(self.ui.action_Stammdaten_Liefereinheiten, QtCore.SIGNAL('triggered()'), self.openLiefereinheitenForm)
 		self.connect(self.ui.action_Stammdaten_Veranstaltungen, QtCore.SIGNAL('triggered()'), self.openVeranstaltungenForm)
+		self.connect(self.ui.action_Stammdaten_Buchungskonten, QtCore.SIGNAL('triggered()'), self.openBuchungskontenForm)
 		
 
 	def openConnectDlg(self):
@@ -224,7 +225,12 @@ class MainWindow(QtGui.QMainWindow):
 		form = forms.veranstaltungen.VeranstaltungenForm(self)
 		window = self.ui.mdiArea.addSubWindow(form)
 		window.show()
-						
+		
+	def openBuchungskontenForm(self):
+		import forms.buchungskonten
+		form = forms.buchungskonten.BuchungskontenForm(self)
+		window = self.ui.mdiArea.addSubWindow(form)
+		window.show()
 				
 				
 if __name__ == "__main__":

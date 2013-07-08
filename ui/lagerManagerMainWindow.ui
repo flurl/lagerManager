@@ -98,6 +98,7 @@
     <addaction name="action_Stammdaten_Steuersaetze"/>
     <addaction name="action_Stammdaten_Liefereinheiten"/>
     <addaction name="action_Stammdaten_Veranstaltungen"/>
+    <addaction name="action_Stammdaten_Buchungskonten"/>
    </widget>
    <widget class="QMenu" name="menu_Dokumente">
     <property name="title">
@@ -272,6 +273,11 @@
   <action name="action_Report_Personal_DienstnehmerStunden">
    <property name="text">
     <string>Dienstnehmer &amp;Stunden</string>
+   </property>
+  </action>
+  <action name="action_Stammdaten_Buchungskonten">
+   <property name="text">
+    <string>&amp;Buchungskonten</string>
    </property>
   </action>
  </widget>

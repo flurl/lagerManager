@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/lagerManagerMainWindow.ui'
 #
-# Created: Tue Jun 25 20:50:21 2013
+# Created: Mon Jul  8 21:29:03 2013
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -122,6 +122,8 @@ class Ui_MainWindow(object):
         self.action_Stammdaten_Veranstaltungen.setObjectName(_fromUtf8("action_Stammdaten_Veranstaltungen"))
         self.action_Report_Personal_DienstnehmerStunden = QtGui.QAction(MainWindow)
         self.action_Report_Personal_DienstnehmerStunden.setObjectName(_fromUtf8("action_Report_Personal_DienstnehmerStunden"))
+        self.action_Stammdaten_Buchungskonten = QtGui.QAction(MainWindow)
+        self.action_Stammdaten_Buchungskonten.setObjectName(_fromUtf8("action_Stammdaten_Buchungskonten"))
         self.menuFile.addAction(self.actionQuit)
         self.menu_Einkauf.addAction(self.action_Report_Einkauf_GesamteLieferungen)
         self.menu_Einkauf.addAction(self.action_Report_Einkauf_Verprobung)
@@ -147,6 +149,7 @@ class Ui_MainWindow(object):
         self.menuStammdaten.addAction(self.action_Stammdaten_Steuersaetze)
         self.menuStammdaten.addAction(self.action_Stammdaten_Liefereinheiten)
         self.menuStammdaten.addAction(self.action_Stammdaten_Veranstaltungen)
+        self.menuStammdaten.addAction(self.action_Stammdaten_Buchungskonten)
         self.menu_Dokumente.addAction(self.action_Dokumente_Dokumenttypen)
         self.menu_Dokumente.addAction(self.action_Dokumente_Dokumente)
         self.menu_Personal.addAction(self.action_Personal_DienstplanErstellen)
@@ -207,4 +210,5 @@ class Ui_MainWindow(object):
         self.action_Personal_Arbeitsplaetze.setText(_translate("MainWindow", "&Arbeitsplätze", None))
         self.action_Stammdaten_Veranstaltungen.setText(_translate("MainWindow", "&Veranstaltungen", None))
         self.action_Report_Personal_DienstnehmerStunden.setText(_translate("MainWindow", "Dienstnehmer &Stunden", None))
+        self.action_Stammdaten_Buchungskonten.setText(_translate("MainWindow", "&Buchungskonten", None))
 
