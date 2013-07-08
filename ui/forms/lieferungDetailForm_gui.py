@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/forms/lieferungDetailForm.ui'
 #
-# Created: Wed Jun  5 16:35:31 2013
+# Created: Mon Jul  8 20:20:12 2013
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -100,6 +100,24 @@ class Ui_LieferungDetailForm(object):
         self.tableView_details = QtGui.QTableView(self.groupBox_2)
         self.tableView_details.setObjectName(_fromUtf8("tableView_details"))
         self.verticalLayout.addWidget(self.tableView_details)
+        self.horizontalLayout_3 = QtGui.QHBoxLayout()
+        self.horizontalLayout_3.setObjectName(_fromUtf8("horizontalLayout_3"))
+        self.label_2 = QtGui.QLabel(self.groupBox_2)
+        self.label_2.setObjectName(_fromUtf8("label_2"))
+        self.horizontalLayout_3.addWidget(self.label_2)
+        self.lineEdit_totalNet = QtGui.QLineEdit(self.groupBox_2)
+        self.lineEdit_totalNet.setReadOnly(True)
+        self.lineEdit_totalNet.setObjectName(_fromUtf8("lineEdit_totalNet"))
+        self.horizontalLayout_3.addWidget(self.lineEdit_totalNet)
+        self.label_5 = QtGui.QLabel(self.groupBox_2)
+        self.label_5.setObjectName(_fromUtf8("label_5"))
+        self.horizontalLayout_3.addWidget(self.label_5)
+        self.lineEdit_totalGross = QtGui.QLineEdit(self.groupBox_2)
+        self.lineEdit_totalGross.setObjectName(_fromUtf8("lineEdit_totalGross"))
+        self.horizontalLayout_3.addWidget(self.lineEdit_totalGross)
+        spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_3.addItem(spacerItem1)
+        self.verticalLayout.addLayout(self.horizontalLayout_3)
         self.gridLayout.addWidget(self.groupBox_2, 2, 0, 1, 1)
         self.horizontalLayout_2 = QtGui.QHBoxLayout()
         self.horizontalLayout_2.setObjectName(_fromUtf8("horizontalLayout_2"))
@@ -131,6 +149,8 @@ class Ui_LieferungDetailForm(object):
         self.pushButton_newDetail.setText(_translate("LieferungDetailForm", "&Hinzufügen", None))
         self.pushButton_deleteDetail.setText(_translate("LieferungDetailForm", "&Löschen", None))
         self.pushButton_selectArticles.setText(_translate("LieferungDetailForm", "&Artikelauswahl", None))
-        self.label_unit.setText(_translate("LieferungDetailForm", "TextLabel", None))
+        self.label_2.setText(_translate("LieferungDetailForm", "Summe netto:", None))
+        self.label_5.setText(_translate("LieferungDetailForm", "brutto:", None))
+        self.label_unit.setText(_translate("LieferungDetailForm", "Einheit:", None))
 
 import lagerManager_rc

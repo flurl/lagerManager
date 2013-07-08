@@ -170,6 +170,7 @@ create table lieferungen(
 	datum datetime not null,
 	lie_ist_verbrauch tinyint(1) not null default 0,
 	lie_kommentar MEDIUMTEXT null,
+	lie_summe float not null,
 	foreign key lieferung_lieferant_fk (lieferant_id) references lieferanten(lieferant_id)
 ) ENGINE=INNODB;
 
@@ -179,7 +180,9 @@ create table lieferungen_details(
 	artikel_id int not null,
 	anzahl float not null,
 	einkaufspreis float not null,
-	foreign key lieferung_detail_lieferung_fk (lieferung_id) references lieferungen(lieferung_id)
+	lde_stsid int unsigned null,
+	foreign key lieferung_detail_lieferung_fk (lieferung_id) references lieferungen(lieferung_id),
+	foreign key lieferung_detail_steuersatz_fk (lde_stsid) references steuersaetze(sts_id)
 ) ENGINE=INNODB;
 
 
@@ -335,3 +338,8 @@ alter table lieferungen drop column lie_dokid;
 --20131706
 alter table journal_checkpoints ENGINE=INNODB;
 
+--20130708
+alter table lieferungen add lie_summe float not null;
+update lieferungen set lie_summe = (select sum(anzahl*einkaufspreis) from lieferungen_details where lieferungen_details.lieferung_id = lieferungen.lieferung_id)
+alter table lieferungen_details add lde_stsid int unsigned not null;
+alter table lieferungen_details add foreign key lieferung_detail_steuersatz_fk (lde_stsid) references steuersaetze(sts_id);

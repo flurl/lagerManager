@@ -41,6 +41,7 @@ class LieferungDetailForm(FormBase):
 		self.docImages = []
 		self.documentChanged = False
 		self.newRecord = False
+		self.grossTextEdited = False
 		
 	def setupUi(self):
 		super(LieferungDetailForm, self).setupUi()
@@ -49,6 +50,7 @@ class LieferungDetailForm(FormBase):
 		self.detailModel.setTable('lieferungen_details')
 		self.detailModel.setRelation(1, QtSql.QSqlRelation('lieferungen', 'lieferung_id', 'datum'))
 		self.detailModel.setRelation(2, QtSql.QSqlRelation('artikel_basis', 'artikel_id', 'artikel_bezeichnung'))
+		self.detailModel.setRelation(self.detailModel.fieldIndex('lde_stsid'), QtSql.QSqlRelation('steuersaetze', 'sts_id', 'sts_bezeichnung'))
 		self.detailModel.setEditStrategy(QtSql.QSqlTableModel.OnFieldChange)
 		self.detailModel.sort(self.detailModel.fieldIndex('lieferung_detail_id'), QtCore.Qt.AscendingOrder)
 		#self.detailModel.select()
@@ -76,13 +78,15 @@ class LieferungDetailForm(FormBase):
 		#self.connect(self.ui.label_document, QtCore.SIGNAL('clicked()'), self.showImage)
 		self.connect(self.detailModel, QtCore.SIGNAL('dataChanged(const QModelIndex&,const QModelIndex&)'), self.articleChanged)
 		self.connect(self.ui.tableView_details.selectionModel(), QtCore.SIGNAL('selectionChanged(QItemSelection, QItemSelection)'), self.detailSelectionChanged)
+		self.connect(self.ui.lineEdit_totalNet, QtCore.SIGNAL('textEdited(const QString&)'), self.onNetTextEdited)
+		self.connect(self.ui.lineEdit_totalGross, QtCore.SIGNAL('textEdited(const QString&)'), self.onGrossTextEdited)
 		
 		
 	def createContextMenu(self):
 	
 		#taxes context menu
 		query = QtSql.QSqlQuery()
-		query.prepare('select sts_bezeichnung, sts_prozent from steuersaetze')
+		query.prepare('select sts_bezeichnung, sts_prozent, sts_id from steuersaetze')
 		query.exec_()
 		if query.lastError().isValid():
 			print 'Error selecting taxes for context menu:', query.lastError().text()
@@ -91,8 +95,9 @@ class LieferungDetailForm(FormBase):
 			while query.next():
 				bez = query.value(0).toString()
 				percent = query.value(1).toFloat()[0]
+				stsId = query.value(2).toInt()[0]
 				actions.append(QtGui.QAction(bez, self))
-				self.connect(actions[-1], QtCore.SIGNAL('triggered()'), lambda p=percent: self.calcNetPrice(p))
+				self.connect(actions[-1], QtCore.SIGNAL('triggered()'), lambda sId=stsId: self.calcNetPrice(sId))
 				self.detailTableView.addAction(actions[-1])
 				
 		sep = QtGui.QAction(self)
@@ -143,8 +148,8 @@ class LieferungDetailForm(FormBase):
 		mapper.addMapping(self.ui.lineEdit_id, 0)
 		mapper.addMapping(self.ui.comboBox_lieferant, 1)
 		mapper.addMapping(self.ui.dateEdit_datum, 2)
-		#mapper.addMapping(self.ui.lineEdit_dokId, self.model.fieldIndex('lie_dokid'))
 		mapper.addMapping(self.ui.plainTextEdit_comment, self.model.fieldIndex('lie_kommentar'))
+		mapper.addMapping(self.ui.lineEdit_totalNet, self.model.fieldIndex('lie_summe'))
 		mapper.setSubmitPolicy(QtGui.QDataWidgetMapper.ManualSubmit)
 		
 		
@@ -163,6 +168,8 @@ class LieferungDetailForm(FormBase):
 		if self.isVerbrauch():
 			self.ui.groupBox_lieferung.setTitle(self.tr('Verbrauch'))
 			self.ui.label_lieferant.setText(self.tr('Verbraucher'))
+			
+		self.calcTotal()
 		
 			
 	def accept(self):
@@ -252,9 +259,18 @@ class LieferungDetailForm(FormBase):
 			QtGui.QMessageBox.warning(self, u'Lagerartikel Fehler', u'Kein Lagerartikel für die gewählte Periode gefunden!')
 			return False
 		
-		query = """insert into lieferungen_details (lieferung_id, artikel_id, anzahl, einkaufspreis) 
+		query = "select sts_id from steuersaetze where sts_bezeichnung = 'null'"
+		results = self.db.exec_(query)
+		results.next()
+		stsId = results.value(0).toInt()[0]
+		
+		if not stsId:
+			QtGui.QMessageBox.warning(self, u'Steuersatz Fehler', u'Null Steuersatz nicht gefunden!')
+			return False
+		
+		query = """insert into lieferungen_details (lieferung_id, artikel_id, anzahl, einkaufspreis, lde_stsid) 
 				values 
-				(%s, %s, %s, %s)""" % (lieferungId, artikelId, 1.0, 0.0)
+				(%s, %s, %s, %s, %s)""" % (lieferungId, artikelId, 1.0, 0.0, stsId)
 		results = self.db.exec_(query)
 		self.db.commit()
 		self.detailModel.select()
@@ -461,13 +477,30 @@ class LieferungDetailForm(FormBase):
 			return False
 	
 		
-	def calcNetPrice(self, percent):
+	def calcNetPrice(self, stsId):
+		query = QtSql.QSqlQuery()
+		query.prepare('select sts_bezeichnung, sts_prozent, sts_id from steuersaetze where sts_id = ?')
+		query.addBindValue(stsId)
+		query.exec_()
+		if query.lastError().isValid():
+			print 'Error selecting tax for calculating net price:', query.lastError().text()
+			return
+		
+		query.next()
+		bez = query.value(0).toString()
+		percent = query.value(1).toFloat()[0]
+		stsId = query.value(2).toInt()[0]
+				
 		idxList = self.detailTableView.selectedIndexes()
 		idx = idxList[0]
 		idx = idx.sibling(idx.row(), 4)
 		value = self.detailModel.data(idx)
 		value = QtCore.QVariant(value.toFloat()[0]/(100+percent)*100)
 		self.detailModel.setData(idx, value)
+		
+		#set tax foreign key
+		idx = idx.sibling(idx.row(), self.detailModel.fieldIndex('sts_bezeichnung'))
+		self.detailModel.setData(idx, stsId)
 		
 	def calcAmountPrice(self, amount):
 		idxList = self.detailTableView.selectedIndexes()
@@ -496,6 +529,7 @@ class LieferungDetailForm(FormBase):
 		
 	def articleChanged(self, topLeft, topRight):
 		self.updateUnitDisplay(topLeft)
+		self.calcTotal()
 		
 	def detailSelectionChanged(self, selected, deselected):
 		indexes = selected.indexes()
@@ -525,6 +559,34 @@ class LieferungDetailForm(FormBase):
 		query.next()
 		unit = query.value(0).toString()
 		self.ui.label_unit.setText('Einheit: '+unit)
+		
+		
+	def onGrossTextEdited(self, text):
+		print 'onGrossTextChanged'
+		self.grossTextEdited = True
+		
+	def onNetTextEdited(self, text):
+		print 'onNetTextChanged'
+		
+	
+	def calcTotal(self):
+		query = QtSql.QSqlQuery()
+		query.prepare("""select round(sum(anzahl*einkaufspreis), 2), round(sum(anzahl*(einkaufspreis*(100+sts_prozent)/100)), 2)
+						from lieferungen_details, steuersaetze
+						where 1=1
+						and lde_stsid = sts_id
+						and lieferungen_details.lieferung_id = ?""")
+		query.addBindValue(self.getCurrentLieferungId())
+		query.exec_()
+		if query.lastError().isValid():
+			print 'Error while getting sum of lieferungen details:', query.lastError().text()
+			return
+		query.next()
+		netTotal = query.value(0).toString()
+		grossTotal = query.value(1).toString()
+		self.ui.lineEdit_totalNet.setText(netTotal)
+		if not self.grossTextEdited:
+			self.ui.lineEdit_totalGross.setText(grossTotal)
 		
 		
 	
