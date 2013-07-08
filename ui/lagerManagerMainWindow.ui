@@ -69,10 +69,17 @@
      <addaction name="action_Report_Lager_MinimumLagerstand"/>
      <addaction name="action_Report_Lager_Inventur"/>
     </widget>
+    <widget class="QMenu" name="menu_Personal_2">
+     <property name="title">
+      <string>&amp;Personal</string>
+     </property>
+     <addaction name="action_Report_Personal_DienstnehmerStunden"/>
+    </widget>
     <addaction name="menu_Lagerstand"/>
     <addaction name="menu_Verbrauch"/>
     <addaction name="menu_Umsaetze"/>
     <addaction name="menu_Einkauf"/>
+    <addaction name="menu_Personal_2"/>
    </widget>
    <widget class="QMenu" name="menu_Lieferungen">
     <property name="title">
@@ -90,6 +97,7 @@
     <addaction name="action_Stammdaten_Import"/>
     <addaction name="action_Stammdaten_Steuersaetze"/>
     <addaction name="action_Stammdaten_Liefereinheiten"/>
+    <addaction name="action_Stammdaten_Veranstaltungen"/>
    </widget>
    <widget class="QMenu" name="menu_Dokumente">
     <property name="title">
@@ -98,10 +106,20 @@
     <addaction name="action_Dokumente_Dokumenttypen"/>
     <addaction name="action_Dokumente_Dokumente"/>
    </widget>
+   <widget class="QMenu" name="menu_Personal">
+    <property name="title">
+     <string>&amp;Personal</string>
+    </property>
+    <addaction name="action_Personal_DienstplanErstellen"/>
+    <addaction name="action_Personal_Dienstnehmer"/>
+    <addaction name="action_Personal_Beschaeftigungsbereiche"/>
+    <addaction name="action_Personal_Arbeitsplaetze"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menu_Reports"/>
    <addaction name="menu_Lieferungen"/>
    <addaction name="menu_Dokumente"/>
+   <addaction name="menu_Personal"/>
    <addaction name="menuStammdaten"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -224,6 +242,36 @@
   <action name="action_Report_Einkauf_Verprobung">
    <property name="text">
     <string>&amp;Verprobung</string>
+   </property>
+  </action>
+  <action name="action_Personal_DienstplanErstellen">
+   <property name="text">
+    <string>Dienstplan &amp;erstellen</string>
+   </property>
+  </action>
+  <action name="action_Personal_Dienstnehmer">
+   <property name="text">
+    <string>&amp;Dienstnehmer</string>
+   </property>
+  </action>
+  <action name="action_Personal_Beschaeftigungsbereiche">
+   <property name="text">
+    <string>&amp;Beschäftigungsbereiche</string>
+   </property>
+  </action>
+  <action name="action_Personal_Arbeitsplaetze">
+   <property name="text">
+    <string>&amp;Arbeitsplätze</string>
+   </property>
+  </action>
+  <action name="action_Stammdaten_Veranstaltungen">
+   <property name="text">
+    <string>&amp;Veranstaltungen</string>
+   </property>
+  </action>
+  <action name="action_Report_Personal_DienstnehmerStunden">
+   <property name="text">
+    <string>Dienstnehmer &amp;Stunden</string>
    </property>
   </action>
  </widget>

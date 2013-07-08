@@ -51,6 +51,7 @@ class MainWindow(QtGui.QMainWindow):
 		self.connect(self.ui.action_Report_Umsaetze_DurchschUmsatzWochentag, QtCore.SIGNAL('triggered()'), self.openDurchschnittUmsatzProWochentagReport)
 		self.connect(self.ui.action_Report_Einkauf_GesamteLieferungen, QtCore.SIGNAL('triggered()'), self.openGesamteLieferungenReport)
 		self.connect(self.ui.action_Report_Einkauf_Verprobung, QtCore.SIGNAL('triggered()'), self.openVerprobungReport)
+		self.connect(self.ui.action_Report_Personal_DienstnehmerStunden, QtCore.SIGNAL('triggered()'), self.openDienstnehmerStundenReport)
 		
 		self.connect(self.ui.action_Lieferungen_Lieferungen, QtCore.SIGNAL('triggered()'), self.openLieferungenForm)
 		self.connect(self.ui.action_Lieferungen_Lieferanten, QtCore.SIGNAL('triggered()'), self.openLieferantenForm)
@@ -59,10 +60,17 @@ class MainWindow(QtGui.QMainWindow):
 		self.connect(self.ui.action_Dokumente_Dokumenttypen, QtCore.SIGNAL('triggered()'), self.openDokumenttypenForm)
 		self.connect(self.ui.action_Dokumente_Dokumente, QtCore.SIGNAL('triggered()'), self.openDokumenteForm)		
 		
+		self.connect(self.ui.action_Personal_DienstplanErstellen, QtCore.SIGNAL('triggered()'), self.openDienstplanForm)
+		self.connect(self.ui.action_Personal_Beschaeftigungsbereiche, QtCore.SIGNAL('triggered()'), self.openBeschaeftigungsbereicheForm)
+		self.connect(self.ui.action_Personal_Arbeitsplaetze, QtCore.SIGNAL('triggered()'), self.openArbeitsplaetzeForm)
+		self.connect(self.ui.action_Personal_Dienstnehmer, QtCore.SIGNAL('triggered()'), self.openDienstnehmerForm)
+		
 		self.connect(self.ui.action_Stammdaten_Perioden, QtCore.SIGNAL('triggered()'), self.openPeriodenForm)
 		self.connect(self.ui.action_Stammdaten_Import, QtCore.SIGNAL('triggered()'), self.openImportForm)
 		self.connect(self.ui.action_Stammdaten_Steuersaetze, QtCore.SIGNAL('triggered()'), self.openSteuersaetzeForm)
 		self.connect(self.ui.action_Stammdaten_Liefereinheiten, QtCore.SIGNAL('triggered()'), self.openLiefereinheitenForm)
+		self.connect(self.ui.action_Stammdaten_Veranstaltungen, QtCore.SIGNAL('triggered()'), self.openVeranstaltungenForm)
+		
 
 	def openConnectDlg(self):
 		import connectDlg
@@ -122,6 +130,14 @@ class MainWindow(QtGui.QMainWindow):
 		report = reports.verprobung.VerprobungReport()
 		window = self.ui.mdiArea.addSubWindow(report)
 		window.show()
+		
+	def openDienstnehmerStundenReport(self):
+		import reports.dienstnehmerStunden
+		report = reports.dienstnehmerStunden.DienstnehmerStundenReport()
+		window = self.ui.mdiArea.addSubWindow(report)
+		window.show()
+		
+		
 
 		
 	def openLieferungenForm(self):
@@ -143,6 +159,30 @@ class MainWindow(QtGui.QMainWindow):
 		import forms.lagerstand
 		form = forms.lagerstand.LagerstandForm(self)
 		form.show()
+	
+	def openDienstplanForm(self):
+		import forms.dienstplan
+		form = forms.dienstplan.DienstplanForm(self)
+		window = self.ui.mdiArea.addSubWindow(form)
+		window.show()
+	
+	def openBeschaeftigungsbereicheForm(self):
+		import forms.beschaeftigungsbereiche
+		form = forms.beschaeftigungsbereiche.BeschaeftigungsbereicheForm(self)
+		window = self.ui.mdiArea.addSubWindow(form)
+		window.show()
+		
+	def openArbeitsplaetzeForm(self):
+		import forms.arbeitsplaetze
+		form = forms.arbeitsplaetze.ArbeitsplaetzeForm(self)
+		window = self.ui.mdiArea.addSubWindow(form)
+		window.show()
+	
+	def openDienstnehmerForm(self):
+		import forms.dienstnehmer
+		form = forms.dienstnehmer.DienstnehmerForm(self)
+		window = self.ui.mdiArea.addSubWindow(form)
+		window.show()
 		
 	def openPeriodenForm(self):
 		import periodenDlg
@@ -176,6 +216,12 @@ class MainWindow(QtGui.QMainWindow):
 	def openLiefereinheitenForm(self):
 		import forms.liefereinheiten
 		form = forms.liefereinheiten.LiefereinheitenForm(self)
+		window = self.ui.mdiArea.addSubWindow(form)
+		window.show()
+		
+	def openVeranstaltungenForm(self):
+		import forms.veranstaltungen
+		form = forms.veranstaltungen.VeranstaltungenForm(self)
 		window = self.ui.mdiArea.addSubWindow(form)
 		window.show()
 						

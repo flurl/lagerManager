@@ -58,7 +58,7 @@ CREATE TABLE journal_checkpoints(
 	index journal_checkpoints_idx (checkpoint_id),
 	index journal_checkpoints_periode_idx (checkpoint_periode),
 	foreign key journal_checkpoints_periode_fk (checkpoint_periode) references perioden(periode_id)
-);
+) ENGINE=INNODB;
 
 
 CREATE TABLE artikel_zutaten(
@@ -149,7 +149,7 @@ create table lagerstand(
 	foreign key lagerstand_artikel_fk (artikel_id) references artikel_basis(artikel_id),
 	foreign key lagerstand_periode_fk (periode_id) references perioden(periode_id)
 ) ENGINE=INNODB;
-
+detail_preis decimal(18, 3) NOT NULL,
 
 create table dokumenttypen (
 	dot_id integer unsigned auto_increment primary key not null,
@@ -218,6 +218,65 @@ create table bilder (
 ) ENGINE=INNODB;
 
 
+create table beschaeftigungsbereiche (
+	beb_id int unsigned auto_increment primary key not null,
+	beb_bezeichnung varchar(255) not null
+) ENGINE=INNODB;
+
+
+create table dienstnehmer (
+	din_id int unsigned auto_increment primary key not null,
+	din_name varchar(255) not null,
+	din_gehalt decimal(18, 3) NOT NULL,
+	din_bebid int unsigned not null,
+	din_stundensatz decimal(18, 3) NOT NULL,
+	din_farbe varchar(255) NULL,
+	foreign key dienstnehmer_beschaeftigunsgbereich_fk (din_bebid) references beschaeftigungsbereiche(beb_id)
+) ENGINE=INNODB;
+
+
+create table veranstaltungen (
+	ver_id int unsigned auto_increment primary key not null,
+	ver_datum date not null,
+	ver_bezeichnung varchar(255) not null,
+	ver_beginn time not null,
+	ver_checkpointid int null,
+	foreign key veranstaltung_checkpoint_fk (ver_checkpointid) references journal_checkpoints(checkpoint_id)
+) ENGINE=INNODB;
+	
+	
+create table arbeitsplaetze (
+	arp_id int unsigned auto_increment primary key not null,
+	arp_bezeichnung varchar(255) not null,
+	arp_std_dienst_dauer float not null,
+	arp_bebid int unsigned not null,
+	foreign key arbeitsplatz_beschaeftigungsbereich_fk (arp_bebid) references beschaeftigungsbereiche(beb_id)
+) ENGINE=INNODB;
+
+create table dienste (
+	die_id int unsigned auto_increment primary key not null,
+	die_dinid int unsigned not null,
+	die_verid int unsigned not null,
+	die_arpid int unsigned not null,
+	die_beginn datetime not null,
+	die_ende datetime not null,
+	die_pause float not null,
+	foreign key dienst_dienstnehmer_fk (die_dinid) references dienstnehmer(din_id),
+	foreign key dienst_veranstaltung_fk (die_verid) references veranstaltungen(ver_id),
+	foreign key dienst_arbeitsplatz_fk (die_arpid) references arbeitsplaetze(arp_id)
+) ENGINE=INNODB;
+
+
+create table dienste_vorlagen (
+	div_id int unsigned auto_increment primary key not null,
+	div_bezeichnung varchar(255) not null,
+	div_arpid int unsigned not null,
+	div_beginn time not null,
+	div_ende time not null,
+	foreign key dienst_arbeitsplatz_fk (div_arpid) references arbeitsplaetze(arp_id)
+) ENGINE=INNODB;
+
+	
 
 
 
@@ -225,7 +284,7 @@ alter table journal_details add index journal_details_artikel_text_idx (detail_a
 alter table journal_details add index journal_details_journal_idx (detail_journal);
 alter table journal_daten add index journal_daten_rechnung_idx (daten_rechnung_id);
 alter table journal_daten add index journal_daten_tag_idx (daten_checkpoint_tag);
-alter table journal_checkpoints add index journal_checkpointMEDIUMTEXT null,s_id_idx (checkpoint_id);
+alter table journal_checkpoints add index journal_checkpoints_id_idx (checkpoint_id);
 
 
 --20120831
@@ -273,4 +332,6 @@ update dokumente set dok_lieferung_id = (select lieferung_id from lieferungen wh
 alter table lieferungen drop foreign key lieferungen_ibfk_2;
 alter table lieferungen drop column lie_dokid;
 
+--20131706
+alter table journal_checkpoints ENGINE=INNODB;
 
