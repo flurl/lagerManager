@@ -37,6 +37,7 @@ class TextReport(ReportBase):
 		self.__header = u''
 		self.__footer = u''
 		self.__tableHeaders = []
+		self.__repeatTableHeadersAfterBlankLine = False
 		
 		self.setData([])
 
@@ -47,9 +48,16 @@ class TextReport(ReportBase):
 	def setFooter(self, footer):
 		self.__footer = footer
 		
-	def setTableHeaders(self, headers):
-		"""@headers a list of table headers"""
+	def setTableHeaders(self, headers, repeat=False):
+		"""
+		@headers a list of table headers
+		@repeat defines if the headers should be repeated after each blank line
+		"""
 		self.__tableHeaders = headers
+		self.setTableHeadersRepeat(repeat)
+		
+	def setTableHeadersRepeat(self, repeat):
+		self.__repeatTableHeadersAfterBlankLine = repeat
 		
 	def setData(self, data):
 		"""override this method for custom data set, otherwise supply a query"""
@@ -78,17 +86,15 @@ class TextReport(ReportBase):
 		output = u''
 		output += u'<table border="1">'
 		
-		if len(self.__tableHeaders) > 0:
-			output += u'<tr>'
-			for h in self.__tableHeaders:
-				output += u'<th>%s</th>' % (h, )
-			output += u'</tr>'
+		output += self.mkTableHeaders()
+		blankLine = False
 		
 		for row in self.__data:
 			output += u'<tr>'
 			for cell in row:
 				if cell is None:
 					output += u'<td>'+u'☭'*10+u'</td>'
+					blankLine = True
 				else:
 					#apply formating
 					if type(cell) is list or type(cell) is tuple:
@@ -96,7 +102,22 @@ class TextReport(ReportBase):
 							cell = u'<strong>' + unicode(cell[0]) + u'</strong>'
 					output += u'<td>%s</td>' % (cell,)
 			output += u'</tr>'
+			
+			if blankLine:
+				blankLine = False
+				output += self.mkTableHeaders()
+				
 		output += u'</table>'
+		return output
+	
+	
+	def mkTableHeaders(self):
+		output = u''
+		if len(self.__tableHeaders) > 0:
+			output += u'<tr>'
+			for h in self.__tableHeaders:
+				output += u'<th>%s</th>' % (h, )
+			output += u'</tr>'
 		return output
 	
 	def updatePeriod(self, periodId):
