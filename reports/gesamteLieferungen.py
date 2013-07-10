@@ -15,7 +15,7 @@ class GesamteLieferungenReport(TextReport):
 				
 		self.setHeader('Insgesamt gelieferte Artikel')
 		self.setFooter('here could be a nice footer')
-		self.setTableHeaders(['Artikel', 'Anzahl', 'Einheit', 'Warenwert'])
+		self.setTableHeaders(['Artikel', 'Anzahl', 'Einheit', 'Warenwert', 'Warenwert Durchschnitt'])
 		
 		self.updateData()
 		self.process()
@@ -46,7 +46,7 @@ class GesamteLieferungenReport(TextReport):
 		begin, end = self._getCurrentPeriodStartEnd()
 		perId = self._getCurrentPeriodId()
 		query = """
-				select artikel_bezeichnung, round(sum(anzahl), 2), lager_einheit_name, round(sum(anzahl*einkaufspreis), 2)
+				select artikel_bezeichnung, round(sum(anzahl), 2), lager_einheit_name, round(sum(anzahl*einkaufspreis), 2), round(sum(anzahl*einkaufspreis)/sum(anzahl), 2)
 				from artikel_basis, lieferungen_details, lieferungen, lager_artikel, lager_einheiten
 				where 1=1 
 				and artikel_basis.artikel_id = lieferungen_details.artikel_id 
