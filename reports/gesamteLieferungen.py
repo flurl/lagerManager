@@ -53,6 +53,7 @@ class GesamteLieferungenReport(TextReport):
 				and lieferungen_details.lieferung_id = lieferungen.lieferung_id
 				and lager_artikel.lager_artikel_artikel = artikel_basis.artikel_id
 				and lager_einheit_id = lager_artikel_einheit
+				and lie_ist_verbrauch = 0
 				and lieferungen.datum between '%s' and '%s'
 				and lager_artikel_periode = %s
 				and lager_einheit_periode = %s

@@ -249,7 +249,7 @@ class ImportForm(FormBase):
 			id_ = query.value(0).toInt()[0]
 			
 			s = self.connectToSource()
-			q = """select artikel_id, artikel_bezeichnung, artikel_gruppe, artikel_ep, artikel_ep_mwst, artikel_preis_popup, artikel_ep_preis_popup, artikel_bemerkung, artikel_bezeichnung_2
+			q = """select artikel_id, artikel_bezeichnung, artikel_gruppe, isnull(artikel_ep, 0.0), artikel_ep_mwst, artikel_preis_popup, artikel_ep_preis_popup, artikel_bemerkung, artikel_bezeichnung_2
 						from artikel_basis where artikel_id > %s""" % (id_, )
 			res = self.runQuery(q, db=s)
 			
@@ -258,7 +258,8 @@ class ImportForm(FormBase):
 				query.addBindValue(row[0])
 				query.addBindValue(row[1])
 				query.addBindValue(row[2])
-				query.addBindValue(row[3])
+				print "ep:", float(row[3]), row[3]
+				query.addBindValue(float(row[3]))
 				query.addBindValue(row[4])
 				query.addBindValue(row[5])
 				query.addBindValue(row[6])
@@ -408,11 +409,42 @@ class ImportForm(FormBase):
 				query.exec_()
 				if query.lastError().isValid():
 					print 'Error in query:', query.lastError().text()
+					
+					
+			##################
+			#mwst gruppen
+			##################
+			print 'importing mwst gruppen'
+			
+			query = QtSql.QSqlQuery()
+			print 'deleting'
+			query.prepare('delete from meta_mwstgruppen where mwst_periode = ?')
+			query.addBindValue(periodId)
+			query.exec_()
+			if query.lastError().isValid():
+					print 'Error in query:', query.lastError().text()
+			
+			s = self.connectToSource()
+			q = """select mwst_id, mwst_satz, mwst_bezeichnung
+						from meta_mwstgruppen
+						where 1=1"""
+			res = self.runQuery(q, db=s)
+			
+			for row in res:
+				query.prepare("insert into meta_mwstgruppen (mwst_id, mwst_satz, mwst_bezeichnung, mwst_periode) values (?, ?, ?, ?)")
+				query.addBindValue(row[0])
+				query.addBindValue(float(row[1]))
+				query.addBindValue(row[2])
+				query.addBindValue(periodId)
+				query.exec_()
+				if query.lastError().isValid():
+					print 'Error in query:', query.lastError().text()
 				
 				
 			self.commit()
 		
-		except:
+		except Exception, e:
+			print "Import not successfull - rolling back", e
 			self.rollback()
 		
 		finally:
