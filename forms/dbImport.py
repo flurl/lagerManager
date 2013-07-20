@@ -258,7 +258,6 @@ class ImportForm(FormBase):
 				query.addBindValue(row[0])
 				query.addBindValue(row[1])
 				query.addBindValue(row[2])
-				print "ep:", float(row[3]), row[3]
 				query.addBindValue(float(row[3]))
 				query.addBindValue(row[4])
 				query.addBindValue(row[5])
