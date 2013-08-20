@@ -20,7 +20,7 @@ class AufwandDetailsProTagReport(TextReport):
 				
 		self.setHeader('Aufwandbonierungendetails pro Tag')
 		self.setFooter('here could be a nice footer')
-		self.setTableHeaders(['Checkpoint', 'Artikel', 'Anzahl', 'Summe brutto', 'Summe EK netto', 'VK MWSt.'])
+		self.setTableHeaders(['Checkpoint', 'Artikel', 'Anzahl', 'Summe brutto', 'Summe EK netto', 'VK MWSt.', 'Aufwandbreich'])
 		self.setTableHeadersRepeat(True)
 		
 		self.updateData()
@@ -45,7 +45,8 @@ class AufwandDetailsProTagReport(TextReport):
 			amount = results.value(2).toFloat()[0]
 			sum_ = round(results.value(3).toFloat()[0], 2)
 			tax = round(results.value(4).toFloat()[0], 2)
-			data.append([checkpoint, article, amount, sum_, tax])
+			table = unicode(results.value(5).toString())
+			data.append([checkpoint, article, amount, sum_, tax, table])
 		
 		
 		
@@ -71,8 +72,8 @@ class AufwandDetailsProTagReport(TextReport):
 			if checkpoint is None:
 				continue
 			if checkpoint != lastCheckpoint and lastCheckpoint != '':
-				data.append([[lastCheckpoint, 'strong'], ['Total:', 'strong'], [checkpointTotalCount, 'strong'], [checkpointTotal, 'strong'], [checkpointPurchasePriceTotal, 'strong'], ''])
-				data.append([None, None, None, None, None, None])
+				data.append([[lastCheckpoint, 'strong'], ['Total:', 'strong'], [checkpointTotalCount, 'strong'], [checkpointTotal, 'strong'], [checkpointPurchasePriceTotal, 'strong'], '', ''])
+				data.append([None, None, None, None, None, None, None])
 				checkpointTotal = 0.0
 				checkpointTotalCount = 0.0
 				checkpointPurchasePriceTotal = 0.0
@@ -81,6 +82,7 @@ class AufwandDetailsProTagReport(TextReport):
 			amount = row[2]
 			sum_ = row[3]
 			tax = row[4]
+			table = row[5]
 			
 			articleId = self.getArticleIdByName(article)
 			avgPurchasePrice = self.getAveragePurchasePrice(articleId)
@@ -93,11 +95,11 @@ class AufwandDetailsProTagReport(TextReport):
 			total += sum_
 			totalCount += amount
 			totalPurchasePrice += purchasePrice
-			data.append([checkpoint, article, amount, sum_, purchasePrice, tax])
+			data.append([checkpoint, article, amount, sum_, purchasePrice, tax, table])
 		
 		data.append([lastCheckpoint, 'Total:', checkpointTotalCount, checkpointTotal, checkpointPurchasePriceTotal])
-		data.append([None, None, None, None, None, None])
-		data.append([['Alle Checkpoints:', 'strong'], '', [totalCount, 'strong'], [total, 'strong'], [totalPurchasePrice, 'strong'], ''])
+		data.append([None, None, None, None, None, None, None])
+		data.append([['Alle Checkpoints:', 'strong'], '', [totalCount, 'strong'], [total, 'strong'], [totalPurchasePrice, 'strong'], '', ''])
 		
 		return data
 		
@@ -138,14 +140,16 @@ class AufwandDetailsProTagReport(TextReport):
 	def mkQuery(self):
 		"""returns the query"""
 		query = """
-				select checkpoint_info, detail_artikel_text, sum(detail_absmenge), sum(detail_absmenge*detail_preis), detail_mwst
-from journal_details, journal_daten, journal_checkpoints
+				select checkpoint_info, detail_artikel_text, sum(detail_absmenge), sum(detail_absmenge*detail_preis), detail_mwst, rechnung_tischBereich
+from journal_details, journal_daten, journal_checkpoints, rechnungen_basis
 where 1=1
 and {0}
+and daten_rechnung_id = rechnung_id
 and detail_journal = daten_rechnung_id
 and daten_checkpoint_tag = checkpoint_id
 and detail_periode = {1}
-group by checkpoint_info, detail_artikel_text, detail_istUmsatz, detail_mwst
+and rechnung_periode = {2}
+group by checkpoint_info, rechnung_tischBereich, detail_artikel_text, detail_istUmsatz, detail_mwst
 order by str_to_date(checkpoint_info, '%d.%m.%Y') desc, detail_artikel_text
 		""" 
 		
@@ -154,7 +158,7 @@ order by str_to_date(checkpoint_info, '%d.%m.%Y') desc, detail_artikel_text
 		else:
 			whereClause = "(detail_istUmsatz = 0 or detail_preis = 0.0)"
 		
-		query = query.format(whereClause, self._getCurrentPeriodId())
+		query = query.format(whereClause, self._getCurrentPeriodId(), self._getCurrentPeriodId())
 		print query
 		return query
 	

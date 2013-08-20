@@ -223,6 +223,61 @@ class ImportForm(FormBase):
 				query.exec_()
 				if query.lastError().isValid():
 					print 'Error in query:', query.lastError().text()
+					
+					
+			##################
+			#rechnungen_basis
+			##################
+			print 'importing rechnungen'
+			
+			query = QtSql.QSqlQuery()
+			if initialImport:
+				print 'deleting'
+				query.prepare('delete from rechnungen_basis where rechnung_periode = ?')
+				query.addBindValue(periodId)
+				query.exec_()
+				if query.lastError().isValid():
+					print 'Error in query:', query.lastError().text()
+			
+			query.prepare('select ifnull(max(rechnung_id), 0) from rechnungen_basis where rechnung_periode = ?')
+			query.addBindValue(periodId)
+			query.exec_()
+			if query.lastError().isValid():
+					print 'Error in query:', query.lastError().text()
+			query.next()
+			id_ = query.value(0).toInt()[0]
+			
+			s = self.connectToSource()
+			if checkpointId is None:
+				q = "select * from rechnungen_basis where rechnung_id > %s order by rechnung_id" %(id_, )
+			else:
+				q = """select * from rechnungen_basis, journal_daten 
+						where 1=1
+						and rechnung_id > %s 
+						and daten_rechnung_id = rechnung_id
+						and daten_checkpoint_jahr = %s
+						order by rechnung_id""" %(id_, checkpointId)
+			res = self.runQuery(q, db=s)
+			
+			for row in res:
+				query.prepare("""insert into rechnungen_basis (rechnung_id, rechnung_typ, rechnung_nr, rechnung_dt_erstellung, rechnung_kellnerKurzName, rechnung_tischCode, rechnung_tischBereich, rechnung_adresse, rechnung_istStorno, rechnung_retour, rechnung_dt_zusatz, rechnung_periode)
+						values
+						(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""")
+				query.addBindValue(row[0])
+				query.addBindValue(row[1])
+				query.addBindValue(row[2])
+				query.addBindValue(row[3])
+				query.addBindValue(row[4])
+				query.addBindValue(row[5])
+				query.addBindValue(row[6])
+				query.addBindValue(row[7])
+				query.addBindValue(row[8])
+				query.addBindValue(row[9])
+				query.addBindValue(row[10])
+				query.addBindValue(periodId)
+				query.exec_()
+				if query.lastError().isValid():
+					print 'Error in query:', query.lastError().text()
 
 			
 
