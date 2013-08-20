@@ -61,6 +61,23 @@ CREATE TABLE journal_checkpoints(
 ) ENGINE=INNODB;
 
 
+CREATE TABLE rechnungen_basis(
+	rechnung_id int NOT NULL,
+	rechnung_typ int NOT NULL,
+	rechnung_nr int NOT NULL,
+	rechnung_dt_erstellung datetime NOT NULL,
+	rechnung_kellnerKurzName varchar(50) NOT NULL,
+	rechnung_tischCode varchar(50) NOT NULL,
+	rechnung_tischBereich varchar(50) NOT NULL,
+	rechnung_adresse int NULL,
+	rechnung_istStorno bit NOT NULL,
+	rechnung_retour decimal(18, 2) NULL,
+	rechnung_dt_zusatz datetime NULL,
+	rechnung_periode int not null,
+	index rechnungen_basis_idx (rechnung_id),
+	foreign key rechnungen_basis_periode_fk (rechnung_periode) references perioden(periode_id)
+) ENGINE=INNODB;
+
 CREATE TABLE artikel_zutaten(
 	zutate_master_artikel int NOT NULL,
 	zutate_artikel int NOT NULL,
@@ -136,7 +153,16 @@ create table lager_einheiten(
 	lager_einheit_periode int not null,
 	index (lager_einheit_id),
 	foreign key lager_einheit_periode_fk (lager_einheit_periode) references perioden(periode_id)
-);
+) ENGINE=INNODB;
+
+
+CREATE TABLE meta_mwstgruppen (
+	mwst_id int NOT NULL,
+	mwst_satz decimal(18, 2) NOT NULL,
+	mwst_bezeichnung varchar(50) NOT NULL,
+	mwst_periode integer not null,
+	foreign key mwst_periode_fk (mwst_periode) references perioden(periode_id)
+) ENGINE=INNODB;
 
 
 
@@ -276,7 +302,7 @@ create table dienste_vorlagen (
 	div_arpid int unsigned not null,
 	div_beginn time not null,
 	div_ende time not null,
-	foreign key dienst_arbeitsplatz_fk (div_arpid) references arbeitsplaetze(arp_id)
+	foreign key dienstvorlage_arbeitsplatz_fk (div_arpid) references arbeitsplaetze(arp_id)
 ) ENGINE=INNODB;
 
 
@@ -284,6 +310,18 @@ create table buchungskonten (
 	buk_id int unsigned auto_increment primary key not null,
 	buk_nummer varchar(255) not null,
 	buk_bezeichnung varchar(255) not null
+) ENGINE=INNODB;
+
+
+create table buchungskonto2artikel (
+	b2a_id int unsigned auto_increment primary key not null,
+	b2a_bukid int unsigned not null,
+	b2a_artikel_id int not null,
+	b2a_periode int not null,
+	foreign key b2a_buchungskonto_fk (b2a_bukid) references buchungskonten(buk_id),
+	foreign key b2a_artikel_fk (b2a_artikel_id) references artikel_basis(artikel_id),
+	foreign key b2a_periode_fk (b2a_periode) references perioden(periode_id),
+	unique key (b2a_bukid, b2a_artikel_id, b2a_periode)
 ) ENGINE=INNODB;
 
 	
@@ -350,3 +388,20 @@ alter table lieferungen add lie_summe float not null;
 update lieferungen set lie_summe = (select sum(anzahl*einkaufspreis) from lieferungen_details where lieferungen_details.lieferung_id = lieferungen.lieferung_id)
 alter table lieferungen_details add lde_stsid int unsigned not null;
 alter table lieferungen_details add foreign key lieferung_detail_steuersatz_fk (lde_stsid) references steuersaetze(sts_id);
+
+
+
+--20130719
+--this update has to be made on the wiffzack database
+update artikel_basis
+set artikel_ep = 
+(select (artikel_preise_preis/3)/(1+mwst_satz/100) from artikel_preise, meta_preisgruppen, meta_mwstgruppen
+where artikel_preise_artikel_id = artikel_id 
+and  artikel_preise_preisgruppe_id = preisgruppe_id 
+and preisgruppe_name = 'Normalpreis'
+and artikel_preise_mwst = mwst_id),
+artikel_ep_mwst = 
+(select artikel_preise_mwst from artikel_preise, meta_preisgruppen 
+where artikel_preise_artikel_id = artikel_id 
+and  artikel_preise_preisgruppe_id = preisgruppe_id 
+and preisgruppe_name = 'Normalpreis')
