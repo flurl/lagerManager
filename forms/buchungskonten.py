@@ -40,6 +40,7 @@ class BuchungskontenForm(FormBase):
 		
 		self.connect(self.ui.pushButton_newRecord, QtCore.SIGNAL('clicked()'), self.newRecord)
 		self.connect(self.ui.pushButton_deleteRecord, QtCore.SIGNAL('clicked()'), self.deleteRecord)
+		self.connect(self.ui.pushButton_openBuchungskonten2ArtikelForm, QtCore.SIGNAL('clicked()'), self.showBuchungskonten2ArtikelForm)
 		
 	
 	def newRecord(self):
@@ -54,4 +55,10 @@ class BuchungskontenForm(FormBase):
 		for i in range(len(selected)):
 			self.model.removeRows(selected[i].row(), 1);
 		self.model.submitAll()
+		
+		
+	def showBuchungskonten2ArtikelForm(self):
+		import forms.buchungskonten2artikel
+		form = forms.buchungskonten2artikel.Buchungskonten2artikelForm(self)
+		form.show()
 	

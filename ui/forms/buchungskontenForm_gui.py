@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/forms/buchungskontenForm.ui'
 #
-# Created: Mon Jul  8 21:31:15 2013
+# Created: Tue Aug 20 17:35:39 2013
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -48,7 +48,15 @@ class Ui_BuchungskontenForm(object):
         self.gridLayout.addLayout(self.verticalLayout, 0, 0, 2, 2)
         self.tableView = QtGui.QTableView(BuchungskontenForm)
         self.tableView.setObjectName(_fromUtf8("tableView"))
-        self.gridLayout.addWidget(self.tableView, 2, 0, 1, 1)
+        self.gridLayout.addWidget(self.tableView, 4, 0, 1, 1)
+        self.horizontalLayout = QtGui.QHBoxLayout()
+        self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
+        spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem1)
+        self.pushButton_openBuchungskonten2ArtikelForm = QtGui.QPushButton(BuchungskontenForm)
+        self.pushButton_openBuchungskonten2ArtikelForm.setObjectName(_fromUtf8("pushButton_openBuchungskonten2ArtikelForm"))
+        self.horizontalLayout.addWidget(self.pushButton_openBuchungskonten2ArtikelForm)
+        self.gridLayout.addLayout(self.horizontalLayout, 2, 0, 1, 1)
 
         self.retranslateUi(BuchungskontenForm)
         QtCore.QMetaObject.connectSlotsByName(BuchungskontenForm)
@@ -57,4 +65,5 @@ class Ui_BuchungskontenForm(object):
         BuchungskontenForm.setWindowTitle(_translate("BuchungskontenForm", "Buchungskonten", None))
         self.pushButton_newRecord.setText(_translate("BuchungskontenForm", "&Neu", None))
         self.pushButton_deleteRecord.setText(_translate("BuchungskontenForm", "&Löschen", None))
+        self.pushButton_openBuchungskonten2ArtikelForm.setText(_translate("BuchungskontenForm", "&Artikel zuweisen", None))
 
