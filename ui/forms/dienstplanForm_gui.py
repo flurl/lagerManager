@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/forms/dienstplanForm.ui'
 #
-# Created: Tue Jun 25 16:54:26 2013
+# Created: Thu Aug 22 19:35:53 2013
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -62,6 +62,9 @@ class Ui_DienstplanForm(object):
         self.horizontalLayout_3.addWidget(self.pushButton_saveTemplate)
         spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem1)
+        self.pushButton_autoAssignEmps = QtGui.QPushButton(DienstplanForm)
+        self.pushButton_autoAssignEmps.setObjectName(_fromUtf8("pushButton_autoAssignEmps"))
+        self.horizontalLayout_3.addWidget(self.pushButton_autoAssignEmps)
         self.verticalLayout.addLayout(self.horizontalLayout_3)
         self.groupBox_event = QtGui.QGroupBox(DienstplanForm)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
@@ -112,6 +115,7 @@ class Ui_DienstplanForm(object):
         self.label_2.setText(_translate("DienstplanForm", "Voreinstellung", None))
         self.pushButton_loadTemplate.setText(_translate("DienstplanForm", "&Laden", None))
         self.pushButton_saveTemplate.setText(_translate("DienstplanForm", "&Speichern", None))
+        self.pushButton_autoAssignEmps.setText(_translate("DienstplanForm", "DN autom. zuordnen", None))
         self.groupBox_event.setTitle(_translate("DienstplanForm", "GroupBox", None))
         self.pushButton_addEmployee.setText(_translate("DienstplanForm", "&Hinzufügen", None))
 

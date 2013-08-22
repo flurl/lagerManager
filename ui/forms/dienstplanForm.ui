@@ -90,6 +90,13 @@
        </property>
       </spacer>
      </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_autoAssignEmps">
+       <property name="text">
+        <string>DN autom. zuordnen</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>

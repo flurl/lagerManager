@@ -76,6 +76,7 @@ class DienstplanForm(FormBase):
 		self.connect(self.ui.comboBox_event, QtCore.SIGNAL('currentIndexChanged(int)'), self.load)
 		self.connect(self.ui.pushButton_saveTemplate, QtCore.SIGNAL('clicked()'), self.saveTemplate)
 		self.connect(self.ui.pushButton_loadTemplate, QtCore.SIGNAL('clicked()'), self.loadTemplate)
+		self.connect(self.ui.pushButton_autoAssignEmps, QtCore.SIGNAL('clicked()'), self.autoAssignEmployees)
 		
 		
 		
