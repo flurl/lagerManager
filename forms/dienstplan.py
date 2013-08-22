@@ -33,6 +33,7 @@ class DienstplanForm(FormBase):
 		super(DienstplanForm, self).setupUi()
 		eventsModel = QtSql.QSqlTableModel()
 		eventsModel.setTable('veranstaltungen')
+		eventsModel.setSort(eventsModel.fieldIndex('ver_datum'), QtCore.Qt.DescendingOrder)
 		eventsModel.select()
 		
 		view = QtGui.QTableView()
@@ -195,6 +196,8 @@ class DienstplanForm(FormBase):
 		
 		
 		self.employees.append(widgetRef)
+		
+		return widgetRef
 	
 	
 	def findEmployeeWidgetRefByEmpId(self, empId):
@@ -576,10 +579,78 @@ class DienstplanForm(FormBase):
 			wpId = query.value(2).toInt()[0]
 			begin = query.value(3).toTime()
 			end = query.value(4).toTime()
-			self.addEmployee(arpId=wpId, dieBeginn=begin, dieEnde=end)
-			
+			wr = self.addEmployee(arpId=wpId, dieBeginn=begin, dieEnde=end)
+			self.checkDateTime(wr)
+		
+		self.autoAssignEmployees()
 		self.setModified()
-	
+		
+		
+	def autoAssignEmployees(self):
+		alreadyAssignedEmps = []
+		
+		for waiterWidgetRefs in self.employees:
+			wpId = self.getPKForCombobox(waiterWidgetRefs['workplaceCombo'], 'arp_id')
+			begin = waiterWidgetRefs['beginDateTimeEdit'].dateTime()
+			end = waiterWidgetRefs['endDateTimeEdit'].dateTime()
+			delta = end.toPyDateTime()-begin.toPyDateTime()
+			days, seconds = delta.days, delta.seconds
+			workHours = days*24.0 + seconds/3600.0
+			
+			query = QtSql.QSqlQuery()
+			query.prepare('select arp_bebid from arbeitsplaetze where arp_id = ?')
+			query.addBindValue(wpId)
+			query.exec_()
+			if query.lastError().isValid():
+				print 'Error while selecting arp_bebid for arbeitsplatz:', query.lastError().text()
+				QtGui.QMessageBox.warning(self, u'Datenbank Fehler', 
+												u'Fehler beim Laden der Dienstplan Vorlage!\nBitte kontaktieren Sie Ihren Administrator.')
+				return
+			query.next()
+			bebId = query.value(0).toInt()[0]
+			print 'bebId', bebId, 'wpId', wpId
+			query = QtSql.QSqlQuery()
+			query.prepare('select din_id from dienstnehmer where din_bebid = ? order by RAND()')
+			query.addBindValue(bebId)
+			query.exec_()
+			if query.lastError().isValid():
+				print 'Error while selecting dienstnehmer:', query.lastError().text()
+				QtGui.QMessageBox.warning(self, u'Datenbank Fehler', 
+												u'Fehler beim Laden der Dienstplan Vorlage!\nBitte kontaktieren Sie Ihren Administrator.')
+				return
+			
+			availableEmps = []
+			while query.next():
+				print 'BP1', query.value(0).toInt()[0]
+				availableEmps.append(query.value(0).toInt()[0])
+			print 'availableEmps:', availableEmps
+			
+			suitableEmpFound = False
+			eventDate = self.getEventProperties(self.getCurrentEventId())['ver_datum'].toPyDate()
+			for empId in availableEmps:
+				if empId in alreadyAssignedEmps:
+					continue
+				remainingHours = self.getRemainingEmployeeHours(empId, eventDate)
+				print "workHours:", workHours, 'remainingHours:', remainingHours, 'empId:', empId, 'eventDate:', eventDate
+				if workHours > remainingHours:
+					continue
+				else:
+					employeeModel = waiterWidgetRefs['employeeCombo'].model()
+					idx = employeeModel.match(employeeModel.index(0,0), 0, empId)[0]
+					waiterWidgetRefs['employeeCombo'].setCurrentIndex(idx.row())
+					suitableEmpFound = True
+					alreadyAssignedEmps.append(empId)
+					break
+				
+			if not suitableEmpFound:
+				print 'No suitable employee found for workplace %s'%wpId
+				QtGui.QMessageBox.warning(self, u'Dienstnehmer Fehler', 
+												u'Kein passender Dienstnehmer gefunden für Arbeitsplatz %s'%wpId)
+				
+		self.validateRoster()
+				
+			
+			
 	
 	def askToContinueIfModified(self):
 		if self.modified:
