@@ -385,8 +385,9 @@ alter table journal_checkpoints ENGINE=INNODB;
 
 --20130708
 alter table lieferungen add lie_summe float not null;
-update lieferungen set lie_summe = (select sum(anzahl*einkaufspreis) from lieferungen_details where lieferungen_details.lieferung_id = lieferungen.lieferung_id)
+update lieferungen set lie_summe = (select sum(anzahl*einkaufspreis) from lieferungen_details where lieferungen_details.lieferung_id = lieferungen.lieferung_id);
 alter table lieferungen_details add lde_stsid int unsigned not null;
+update lieferungen_details set lde_stsid = 1;
 alter table lieferungen_details add foreign key lieferung_detail_steuersatz_fk (lde_stsid) references steuersaetze(sts_id);
 
 
