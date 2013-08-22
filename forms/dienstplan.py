@@ -194,9 +194,8 @@ class DienstplanForm(FormBase):
 		self.connect(employeeCombo, QtCore.SIGNAL('currentIndexChanged(int)'), lambda i, wr=widgetRef: self.setEmployeeFrameColor(wr))
 		self.connect(workplaceCombo, QtCore.SIGNAL('currentIndexChanged(int)'), lambda i, wr=widgetRef: self.checkEmployeeWorkplaceAssignment(wr))
 		
-		
-		
 		self.employees.append(widgetRef)
+		self.checkDateTime(widgetRef)
 		
 		return widgetRef
 	
@@ -351,18 +350,27 @@ class DienstplanForm(FormBase):
 	def checkDateTime(self, wr):
 		begin = wr['beginDateTimeEdit'].dateTime()
 		end = wr['endDateTimeEdit'].dateTime()
-		if end < begin:
-			QtGui.QMessageBox.warning(self, u'Zeiten Fehler', 
-											u'Das End-Datum liegt vor dem Beginn-Datum! Zeitraum wird angepasst.')
+		modified = False
+		if end <= begin:
 			wpId = self.getPKForCombobox(wr['workplaceCombo'], 'arp_id')
 			wpProps = self.getWorkplaceProperties(wpId)
 			wr['endDateTimeEdit'].setDateTime(begin.addSecs(int(wpProps['arp_std_dienst_dauer']*3600)))
+			modified = True
+			QtGui.QMessageBox.warning(self, u'Zeiten Fehler', 
+											u'Das End-Datum liegt vor dem Beginn-Datum! Zeitraum wurde angepasst.')
 			
 		delta = end.toPyDateTime()-begin.toPyDateTime()
 		if delta.days > 0 or delta.seconds/3600.0 > (MINHOURSFORPAUSE-0.01):
-			wr['pauseCheckBox'].setChecked(True)
+			if not wr['pauseCheckBox'].isChecked():
+				wr['pauseCheckBox'].setChecked(True)
+				modified = True
 		else:
-			wr['pauseCheckBox'].setChecked(False)
+			if wr['pauseCheckBox'].isChecked():
+				wr['pauseCheckBox'].setChecked(False)
+				modified = True
+		
+		if modified:
+			self.setModified()
 			
 			
 	def checkEmployeeWorkplaceAssignment(self, wr):
@@ -581,7 +589,7 @@ class DienstplanForm(FormBase):
 			begin = query.value(3).toTime()
 			end = query.value(4).toTime()
 			wr = self.addEmployee(arpId=wpId, dieBeginn=begin, dieEnde=end)
-			self.checkDateTime(wr)
+			#self.checkDateTime(wr)
 		
 		self.autoAssignEmployees()
 		self.setModified()
