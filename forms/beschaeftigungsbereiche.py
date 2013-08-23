@@ -37,6 +37,7 @@ class BeschaeftigungsbereicheForm(FormBase):
 		self.tableView.setSelectionBehavior(QtGui.QTableView.SelectRows)
 		self.tableView.resizeColumnsToContents()
 		self.tableView.horizontalHeader().setStretchLastSection(True)
+		self.tableView.setSortingEnabled(True)
 		
 		self.connect(self.ui.pushButton_newRecord, QtCore.SIGNAL('clicked()'), self.newRecord)
 		self.connect(self.ui.pushButton_deleteRecord, QtCore.SIGNAL('clicked()'), self.deleteRecord)
