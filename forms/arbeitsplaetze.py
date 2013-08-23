@@ -18,6 +18,10 @@ class ArbeitsplaetzeForm(FormBase):
 		
 		self.model = QtSql.QSqlRelationalTableModel()
 		self.model.setTable('arbeitsplaetze')
+		
+		#the a record before setting the relations for use in the newRecord method
+		self.baseRecord = self.model.record()
+		
 		self.model.setRelation(self.model.fieldIndex('arp_bebid'), QtSql.QSqlRelation('beschaeftigungsbereiche', 'beb_id', 'beb_bezeichnung'))
 		self.model.setEditStrategy(QtSql.QSqlTableModel.OnFieldChange)
 		self.model.select()
@@ -50,8 +54,8 @@ class ArbeitsplaetzeForm(FormBase):
 		query.exec_()
 		query.next()
 		minBebId = query.value(0).toInt()[0]
-		
-		rec = self.model.record()
+
+		rec = self.baseRecord
 		rec.setValue(1, '')
 		rec.setValue(2, 0.0)
 		rec.setValue(3, minBebId)
