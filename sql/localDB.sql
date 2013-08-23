@@ -249,7 +249,8 @@ create table bilder (
 
 create table beschaeftigungsbereiche (
 	beb_id int unsigned auto_increment primary key not null,
-	beb_bezeichnung varchar(255) not null
+	beb_bezeichnung varchar(255) not null,
+	beb_trinkgeldpauschale bool not null default 0
 ) ENGINE=INNODB;
 
 
@@ -406,3 +407,7 @@ artikel_ep_mwst =
 where artikel_preise_artikel_id = artikel_id 
 and  artikel_preise_preisgruppe_id = preisgruppe_id 
 and preisgruppe_name = 'Normalpreis')
+
+
+--20130823
+alter table beschaeftigungsbereiche add column beb_trinkgeldpauschale bool not null default 0;
