@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/forms/dienstplanForm.ui'
 #
-# Created: Thu Aug 22 19:35:53 2013
+# Created: Fri Aug 23 23:44:13 2013
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -79,7 +79,7 @@ class Ui_DienstplanForm(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName(_fromUtf8("scrollArea"))
         self.scrollAreaWidgetContents = QtGui.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 1148, 574))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 1148, 572))
         self.scrollAreaWidgetContents.setObjectName(_fromUtf8("scrollAreaWidgetContents"))
         self.gridLayout = QtGui.QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
@@ -100,10 +100,13 @@ class Ui_DienstplanForm(object):
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.verticalLayout_2.addWidget(self.scrollArea)
         self.verticalLayout.addWidget(self.groupBox_event)
+        self.horizontalLayout_4 = QtGui.QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(_fromUtf8("horizontalLayout_4"))
         self.buttonBox = QtGui.QDialogButtonBox(DienstplanForm)
-        self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
+        self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Apply|QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName(_fromUtf8("buttonBox"))
-        self.verticalLayout.addWidget(self.buttonBox)
+        self.horizontalLayout_4.addWidget(self.buttonBox)
+        self.verticalLayout.addLayout(self.horizontalLayout_4)
 
         self.retranslateUi(DienstplanForm)
         QtCore.QMetaObject.connectSlotsByName(DienstplanForm)

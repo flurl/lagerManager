@@ -74,6 +74,7 @@ class DienstplanForm(FormBase):
 		self.connect(self.ui.pushButton_addEmployee, QtCore.SIGNAL('clicked()'), lambda: self.setModified(True) and self.addEmployee())
 		self.connect(self.ui.buttonBox, QtCore.SIGNAL('accepted()'), self.accept)
 		self.connect(self.ui.buttonBox, QtCore.SIGNAL('rejected()'), self.reject)
+		self.connect(self.ui.buttonBox, QtCore.SIGNAL('clicked(QAbstractButton *)'), self.onButtonBoxClicked)
 		self.connect(self.ui.comboBox_event, QtCore.SIGNAL('currentIndexChanged(int)'), self.load)
 		self.connect(self.ui.pushButton_saveTemplate, QtCore.SIGNAL('clicked()'), self.saveTemplate)
 		self.connect(self.ui.pushButton_loadTemplate, QtCore.SIGNAL('clicked()'), self.loadTemplate)
@@ -487,7 +488,16 @@ class DienstplanForm(FormBase):
 			
 		self.setModified(False)
 		
-		
+	def onButtonBoxClicked(self, btn):
+		if self.ui.buttonBox.buttonRole(btn) == QtGui.QDialogButtonBox.ApplyRole:
+			if self.modified:
+				if self.save():
+					QtGui.QMessageBox.information(self, u'Speichern erfolgreich', 
+												u'Änderungen erfolgreich gespeichert.')
+				else:
+					QtGui.QMessageBox.warning(self, u'Speichern nicht erfolgreich', 
+											u'Fehler beim Speichern des Dienstplans!\nBitte kontaktieren Sie Ihren Administrator.')
+				
 	
 	def deleteWidget(self, w):
 		self.ui.verticalLayout_employees.removeWidget(w)
