@@ -185,6 +185,7 @@ class DienstplanForm(FormBase):
 		self.connect(endDateTimeEdit, QtCore.SIGNAL('dateTimeChanged (const QDateTime&)'), lambda: self.setModified(True))
 		self.connect(pauseCheckBox, QtCore.SIGNAL('stateChanged(int)'), lambda: self.setModified(True))
 		
+		self.connect(delBtn, QtCore.SIGNAL('clicked()'), lambda: self.setModified(True))
 		self.connect(delBtn, QtCore.SIGNAL('clicked()'), lambda f=frame, wr=widgetRef: self.deleteWidget(f) and self.employees.remove(wr))
 		
 		self.connect(employeeCombo, QtCore.SIGNAL('currentIndexChanged(int)'), lambda i, wr=widgetRef: self.checkEmployeeHours(wr))
