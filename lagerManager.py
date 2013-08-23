@@ -164,8 +164,7 @@ class MainWindow(QtGui.QMainWindow):
 	def openDienstplanForm(self):
 		import forms.dienstplan
 		form = forms.dienstplan.DienstplanForm(self)
-		window = self.ui.mdiArea.addSubWindow(form)
-		window.show()
+		form.show()
 	
 	def openBeschaeftigungsbereicheForm(self):
 		import forms.beschaeftigungsbereiche

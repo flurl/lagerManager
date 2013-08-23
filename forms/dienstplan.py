@@ -284,12 +284,9 @@ class DienstplanForm(FormBase):
 		empId = self.getPKForCombobox(combo, 'din_id')
 		failed = self.checkMonthlyWorkingHours([empId])
 		if len(failed) > 0:
-						palette = combo.palette()
-						palette.setColor(QtGui.QPalette.Active, QtGui.QPalette.Button, QtCore.Qt.red)
-						palette.setColor(QtGui.QPalette.Inactive, QtGui.QPalette.Button, QtCore.Qt.red)
-						combo.setPalette(palette)
+			combo.setStyleSheet('QFrame {background-color:red;}')
 		else:
-			combo.setPalette(combo.style().standardPalette())
+			combo.setStyleSheet('')
 			
 		
 	
@@ -381,13 +378,9 @@ class DienstplanForm(FormBase):
 	
 	def setEmployeeFrameColor(self, wr):
 		empProps = self.getEmployeeProperties(self.getPKForCombobox(wr['employeeCombo'], 'din_id'))
-		color = QtGui.QColor(empProps['din_farbe'])
-		print 'color:', empProps['din_farbe']
-		if color.isValid():
-			palette = wr['frame'].palette()
-			palette.setColor(QtGui.QPalette.Window, color)
-			wr['frame'].setAutoFillBackground(True)
-			wr['frame'].setPalette(palette)
+		color = empProps['din_farbe']
+		print 'color:', empProps['din_farbe'], 'background-color:%s;'%color
+		wr['frame'].setStyleSheet('QFrame {background-color:%s;}'%color)
 		
 		
 		
