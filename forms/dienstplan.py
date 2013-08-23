@@ -25,6 +25,7 @@ class DienstplanForm(FormBase):
 	def __init__(self, parent):
 		self.employees = []
 		self.modified = False
+		self.unmodifiedEmpCombos = []
 		super(DienstplanForm, self).__init__(parent)
 		self.load()
 	
@@ -150,6 +151,8 @@ class DienstplanForm(FormBase):
 		if dinId is not None:
 			idx = employeeModel.match(employeeModel.index(0,0), 0, dinId)[0]
 			employeeCombo.setCurrentIndex(idx.row())
+		else:
+			self.unmodifiedEmpCombos.append(widgetRef['employeeCombo'])
 			
 		if dieBeginn is not None and isinstance(dieBeginn, QtCore.QDateTime):
 			beginDateTimeEdit.setDateTime(dieBeginn)
@@ -192,6 +195,7 @@ class DienstplanForm(FormBase):
 		self.connect(endDateTimeEdit, QtCore.SIGNAL('dateTimeChanged (const QDateTime&)'), lambda dt, wr=widgetRef: self.checkDateTime(wr))
 		
 		self.connect(employeeCombo, QtCore.SIGNAL('currentIndexChanged(int)'), lambda i, wr=widgetRef: self.setEmployeeFrameColor(wr))
+		self.connect(employeeCombo, QtCore.SIGNAL('currentIndexChanged(int)'), lambda i, wr=widgetRef: (wr['employeeCombo'] in self.unmodifiedEmpCombos) and self.unmodifiedEmpCombos.remove(wr['employeeCombo']))
 		self.connect(workplaceCombo, QtCore.SIGNAL('currentIndexChanged(int)'), lambda i, wr=widgetRef: self.checkEmployeeWorkplaceAssignment(wr))
 		
 		self.employees.append(widgetRef)
@@ -385,13 +389,22 @@ class DienstplanForm(FormBase):
 		
 		
 	def accept(self):
-		self.validateRoster()
 		if not self.modified or self.save():
 			super(DienstplanForm, self).accept()
 		
 	def save(self):
 		if not self.validateRoster():
 			return False
+		
+		if len(self.unmodifiedEmpCombos):
+			answer = QtGui.QMessageBox.question(self, u'Dienstnehmer nicht modifiziert', 
+													u'Ein oder mehrere Dienstnehmer Drop-Downs wurden nicht verändert.\nTrotzdem fortfahren?',
+													QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
+			if answer == QtGui.QMessageBox.No:
+				return False
+			else:
+				self.unmodifiedEmpCombos = []
+		
 		try:
 			self.beginTransaction()
 			eventId = self.getPKForCombobox(self.ui.comboBox_event, 'ver_id')
