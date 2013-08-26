@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/reports/dienstnehmerStundenReport.ui'
 #
-# Created: Tue Jun 25 21:46:22 2013
+# Created: Mon Aug 26 14:55:46 2013
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -39,6 +39,9 @@ class Ui_DienstnehmerStunden(object):
         self.horizontalLayout.addWidget(self.comboBox_reportType)
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
+        self.pushButton_export = QtGui.QPushButton(DienstnehmerStunden)
+        self.pushButton_export.setObjectName(_fromUtf8("pushButton_export"))
+        self.horizontalLayout.addWidget(self.pushButton_export)
         self.pushButton_refresh = QtGui.QPushButton(DienstnehmerStunden)
         self.pushButton_refresh.setObjectName(_fromUtf8("pushButton_refresh"))
         self.horizontalLayout.addWidget(self.pushButton_refresh)
@@ -66,6 +69,7 @@ class Ui_DienstnehmerStunden(object):
         self.comboBox_reportType.setItemText(0, _translate("DienstnehmerStunden", "Jährlich", None))
         self.comboBox_reportType.setItemText(1, _translate("DienstnehmerStunden", "Monatlich", None))
         self.comboBox_reportType.setItemText(2, _translate("DienstnehmerStunden", "Täglich", None))
+        self.pushButton_export.setText(_translate("DienstnehmerStunden", "&Exportieren", None))
         self.pushButton_refresh.setText(_translate("DienstnehmerStunden", "Aktualisieren", None))
 
 from reports.reportTextViewWidget import ReportTextViewWidget

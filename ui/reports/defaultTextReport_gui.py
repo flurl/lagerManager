@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'ui/reports/defaultTextReport.ui'
 #
-# Created: Mon Aug 20 01:35:53 2012
-#      by: PyQt4 UI code generator 4.9.1
+# Created: Mon Aug 26 14:55:31 2013
+#      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,7 +12,16 @@ from PyQt4 import QtCore, QtGui
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
-    _fromUtf8 = lambda s: s
+    def _fromUtf8(s):
+        return s
+
+try:
+    _encoding = QtGui.QApplication.UnicodeUTF8
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig, _encoding)
+except AttributeError:
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig)
 
 class Ui_DefaultTextReport(object):
     def setupUi(self, DefaultTextReport):
@@ -26,6 +35,9 @@ class Ui_DefaultTextReport(object):
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
+        self.pushButton_export = QtGui.QPushButton(DefaultTextReport)
+        self.pushButton_export.setObjectName(_fromUtf8("pushButton_export"))
+        self.horizontalLayout.addWidget(self.pushButton_export)
         self.comboBox_period = QtGui.QComboBox(DefaultTextReport)
         self.comboBox_period.setObjectName(_fromUtf8("comboBox_period"))
         self.horizontalLayout.addWidget(self.comboBox_period)
@@ -39,6 +51,7 @@ class Ui_DefaultTextReport(object):
         QtCore.QMetaObject.connectSlotsByName(DefaultTextReport)
 
     def retranslateUi(self, DefaultTextReport):
-        DefaultTextReport.setWindowTitle(QtGui.QApplication.translate("DefaultTextReport", "Report", None, QtGui.QApplication.UnicodeUTF8))
+        DefaultTextReport.setWindowTitle(_translate("DefaultTextReport", "Report", None))
+        self.pushButton_export.setText(_translate("DefaultTextReport", "&Exportieren", None))
 
 from reports.reportTextViewWidget import ReportTextViewWidget

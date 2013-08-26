@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import collections
+import csv
 
-from PyQt4 import QtCore
+from PyQt4 import QtCore, QtGui
 
 from reports.reportBase import ReportBase
 from ui.reports.defaultTextReport_gui import Ui_DefaultTextReport
@@ -40,6 +41,11 @@ class TextReport(ReportBase):
 		self.__repeatTableHeadersAfterBlankLine = False
 		
 		self.setData([])
+		
+		
+	def setupSignals(self):
+		ReportBase.setupSignals(self)
+		self.connect(self.ui.pushButton_export, QtCore.SIGNAL('clicked()'), self.exportData)
 
 		
 	def setHeader(self, header):
@@ -123,3 +129,10 @@ class TextReport(ReportBase):
 	def updatePeriod(self, periodId):
 		self.updateData()
 		self.process()
+		
+		
+	def exportData(self):
+		filename = QtGui.QFileDialog.getSaveFileName(self, 'Datei speichern', '', 'CSV Files (*.csv)')
+		with open(filename, 'wb') as f:
+			writer = csv.writer(f)
+			writer.writerows(self.__data)
