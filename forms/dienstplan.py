@@ -259,6 +259,13 @@ class DienstplanForm(FormBase):
 											u'Folgende Dienstnehmer überschreiten ihre monatliche Arbeitszeit: %s'%failingEmployees)
 			return False
 		
+		
+		unavailableEmployees = self.checkEmployeeAvailability(employeesInUse)
+		if unavailableEmployees is False or len(unavailableEmployees) > 0:
+			QtGui.QMessageBox.warning(self, u'Doppelte Einteilung', 
+											u'Folgende Dienstnehmer sind bereits in einer anderen Schicht eingeteilt: %s'%unavailableEmployees)
+			return False
+		
 		return True
 			
 			
@@ -374,7 +381,46 @@ class DienstplanForm(FormBase):
 		
 		if modified:
 			self.setModified()
+	
+	
+	def checkEmployeeAvailability(self, empIds):
+		print "checkEmployeeAvailability"
+		#eventProps = self.getEventProperties(self.getCurrentEventId())
+		#eventDate = eventProps['ver_datum'].toPyDate()
+		failingEmployees = []
+		for empId in empIds:
+			widgetRef = self.findEmployeeWidgetRefByEmpId(empId)
+			beginDate = widgetRef['beginDateTimeEdit'].dateTime()
+			endDate = widgetRef['endDateTimeEdit'].dateTime()
+
+			query = QtSql.QSqlQuery()
+			query.prepare('select count(*) from dienste where die_dinid = ? and die_verid != ? and (die_beginn between ? and ? or die_ende between ? and ?)')
+			query.addBindValue(empId)
+			query.addBindValue(self.getCurrentEventId())
+			query.addBindValue(beginDate)
+			query.addBindValue(endDate)
+			query.addBindValue(beginDate)
+			query.addBindValue(endDate)
 			
+			query.exec_()
+			
+			if query.lastError().isValid():
+				print 'Error while selecting dienste for employee %s:' % empId, query.lastError().text()
+				QtGui.QMessageBox.warning(self, u'Datenbank Fehler', 
+												u'Fehler beim abrufen der Dienste!\nBitte kontaktieren Sie Ihren Administrator.')
+				return False
+			
+			query.next()
+			
+			count = query.value(0).toInt()[0]
+
+			if count != 0:
+				empProps = self.getEmployeeProperties(empId)
+				failingEmployees.append((empProps['din_id'], empProps['din_name']))
+			
+		return failingEmployees
+	
+	
 			
 	def checkEmployeeWorkplaceAssignment(self, wr):
 		wpProps = self.getWorkplaceProperties(self.getPKForCombobox(wr['workplaceCombo'], 'arp_id'))
@@ -495,9 +541,6 @@ class DienstplanForm(FormBase):
 				if self.save():
 					QtGui.QMessageBox.information(self, u'Speichern erfolgreich', 
 												u'Änderungen erfolgreich gespeichert.')
-				else:
-					QtGui.QMessageBox.warning(self, u'Speichern nicht erfolgreich', 
-											u'Fehler beim Speichern des Dienstplans!\nBitte kontaktieren Sie Ihren Administrator.')
 				
 	
 	def deleteWidget(self, w):
