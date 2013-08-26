@@ -117,11 +117,16 @@ class DienstplanForm(FormBase):
 		endDateTimeEdit.setMinimumDate(eventProps['ver_datum'])
 		endDateTimeEdit.setMaximumDate(eventProps['ver_datum'].addDays(1))
 		
+		shiftLengthLineEdit = QtGui.QLineEdit()
+		shiftLengthLineEdit.setReadOnly(True)
+		shiftLengthLineEdit.setFixedWidth(50)
+		
 		pauseCheckBox = QtGui.QCheckBox()
 		pauseCheckBox.setText(u'Pause')
 		timeLayout = QtGui.QHBoxLayout()
 		timeLayout.addWidget(beginDateTimeEdit)
 		timeLayout.addWidget(endDateTimeEdit)
+		timeLayout.addWidget(shiftLengthLineEdit)
 		timeLayout.addWidget(pauseCheckBox)
 		layout.addLayout(timeLayout)
 		
@@ -139,6 +144,7 @@ class DienstplanForm(FormBase):
 						'employeeCombo': employeeCombo,
 						'beginDateTimeEdit': beginDateTimeEdit,
 						'endDateTimeEdit': endDateTimeEdit,
+						'shiftLengthLineEdit': shiftLengthLineEdit,
 						'pauseCheckBox': pauseCheckBox,
 						'frame': frame
 					}
@@ -370,7 +376,11 @@ class DienstplanForm(FormBase):
 											u'Das End-Datum liegt vor dem Beginn-Datum! Zeitraum wurde angepasst.')
 			
 		delta = end.toPyDateTime()-begin.toPyDateTime()
-		if delta.days > 0 or delta.seconds/3600.0 > (MINHOURSFORPAUSE-0.01):
+		days = delta.days
+		seconds = delta.seconds
+		hours = round(days*24.0+seconds/3600.0, 2)
+		
+		if hours > (MINHOURSFORPAUSE-0.01):
 			if not wr['pauseCheckBox'].isChecked():
 				wr['pauseCheckBox'].setChecked(True)
 				modified = True
@@ -378,6 +388,8 @@ class DienstplanForm(FormBase):
 			if wr['pauseCheckBox'].isChecked():
 				wr['pauseCheckBox'].setChecked(False)
 				modified = True
+		
+		wr['shiftLengthLineEdit'].setText(unicode(hours))
 		
 		if modified:
 			self.setModified()
