@@ -444,7 +444,7 @@ class DienstplanForm(FormBase):
 		empProps = self.getEmployeeProperties(self.getPKForCombobox(wr['employeeCombo'], 'din_id'))
 		color = empProps['din_farbe']
 		print 'color:', empProps['din_farbe'], 'background-color:%s;'%color
-		wr['frame'].setStyleSheet('QFrame {background-color:%s;} QComboBox QAbstractItemView {background: transparent;}'%color)
+		wr['frame'].setStyleSheet('QFrame {background-color:%s;} QComboBox QAbstractItemView {background: transparent;} QCheckBox {background: white;}'%color)
 		
 		
 		
