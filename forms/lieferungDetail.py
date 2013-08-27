@@ -126,6 +126,14 @@ class LieferungDetailForm(FormBase):
 		divideAction = QtGui.QAction(u'Durch Anzahl dividieren', self)
 		self.connect(divideAction, QtCore.SIGNAL('triggered()'), self.divideByAmount)
 		self.detailTableView.addAction(divideAction)
+		
+		sep = QtGui.QAction(self)
+		sep.setSeparator(True)
+		self.detailTableView.addAction(sep)
+		
+		fillRemainingAction = QtGui.QAction(u'Artikel mit Restbetrag anlegen', self)
+		self.connect(fillRemainingAction, QtCore.SIGNAL('triggered()'), self.createRemainingAmountArticle)
+		self.detailTableView.addAction(fillRemainingAction)
 				
 		self.detailTableView.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 		
@@ -247,30 +255,38 @@ class LieferungDetailForm(FormBase):
 		super(LieferungDetailForm, self).reject()
 		
 		
-	def addDetail(self):
+	def addDetail(self, artikelId=None, anzahl=None, einkaufspreis=None, stsId=None):
 		lieferungId = self.getCurrentLieferungId()
 		
-		query = "select min(lager_artikel_artikel) from lager_artikel where lager_artikel_periode = %s" % (self.getCurrentPeriodId(), )
-		results = self.db.exec_(query)
-		results.next()
-		artikelId = results.value(0).toInt()[0]
+		if artikelId is None:
+			query = "select min(lager_artikel_artikel) from lager_artikel where lager_artikel_periode = %s" % (self.getCurrentPeriodId(), )
+			results = self.db.exec_(query)
+			results.next()
+			artikelId = results.value(0).toInt()[0]
 		
 		if not artikelId:
 			QtGui.QMessageBox.warning(self, u'Lagerartikel Fehler', u'Kein Lagerartikel für die gewählte Periode gefunden!')
 			return False
 		
-		query = "select sts_id from steuersaetze where sts_bezeichnung = 'null'"
-		results = self.db.exec_(query)
-		results.next()
-		stsId = results.value(0).toInt()[0]
+		if stsId is None:
+			query = "select sts_id from steuersaetze where sts_bezeichnung = 'null'"
+			results = self.db.exec_(query)
+			results.next()
+			stsId = results.value(0).toInt()[0]
 		
 		if not stsId:
 			QtGui.QMessageBox.warning(self, u'Steuersatz Fehler', u'Null Steuersatz nicht gefunden!')
 			return False
 		
+		if anzahl is None:
+			anzahl = 1.0
+		
+		if einkaufspreis is None:
+			einkaufspreis = 0.0
+		
 		query = """insert into lieferungen_details (lieferung_id, artikel_id, anzahl, einkaufspreis, lde_stsid) 
 				values 
-				(%s, %s, %s, %s, %s)""" % (lieferungId, artikelId, 1.0, 0.0, stsId)
+				(%s, %s, %s, %s, %s)""" % (lieferungId, artikelId, anzahl, einkaufspreis, stsId)
 		results = self.db.exec_(query)
 		self.db.commit()
 		self.detailModel.select()
@@ -521,6 +537,14 @@ class LieferungDetailForm(FormBase):
 		self.detailModel.setData(valueIdx, value)
 		
 		
+	def createRemainingAmountArticle(self):
+		grossTotal = self.calcTotal()['gross']
+		enteredTotal = self.ui.lineEdit_totalGross.text().toFloat()[0]
+		diff = enteredTotal-grossTotal
+		self.addDetail(einkaufspreis=diff)
+		self.grossTextEdited = False
+		
+		
 	def openArticleSelection(self):
 		import forms.lagerartikelAuswahl
 		form = forms.lagerartikelAuswahl.LagerartikelAuswahlForm(self)
@@ -587,6 +611,8 @@ class LieferungDetailForm(FormBase):
 		self.ui.lineEdit_totalNet.setText(netTotal)
 		if not self.grossTextEdited:
 			self.ui.lineEdit_totalGross.setText(grossTotal)
+			
+		return {'net':netTotal.toFloat()[0], 'gross': grossTotal.toFloat()[0]}
 		
 		
 	
