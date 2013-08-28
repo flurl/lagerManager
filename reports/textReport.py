@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import collections
-import csv
+
+from lib.UnicodeWriter import UnicodeWriter
 
 from PyQt4 import QtCore, QtGui
 
@@ -134,5 +135,5 @@ class TextReport(ReportBase):
 	def exportData(self):
 		filename = QtGui.QFileDialog.getSaveFileName(self, 'Datei speichern', '', 'CSV Files (*.csv)')
 		with open(filename, 'wb') as f:
-			writer = csv.writer(f)
+			writer = UnicodeWriter(f)
 			writer.writerows(self.__data)
