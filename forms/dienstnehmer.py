@@ -31,6 +31,7 @@ class DienstnehmerForm(FormBase):
 		self.model.setHeaderData(3, QtCore.Qt.Horizontal, u'Beschäftigungsbereich')
 		self.model.setHeaderData(4, QtCore.Qt.Horizontal, u'Stundenlohn')
 		self.model.setHeaderData(5, QtCore.Qt.Horizontal, u'Farbe')
+		self.model.setHeaderData(self.model.fieldIndex('din_nummer'), QtCore.Qt.Horizontal, u'Nummer')
 		
 
 		
@@ -50,6 +51,12 @@ class DienstnehmerForm(FormBase):
 		#self.connect(delegate, QtCore.SIGNAL('colorColumnEdit(const QModelIndex&)', self.openColorDialog)
 		self.tableView.setItemDelegate(delegate)
 		
+		fromIndex = self.model.fieldIndex('din_nummer')
+		toIndex   = 1
+		if fromIndex != toIndex: 
+				self.tableView.horizontalHeader().moveSection(fromIndex, toIndex)
+		
+		
 		self.connect(self.ui.pushButton_newRecord, QtCore.SIGNAL('clicked()'), self.newRecord)
 		self.connect(self.ui.pushButton_deleteRecord, QtCore.SIGNAL('clicked()'), self.deleteRecord)
 		
@@ -66,6 +73,7 @@ class DienstnehmerForm(FormBase):
 		rec.setValue(2, 0.0)
 		rec.setValue(self.model.fieldIndex('beb_bezeichnung'), QtCore.QVariant(minBebId))
 		rec.setValue(self.model.fieldIndex('din_stundensatz'), 0.0)
+		rec.setValue(self.model.fieldIndex('din_nummer'), -1)
 		#self.model.insertRecord(-1, rec)
 		self.model.insertRowIntoTable(rec)
 		self.model.select()

@@ -257,11 +257,13 @@ create table beschaeftigungsbereiche (
 create table dienstnehmer (
 	din_id int unsigned auto_increment primary key not null,
 	din_name varchar(255) not null,
+	din_nummer varchar(255) not null,
 	din_gehalt decimal(18, 3) NOT NULL,
 	din_bebid int unsigned not null,
 	din_stundensatz decimal(18, 3) NOT NULL,
 	din_farbe varchar(255) NULL,
-	foreign key dienstnehmer_beschaeftigunsgbereich_fk (din_bebid) references beschaeftigungsbereiche(beb_id)
+	foreign key dienstnehmer_beschaeftigunsgbereich_fk (din_bebid) references beschaeftigungsbereiche(beb_id),
+	unique key (din_nummer)
 ) ENGINE=INNODB;
 
 
@@ -411,3 +413,9 @@ and preisgruppe_name = 'Normalpreis')
 
 --20130823
 alter table beschaeftigungsbereiche add column beb_trinkgeldpauschale bool not null default 0;
+
+
+--20130828
+alter table dienstnehmer add din_nummer varchar(255) not null;
+alter table dienstnehmer add unique key (din_nummer);
+
