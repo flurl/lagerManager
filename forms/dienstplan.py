@@ -758,7 +758,7 @@ class DienstplanForm(FormBase):
 		if query.lastError().isValid():
 			print 'Error while selecting dienstplan:', query.lastError().text()
 			QtGui.QMessageBox.warning(self, u'Datenbank Fehler', 
-											u'Fehler beim Laden des Dienstplans!\nBitte kontaktieren Sie Ihren Administrator.')
+											u'Fehler beim Laden der Schicht!\nBitte kontaktieren Sie Ihren Administrator.')
 			return False
 		
 		query.next()
