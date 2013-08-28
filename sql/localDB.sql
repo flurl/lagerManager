@@ -417,5 +417,6 @@ alter table beschaeftigungsbereiche add column beb_trinkgeldpauschale bool not n
 
 --20130828
 alter table dienstnehmer add din_nummer varchar(255) not null;
+update dienstnehmer set din_nummer = din_id;
 alter table dienstnehmer add unique key (din_nummer);
 

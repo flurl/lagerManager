@@ -47,14 +47,14 @@ class DienstnehmerStundenReport(TextReport):
 				"""
 				
 		if reportType == u'Jährlich':
-			fields = 'din_name, sum((unix_timestamp(die_ende)-unix_timestamp(die_beginn))/3600+die_pause), count(*)'
-			groupByFields = 'din_id, din_name'
+			fields = 'din_name, din_nummer, sum((unix_timestamp(die_ende)-unix_timestamp(die_beginn))/3600) - sum(die_pause), sum(die_pause), count(*), sum((unix_timestamp(die_ende)-unix_timestamp(die_beginn))/3600)*din_stundensatz'
+			groupByFields = 'din_id, din_name, din_nummer'
 		elif reportType == u'Monatlich':
-			fields = 'monthname(ver_datum), din_name, sum((unix_timestamp(die_ende)-unix_timestamp(die_beginn))/3600+die_pause), count(*)'
-			groupByFields = 'monthname(ver_datum), din_id, din_name'
+			fields = 'monthname(ver_datum), din_name, din_nummer, sum((unix_timestamp(die_ende)-unix_timestamp(die_beginn))/3600) - sum(die_pause), sum(die_pause), count(*), sum((unix_timestamp(die_ende)-unix_timestamp(die_beginn))/3600)*din_stundensatz'
+			groupByFields = 'monthname(ver_datum), din_id, din_name, din_nummer'
 		else:
-			fields = 'ver_bezeichnung, ver_datum, din_name, sum((unix_timestamp(die_ende)-unix_timestamp(die_beginn))/3600+die_pause), count(*)'
-			groupByFields = 'ver_id, ver_bezeichnung, ver_datum, din_id, din_name'
+			fields = 'ver_bezeichnung, ver_datum, din_name, din_nummer, sum((unix_timestamp(die_ende)-unix_timestamp(die_beginn))/3600) - sum(die_pause), sum(die_pause), count(*), sum((unix_timestamp(die_ende)-unix_timestamp(die_beginn))/3600)*din_stundensatz'
+			groupByFields = 'ver_id, ver_bezeichnung, ver_datum, din_id, din_name, din_nummer'
 			
 		query = query.format(
 							fields=fields,
