@@ -18,6 +18,18 @@ class DienstnehmerStundenReport(TextReport):
 				
 		self.setHeader('Dienstnehmer Stunden Auswertung')
 		self.setFooter('here could be a nice footer')
+		self.defTableHeaders = [
+								'DN Name',
+								'DN Nummer',
+								'Arbeitsstunden',
+								'Pausestunden',
+								'Anzahl der Dienste',
+								'Lohn lt. Stunden',
+								'Nachtarbeitszuschlag',
+								'Trinkgeldpauschale',
+								'Gesamt'
+		]
+		self.setTableHeaders(self.defTableHeaders)
 
 		self.updateData()
 		
@@ -75,12 +87,20 @@ class DienstnehmerStundenReport(TextReport):
 		if reportType == u'Jährlich':
 			fields = 'din_name, din_nummer, sum((unix_timestamp(die_ende)-unix_timestamp(die_beginn))/3600) - sum(die_pause), sum(die_pause), count(*), (sum((unix_timestamp(die_ende)-unix_timestamp(die_beginn))/3600) - sum(die_pause))*din_stundensatz, ' + nachtarbeitszuschlagQuery + ', {TRINKGELDPAUSCHALE}*(sum((unix_timestamp(die_ende)-unix_timestamp(die_beginn))/3600) - sum(die_pause))*beb_trinkgeldpauschale, ' + nachtarbeitszuschlagQuery + ' + (sum((unix_timestamp(die_ende)-unix_timestamp(die_beginn))/3600) - sum(die_pause))*din_stundensatz + {TRINKGELDPAUSCHALE}*(sum((unix_timestamp(die_ende)-unix_timestamp(die_beginn))/3600) - sum(die_pause))*beb_trinkgeldpauschale '
 			groupByFields = 'din_id, din_name, din_nummer'
+			
+			self.setTableHeaders(self.defTableHeaders)
+			
 		elif reportType == u'Monatlich':
 			fields = 'monthname(ver_datum), din_name, din_nummer, sum((unix_timestamp(die_ende)-unix_timestamp(die_beginn))/3600) - sum(die_pause), sum(die_pause), count(*), (sum((unix_timestamp(die_ende)-unix_timestamp(die_beginn))/3600) - sum(die_pause))*din_stundensatz, ' + nachtarbeitszuschlagQuery + ', {TRINKGELDPAUSCHALE}*(sum((unix_timestamp(die_ende)-unix_timestamp(die_beginn))/3600) - sum(die_pause))*beb_trinkgeldpauschale, ' + nachtarbeitszuschlagQuery + ' + (sum((unix_timestamp(die_ende)-unix_timestamp(die_beginn))/3600) - sum(die_pause))*din_stundensatz + {TRINKGELDPAUSCHALE}*(sum((unix_timestamp(die_ende)-unix_timestamp(die_beginn))/3600) - sum(die_pause))*beb_trinkgeldpauschale '
 			groupByFields = 'monthname(ver_datum), din_id, din_name, din_nummer'
+			
+			self.setTableHeaders(['Monat']+self.defTableHeaders)
+			
 		else:
 			fields = 'ver_bezeichnung, ver_datum, din_name, din_nummer, sum((unix_timestamp(die_ende)-unix_timestamp(die_beginn))/3600) - sum(die_pause), sum(die_pause), count(*), (sum((unix_timestamp(die_ende)-unix_timestamp(die_beginn))/3600) - sum(die_pause))*din_stundensatz, ' + nachtarbeitszuschlagQuery + ', {TRINKGELDPAUSCHALE}*(sum((unix_timestamp(die_ende)-unix_timestamp(die_beginn))/3600) - sum(die_pause))*beb_trinkgeldpauschale, ' + nachtarbeitszuschlagQuery + ' + (sum((unix_timestamp(die_ende)-unix_timestamp(die_beginn))/3600) - sum(die_pause))*din_stundensatz + {TRINKGELDPAUSCHALE}*(sum((unix_timestamp(die_ende)-unix_timestamp(die_beginn))/3600) - sum(die_pause))*beb_trinkgeldpauschale '
 			groupByFields = 'ver_id, ver_bezeichnung, ver_datum, din_id, din_name, din_nummer'
+			
+			self.setTableHeaders(['Schicht', 'Datum']+self.defTableHeaders)
 			
 		fields = fields.format(TRINKGELDPAUSCHALE=TRINKGELDPAUSCHALE)
 			
