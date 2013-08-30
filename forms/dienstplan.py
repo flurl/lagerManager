@@ -13,9 +13,6 @@ import datetime
 import calendar
 import sip
 
-NACHTZUSCHLAG = 21.0
-TRINKGELDPAUSCHALE = 1.5
-MINHOURSFORPAUSE = 6.0
 
 class DienstplanForm(FormBase):
 	
@@ -314,6 +311,8 @@ class DienstplanForm(FormBase):
 		"""
 		@dinId the employee ID
 		@date supply a date within the month the hours are wanted
+		
+		this function is only able to roughly estimate the remaining hours
 		"""
 		if date is None:
 			date = datetime.datetime.now()
@@ -354,9 +353,10 @@ class DienstplanForm(FormBase):
 		print empProps
 		salary = empProps['din_gehalt']
 		hourlyRate = empProps['din_stundensatz']
+		tipAllowance = self.getFieldOfEmploymentProperties(empProps['din_bebid'])['beb_trinkgeldpauschale']
 		
-		remainingSalary = salary - hours*hourlyRate - NACHTZUSCHLAG*count - TRINKGELDPAUSCHALE*count
-		remainingHours = (remainingSalary - NACHTZUSCHLAG - TRINKGELDPAUSCHALE)/hourlyRate
+		remainingSalary = salary - hours*hourlyRate - TRINKGELDPAUSCHALE*count*tipAllowance
+		remainingHours = (remainingSalary - TRINKGELDPAUSCHALE)/hourlyRate
 		
 		print 'dinId:', dinId, 'month hours:', hours, 'count:', count, 'remainingHours:', remainingHours
 		
@@ -819,6 +819,27 @@ class DienstplanForm(FormBase):
 		
 		return props
 		
+		
+	def getFieldOfEmploymentProperties(self, bebId):
+		query = QtSql.QSqlQuery()
+		query.prepare("""select beb_id, beb_bezeichnung, beb_trinkgeldpauschale from beschaeftigungsbereiche where beb_id = ?""")
+		query.addBindValue(bebId)
+		query.exec_()
+		if query.lastError().isValid():
+			print 'Error while selecting beschaeftigungsbereiche:', query.lastError().text()
+			QtGui.QMessageBox.warning(self, u'Datenbank Fehler', 
+											u'Fehler beim Laden des Beschäftigungsbereichs!\nBitte kontaktieren Sie Ihren Administrator.')
+			return False
+		
+		query.next()
+		
+		props = {
+				'beb_id': query.value(0).toInt()[0],
+				'beb_bezeichnung': query.value(1).toString(),
+				'beb_trinkgeldpauschale': query.value(2).toInt()[0]
+				}
+		
+		return props
 		
 		
 		
