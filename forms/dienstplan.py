@@ -4,6 +4,7 @@ from PyQt4 import QtCore, QtGui, QtSql
 from CONSTANTS import *
 import DBConnection
 import config
+from lib.GlobalConfig import globalConf
 
 from forms.formBase import FormBase
 from ui.forms.dienstplanForm_gui import Ui_DienstplanForm
@@ -355,8 +356,8 @@ class DienstplanForm(FormBase):
 		hourlyRate = empProps['din_stundensatz']
 		tipAllowance = self.getFieldOfEmploymentProperties(empProps['din_bebid'])['beb_trinkgeldpauschale']
 		
-		remainingSalary = salary - hours*hourlyRate - TRINKGELDPAUSCHALE*count*tipAllowance
-		remainingHours = (remainingSalary - TRINKGELDPAUSCHALE)/hourlyRate
+		remainingSalary = salary - hours*hourlyRate - TRINKGELDPAUSCHALE*count*tipAllowance - globalConf['considerNAZ']*NACHTARBEITSZUSCHLAG
+		remainingHours = (remainingSalary - TRINKGELDPAUSCHALE*count*tipAllowance - globalConf['considerNAZ']*NACHTARBEITSZUSCHLAG)/hourlyRate
 		
 		print 'dinId:', dinId, 'month hours:', hours, 'count:', count, 'remainingHours:', remainingHours
 		
