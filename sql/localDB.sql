@@ -430,3 +430,7 @@ alter table dienstnehmer add din_nummer varchar(255) not null;
 update dienstnehmer set din_nummer = din_id;
 alter table dienstnehmer add unique key (din_nummer);
 
+
+
+--20130901
+insert into config (cfg_key, cfg_valueI) values ('considerNAZ', 1);
