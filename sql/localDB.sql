@@ -327,7 +327,17 @@ create table buchungskonto2artikel (
 	unique key (b2a_bukid, b2a_artikel_id, b2a_periode)
 ) ENGINE=INNODB;
 
-	
+
+create table config (
+	cfg_id int unsigned auto_increment primary key not null,
+	cfg_key varchar(255) not null,
+	cfg_valueI int null,
+	cfg_valueF float null,
+	cfg_valueS text null,
+	unique key (cfg_key)
+) ENGINE=INNODB;
+
+
 
 
 

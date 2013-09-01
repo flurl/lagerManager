@@ -99,6 +99,8 @@
     <addaction name="action_Stammdaten_Liefereinheiten"/>
     <addaction name="action_Stammdaten_Veranstaltungen"/>
     <addaction name="action_Stammdaten_Buchungskonten"/>
+    <addaction name="separator"/>
+    <addaction name="action_Stammdaten_Konfiguration"/>
    </widget>
    <widget class="QMenu" name="menu_Dokumente">
     <property name="title">
@@ -278,6 +280,11 @@
   <action name="action_Stammdaten_Buchungskonten">
    <property name="text">
     <string>&amp;Buchungskonten</string>
+   </property>
+  </action>
+  <action name="action_Stammdaten_Konfiguration">
+   <property name="text">
+    <string>&amp;Konfiguration</string>
    </property>
   </action>
  </widget>

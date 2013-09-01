@@ -71,6 +71,7 @@ class MainWindow(QtGui.QMainWindow):
 		self.connect(self.ui.action_Stammdaten_Liefereinheiten, QtCore.SIGNAL('triggered()'), self.openLiefereinheitenForm)
 		self.connect(self.ui.action_Stammdaten_Veranstaltungen, QtCore.SIGNAL('triggered()'), self.openVeranstaltungenForm)
 		self.connect(self.ui.action_Stammdaten_Buchungskonten, QtCore.SIGNAL('triggered()'), self.openBuchungskontenForm)
+		self.connect(self.ui.action_Stammdaten_Konfiguration, QtCore.SIGNAL('triggered()'), self.openConfigForm)
 		
 
 	def openConnectDlg(self):
@@ -231,6 +232,11 @@ class MainWindow(QtGui.QMainWindow):
 		window = self.ui.mdiArea.addSubWindow(form)
 		window.show()
 				
+	def openConfigForm(self):
+		import forms.config
+		form = forms.config.ConfigForm(self)
+		window = self.ui.mdiArea.addSubWindow(form)
+		window.show()
 				
 if __name__ == "__main__":
 
