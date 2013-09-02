@@ -43,13 +43,35 @@ class DienstnehmerStundenReport(TextReport):
 		self.connect(self.ui.comboBox_reportType, QtCore.SIGNAL('currentIndexChanged(int)'), self.updateData)
 		self.connect(self.ui.pushButton_refresh, QtCore.SIGNAL('clicked()'), self.updateData)
 		
+		
+	def setupUi(self):
+		super(DienstnehmerStundenReport, self).setupUi()
+		
+		model = QtSql.QSqlTableModel()
+		model.setTable('dienstnehmer')
+		model.select()
+		
+		self.ui.comboBox_employees.setModel(model)
+		self.ui.comboBox_employees.setModelColumn(model.fieldIndex('din_name'))
+		
+		self.ui.comboBox_employees.insertSeparator(-1)
+		self.ui.comboBox_employees.setCurrentIndex(-1)
+		
+		
 	
 		
 	def mkQuery(self):
 		"""return the query"""
 		reportType = unicode(self.ui.comboBox_reportType.currentText())
 		pStart, pEnd = self._getCurrentPeriodStartEnd()
-		print pStart, pEnd
+		
+		selectedEmpIdx = self.ui.comboBox_employees.currentIndex()
+		empId = None
+		if selectedEmpIdx > 0:
+			empModel = self.ui.comboBox_employees.model()
+			empId = empModel.data(empModel.index(selectedEmpIdx, 0)).toInt()[0]
+		
+		
 		query = """
 				select {fields}
 				from dienstnehmer, dienste, veranstaltungen, beschaeftigungsbereiche
@@ -57,6 +79,7 @@ class DienstnehmerStundenReport(TextReport):
 				and die_dinid = din_id
 				and die_verid = ver_id
 				and din_bebid = beb_id
+				{empIdWhere}
 				and ver_datum between '{pStart}' and '{pEnd}'
 				group by {groupByFields}
 				"""
@@ -108,7 +131,8 @@ class DienstnehmerStundenReport(TextReport):
 							fields=fields,
 							groupByFields=groupByFields,
 							pStart=pStart.strftime('%Y-%m-%d %H:%M:%S'), 
-							pEnd=pEnd.strftime('%Y-%m-%d %H:%M:%S')
+							pEnd=pEnd.strftime('%Y-%m-%d %H:%M:%S'),
+							empIdWhere=("" if empId is None else " and din_id = %s "%(empId, ))
 							)
 			
 		return query
