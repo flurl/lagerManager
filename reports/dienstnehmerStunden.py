@@ -42,6 +42,8 @@ class DienstnehmerStundenReport(TextReport):
 		super(DienstnehmerStundenReport, self).setupSignals()
 		self.connect(self.ui.comboBox_reportType, QtCore.SIGNAL('currentIndexChanged(int)'), self.updateData)
 		self.connect(self.ui.pushButton_refresh, QtCore.SIGNAL('clicked()'), self.updateData)
+		self.connect(self.ui.comboBox_employees, QtCore.SIGNAL('currentIndexChanged(int)'), self.updateData)
+		self.connect(self.ui.comboBox_fieldOfEmployment, QtCore.SIGNAL('currentIndexChanged(int)'), self.updateData)
 		
 		
 	def setupUi(self):
