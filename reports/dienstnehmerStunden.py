@@ -57,7 +57,15 @@ class DienstnehmerStundenReport(TextReport):
 		self.ui.comboBox_employees.insertSeparator(-1)
 		self.ui.comboBox_employees.setCurrentIndex(-1)
 		
+		model = QtSql.QSqlTableModel()
+		model.setTable('beschaeftigungsbereiche')
+		model.select()
 		
+		self.ui.comboBox_fieldOfEmployment.setModel(model)
+		self.ui.comboBox_fieldOfEmployment.setModelColumn(model.fieldIndex('beb_bezeichnung'))
+		
+		self.ui.comboBox_fieldOfEmployment.insertSeparator(-1)
+		self.ui.comboBox_fieldOfEmployment.setCurrentIndex(-1)
 	
 		
 	def mkQuery(self):
@@ -70,6 +78,12 @@ class DienstnehmerStundenReport(TextReport):
 		if selectedEmpIdx > 0:
 			empModel = self.ui.comboBox_employees.model()
 			empId = empModel.data(empModel.index(selectedEmpIdx, 0)).toInt()[0]
+			
+		selectedFOEIdx = self.ui.comboBox_fieldOfEmployment.currentIndex()
+		foeId = None
+		if selectedFOEIdx > 0:
+			foeModel = self.ui.comboBox_fieldOfEmployment.model()
+			foeId = foeModel.data(foeModel.index(selectedFOEIdx, 0)).toInt()[0]
 		
 		
 		query = """
@@ -80,6 +94,7 @@ class DienstnehmerStundenReport(TextReport):
 				and die_verid = ver_id
 				and din_bebid = beb_id
 				{empIdWhere}
+				{foeIdWhere}
 				and ver_datum between '{pStart}' and '{pEnd}'
 				group by {groupByFields}
 				"""
@@ -132,7 +147,8 @@ class DienstnehmerStundenReport(TextReport):
 							groupByFields=groupByFields,
 							pStart=pStart.strftime('%Y-%m-%d %H:%M:%S'), 
 							pEnd=pEnd.strftime('%Y-%m-%d %H:%M:%S'),
-							empIdWhere=("" if empId is None else " and din_id = %s "%(empId, ))
+							empIdWhere=("" if empId is None else " and din_id = %s "%(empId, )),
+							foeIdWhere=("" if foeId is None else " and beb_id = %s "%(foeId, ))
 							)
 			
 		return query

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/reports/dienstnehmerStundenReport.ui'
 #
-# Created: Sun Sep  1 16:26:24 2013
+# Created: Mon Sep  2 16:17:12 2013
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -40,6 +40,9 @@ class Ui_DienstnehmerStunden(object):
         self.comboBox_employees = QtGui.QComboBox(DienstnehmerStunden)
         self.comboBox_employees.setObjectName(_fromUtf8("comboBox_employees"))
         self.horizontalLayout.addWidget(self.comboBox_employees)
+        self.comboBox_fieldOfEmployment = QtGui.QComboBox(DienstnehmerStunden)
+        self.comboBox_fieldOfEmployment.setObjectName(_fromUtf8("comboBox_fieldOfEmployment"))
+        self.horizontalLayout.addWidget(self.comboBox_fieldOfEmployment)
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
         self.pushButton_export = QtGui.QPushButton(DienstnehmerStunden)

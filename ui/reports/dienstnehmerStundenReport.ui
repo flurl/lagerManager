@@ -39,6 +39,9 @@
       <widget class="QComboBox" name="comboBox_employees"/>
      </item>
      <item>
+      <widget class="QComboBox" name="comboBox_fieldOfEmployment"/>
+     </item>
+     <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
