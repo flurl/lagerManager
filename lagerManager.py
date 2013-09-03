@@ -233,8 +233,8 @@ class MainWindow(QtGui.QMainWindow):
 		window.show()
 				
 	def openConfigForm(self):
-		import forms.config
-		form = forms.config.ConfigForm(self)
+		import forms.globalConfig
+		form = forms.globalConfig.ConfigForm(self)
 		window = self.ui.mdiArea.addSubWindow(form)
 		window.show()
 				
