@@ -99,12 +99,22 @@ class LagerstandReport(GraphicsReport):
 		for i in range(len(days)):
 			articles = days[i]
 			allArticles.update(articles.keys())
-
+		
+		extraData = {}
 		for i in range(len(days)):
 			dp[i] = {}
 			articles = days[i]
-			markingData.append((datetime.datetime(int(self.getCurrPeriode()), 1, 1) + datetime.timedelta(int(i) - 1)).strftime('%d.%m.%Y'))
+			day = (datetime.datetime(int(self.getCurrPeriode()), 1, 1) + datetime.timedelta(int(i) - 1))
+			markingData.append(day.strftime('%d.%m.%Y'))
+			
+			deliveries = self.getDeliveryForDay(day)
+			if deliveries is None:
+				deliveries = []
+			
+			extraData[i] = {}
+			
 			for article in allArticles:
+				extraData[i][article] = deliveries
 				if i == 0:
 					dp[i][article] = articles.get(article, 0.0)
 				else:
@@ -119,6 +129,7 @@ class LagerstandReport(GraphicsReport):
 		self.populateArticleSelection(allArticles)
 		self.setDatapoints(dp)
 		self.setMarkingData(markingData)
+		self.setExtraData(extraData)
 		self.plot()
 		
 		
@@ -282,6 +293,31 @@ class LagerstandReport(GraphicsReport):
 		""" % {'period_id': self._getCurrentPeriodId()}
 		
 		return query
+		
+		
+	def getDeliveryForDay(self, day):
+		day = QtCore.QDateTime(day)
+		query = QtSql.QSqlQuery()
+		query.prepare("select lieferung_id, if(lie_ist_verbrauch = 0, 'Lieferung', 'Verbrauch'), lieferant_name from lieferungen, lieferanten where date(datum) = date(?) and lieferungen.lieferant_id = lieferanten.lieferant_id")
+		query.addBindValue(day)
+		query.exec_()
+		if query.lastError().isValid():
+			print "Error while selecting lieferungen for day %s"%(day, ), query.lastError().text()
+			return None
+		
+		if query.size() == 0:
+			return None
+		
+		deliveries = []
+		while query.next():
+			delId = unicode(query.value(0).toString())
+			consOrDel = unicode(query.value(1).toString())
+			name = unicode(query.value(2).toString())
+			deliveries.append(u'ID: ' + delId + '-' + consOrDel + '-' + name)
+			
+		return deliveries
+			
+		
 		
 	
 	def filterArticlesList(self, text):
