@@ -24,8 +24,11 @@ class FormBase(QtGui.QDialog):
 		
 		
 	def setupSignals(self):
-		self.connect(self.ui.comboBox_period, QtCore.SIGNAL('currentIndexChanged(int)'), lambda: self.updatePeriod(self.getCurrentPeriodId()))
-		self.populatePeriodCB()
+		try:
+			self.connect(self.ui.comboBox_period, QtCore.SIGNAL('currentIndexChanged(int)'), lambda: self.updatePeriod(self.getCurrentPeriodId()))
+			self.populatePeriodCB()
+		except AttributeError:
+			pass
 		
 		
 	def populatePeriodCB(self):
