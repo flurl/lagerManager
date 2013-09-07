@@ -18,7 +18,7 @@ class GlobalConfig(object):
 				if not val is None:
 					return val
 				else:
-					return False
+					raise KeyError
 
 
 
