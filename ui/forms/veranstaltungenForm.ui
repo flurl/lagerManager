@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Schichten</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0" rowspan="2" colspan="2">
@@ -29,6 +29,13 @@
         <widget class="QPushButton" name="pushButton_deleteRecord">
          <property name="text">
           <string>&amp;Löschen</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_autoCreate">
+         <property name="text">
+          <string>&amp;auto. erstellen</string>
          </property>
         </widget>
        </item>

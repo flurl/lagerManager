@@ -48,6 +48,12 @@ class VeranstaltungenForm(FormBase):
 		self.connect(self.ui.pushButton_newRecord, QtCore.SIGNAL('clicked()'), self.newRecord)
 		self.connect(self.ui.pushButton_deleteRecord, QtCore.SIGNAL('clicked()'), self.deleteRecord)
 		
+		
+	def setupSignals(self):
+		super(VeranstaltungenForm, self).setupSignals()
+		
+		self.connect(self.ui.pushButton_autoCreate, QtCore.SIGNAL('clicked()'), self.openAutoCreateForm)
+		
 	
 	def newRecord(self):
 		rec = self.model.record()
@@ -65,4 +71,11 @@ class VeranstaltungenForm(FormBase):
 		for i in range(len(selected)):
 			self.model.removeRows(selected[i].row(), 1);
 		self.model.submitAll()
+		
+		
+	def openAutoCreateForm(self):
+		import forms.autoCreateShifts
+		form = forms.autoCreateShifts.AutoCreateShiftsForm(self)
+		form.exec_()
+		self.model.select()
 	

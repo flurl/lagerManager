@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/forms/veranstaltungenForm.ui'
 #
-# Created: Tue Jun 18 17:50:03 2013
+# Created: Thu Sep  5 13:52:02 2013
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -39,6 +39,9 @@ class Ui_VeranstaltungenForm(object):
         self.pushButton_deleteRecord = QtGui.QPushButton(VeranstaltungenForm)
         self.pushButton_deleteRecord.setObjectName(_fromUtf8("pushButton_deleteRecord"))
         self.horizontalLayout_2.addWidget(self.pushButton_deleteRecord)
+        self.pushButton_autoCreate = QtGui.QPushButton(VeranstaltungenForm)
+        self.pushButton_autoCreate.setObjectName(_fromUtf8("pushButton_autoCreate"))
+        self.horizontalLayout_2.addWidget(self.pushButton_autoCreate)
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem)
         self.comboBox_period = QtGui.QComboBox(VeranstaltungenForm)
@@ -54,7 +57,8 @@ class Ui_VeranstaltungenForm(object):
         QtCore.QMetaObject.connectSlotsByName(VeranstaltungenForm)
 
     def retranslateUi(self, VeranstaltungenForm):
-        VeranstaltungenForm.setWindowTitle(_translate("VeranstaltungenForm", "Dialog", None))
+        VeranstaltungenForm.setWindowTitle(_translate("VeranstaltungenForm", "Schichten", None))
         self.pushButton_newRecord.setText(_translate("VeranstaltungenForm", "&Neu", None))
         self.pushButton_deleteRecord.setText(_translate("VeranstaltungenForm", "&Löschen", None))
+        self.pushButton_autoCreate.setText(_translate("VeranstaltungenForm", "&auto. erstellen", None))
 
