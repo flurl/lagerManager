@@ -44,6 +44,8 @@ class VeranstaltungenForm(FormBase):
 		self.tableView.setSelectionBehavior(QtGui.QTableView.SelectRows)
 		self.tableView.resizeColumnsToContents()
 		self.tableView.horizontalHeader().setStretchLastSection(True)
+		self.tableView.setSortingEnabled(True)
+		self.tableView.sortByColumn(self.model.fieldIndex('ver_datum'), QtCore.Qt.DescendingOrder)
 		
 		self.connect(self.ui.pushButton_newRecord, QtCore.SIGNAL('clicked()'), self.newRecord)
 		self.connect(self.ui.pushButton_deleteRecord, QtCore.SIGNAL('clicked()'), self.deleteRecord)
@@ -76,6 +78,6 @@ class VeranstaltungenForm(FormBase):
 	def openAutoCreateForm(self):
 		import forms.autoCreateShifts
 		form = forms.autoCreateShifts.AutoCreateShiftsForm(self)
-		form.exec_()
-		self.model.select()
+		form.show()
+		
 	

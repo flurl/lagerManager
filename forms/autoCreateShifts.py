@@ -16,6 +16,10 @@ class AutoCreateShiftsForm(FormBase):
 	uiClass = Ui_AutoCreateShiftsForm
 	ident = 'autoCreateShifts'
 	
+	def __init__(self, parent, *args, **kwargs):
+		super(AutoCreateShiftsForm, self).__init__(parent, *args, **kwargs)
+		self.parent = parent
+	
 	def setupUi(self):
 		super(AutoCreateShiftsForm, self).setupUi()
 		self.ui.dateTimeEdit_shift.setDate(QtCore.QDate.currentDate())
@@ -138,6 +142,9 @@ class AutoCreateShiftsForm(FormBase):
 		if query.lastError().isValid():
 			print "Error while creating shift!", query.lastError().text()
 			return False
+		
+		#update the parent dialog
+		self.parent.model.select()
 		
 		return True
 	
