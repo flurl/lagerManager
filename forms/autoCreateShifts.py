@@ -74,7 +74,7 @@ class AutoCreateShiftsForm(FormBase):
 			elif recurrence == 3:
 				date = date.addYears(i*1)
 			
-			if not self.createShift(name, beginDate, beginTime):
+			if not self.createShift(name, date, beginTime):
 				self.rollback()
 				QtGui.QMessageBox.critical(self, u'Schichterstellung fehlgeschlagen', 
 											u'Die Schichten konnten nicht erstellt werden!\nBitte kontaktieren Sie Ihren Datenbank Administrator')
