@@ -356,8 +356,8 @@ class DienstplanForm(FormBase):
 		hourlyRate = empProps['din_stundensatz']
 		tipAllowance = self.getFieldOfEmploymentProperties(empProps['din_bebid'])['beb_trinkgeldpauschale']
 		
-		remainingSalary = salary - hours*hourlyRate - TRINKGELDPAUSCHALE*count*tipAllowance - globalConf['considerNAZ']*NACHTARBEITSZUSCHLAG
-		remainingHours = (remainingSalary - TRINKGELDPAUSCHALE*count*tipAllowance - globalConf['considerNAZ']*NACHTARBEITSZUSCHLAG)/hourlyRate
+		remainingSalary = salary - hours*hourlyRate - globalConf['considerNAZ']*NACHTARBEITSZUSCHLAG
+		remainingHours = (remainingSalary - globalConf['considerNAZ']*NACHTARBEITSZUSCHLAG)/hourlyRate
 		
 		print 'dinId:', dinId, 'month hours:', hours, 'count:', count, 'remainingHours:', remainingHours
 		
