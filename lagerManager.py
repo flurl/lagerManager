@@ -19,6 +19,7 @@ from CONSTANTS import *
 import DBConnection
 
 import GLOBALS
+from version import VERSION
 
 
 class MainWindow(QtGui.QMainWindow):
@@ -37,6 +38,7 @@ class MainWindow(QtGui.QMainWindow):
 		
 		self.openConnectDlg()
 		
+		self.statusBar().addPermanentWidget(QtGui.QLabel('V'+unicode(VERSION)), 1)
 		self.statusBar().addPermanentWidget(QtGui.QLabel('Verbindung: '+DBConnection.connName))
 		
 	def _setupForm(self):
