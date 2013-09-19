@@ -177,6 +177,17 @@ class DienstplanForm(FormBase):
 			endDateTimeEdit.setDate(eventProps['ver_datum'])
 			endDateTimeEdit.setTime(eventProps['ver_beginn'])
 			
+		#set the seconds of the datetimeedit to 0
+		edit = beginDateTimeEdit
+		editTime = edit.time()
+		editTime.setHMS(editTime.hour(), editTime.minute(), 0)
+		edit.setTime(editTime)
+		
+		edit = endDateTimeEdit
+		editTime = edit.time()
+		editTime.setHMS(editTime.hour(), editTime.minute(), 0)
+		edit.setTime(editTime)
+			
 		if diePause is not None and diePause > 0.001 :
 			pauseCheckBox.setChecked(QtCore.Qt.Checked)
 		
@@ -356,8 +367,12 @@ class DienstplanForm(FormBase):
 		hourlyRate = empProps['din_stundensatz']
 		tipAllowance = self.getFieldOfEmploymentProperties(empProps['din_bebid'])['beb_trinkgeldpauschale']
 		
-		remainingSalary = salary - hours*hourlyRate - globalConf['considerNAZ']*NACHTARBEITSZUSCHLAG*count
-		remainingHours = (remainingSalary - globalConf['considerNAZ']*NACHTARBEITSZUSCHLAG)/hourlyRate
+		wr = self.findEmployeeWidgetRefByEmpId(dinId)
+		beginDateTime = wr['beginDateTimeEdit'].dateTime()
+		endDateTime = wr['endDateTimeEdit'].dateTime()
+		
+		remainingSalary = salary - hours*hourlyRate - globalConf['considerNAZ']*NACHTARBEITSZUSCHLAG*count - TRINKGELDPAUSCHALE*count*tipAllowance
+		remainingHours = (remainingSalary - globalConf['considerNAZ']*NACHTARBEITSZUSCHLAG*self.considerNAZForShift(beginDateTime, endDateTime) - TRINKGELDPAUSCHALE*tipAllowance)/hourlyRate
 		
 		print 'dinId:', dinId, 'month hours:', hours, 'count:', count, 'remainingHours:', remainingHours
 		
@@ -372,6 +387,7 @@ class DienstplanForm(FormBase):
 			wpId = self.getPKForCombobox(wr['workplaceCombo'], 'arp_id')
 			wpProps = self.getWorkplaceProperties(wpId)
 			wr['endDateTimeEdit'].setDateTime(begin.addSecs(int(wpProps['arp_std_dienst_dauer']*3600)))
+			end = wr['endDateTimeEdit'].dateTime()
 			modified = True
 			QtGui.QMessageBox.warning(self, u'Zeiten Fehler', 
 											u'Das End-Datum liegt vor dem Beginn-Datum! Zeitraum wurde angepasst.')
@@ -433,6 +449,71 @@ class DienstplanForm(FormBase):
 			
 		return failingEmployees
 	
+	
+	def considerNAZForShift(self, beginDateTime, endDateTime, shiftId=None):
+		if not globalConf['considerNAZ']:
+			return 0
+		
+		NAZBegin = QtCore.QDateTime(beginDateTime)
+		NAZBegin.setTime(QtCore.QTime(22, 0))
+		
+		NAZEnd = QtCore.QDateTime(beginDateTime)
+		NAZEnd.setTime(QtCore.QTime(6, 0))
+		
+		midnight = QtCore.QDateTime(beginDateTime)
+		midnight.setTime(QtCore.QTime(0, 0))
+		
+		if beginDateTime.time() < QtCore.QTime(6, 0):
+			NAZBegin = NAZBegin.addDays(-1)
+		else:
+			NAZEnd = NAZEnd.addDays(1)
+			midnight = midnight.addDays(1)
+		
+		
+		timeOutOfNAZ = 0		
+		interval0 = beginDateTime.secsTo(NAZBegin)
+		interval1 = endDateTime.secsTo(NAZEnd)
+		
+		if interval0 > 0:
+			timeOutOfNAZ += interval0
+		
+		if interval1 < 0:
+			timeOutOfNAZ += abs(interval1)
+			
+		timeWithinNAZ = beginDateTime.secsTo(endDateTime) - timeOutOfNAZ
+		
+		print "checking NAZ: begin:",beginDateTime.toPyDateTime(), "end:", endDateTime.toPyDateTime(), "NAZBegin: ", NAZBegin.toPyDateTime(), "NAZEnd:", NAZEnd.toPyDateTime(), "shiftLen:", beginDateTime.secsTo(endDateTime)/3600, 'withinNAZ:', timeWithinNAZ/3600, 'outOfNAZ:', timeOutOfNAZ/3600 
+		
+		if timeWithinNAZ > timeOutOfNAZ:
+			print "Considering NAZ"
+			return 1
+			
+		print "Not considering NAZ"
+		return 0
+		
+		
+		"""
+		if beginDateTime < NAZBegin:
+			timeOutOfNAZ += beginDateTime.secsTo(NAZBegin)
+		
+		if endDateTime <= midnight:
+			timeWithinNAZ += NAZBegin.secsTo(endDateTime)
+		else:
+			timeWithinNAZ += NAZBegin.secsTo(midnight)
+			
+		if endDateTime > NAZEnd:
+			timeOutOfNAZ += NAZEnd.secsTo(endDateTime)
+			timeWithinNAZ += midnight.secsTo(NAZEnd)
+		else:
+			timeWithinNAZ += midnight.secsTo(endDateTime)
+			
+		if timeOutOfNAZ >= timeWithinNAZ:
+			print "No NAZ considered"
+			return 0
+		
+		print "NAZ considered"
+		return 1
+	"""
 	
 			
 	def checkEmployeeWorkplaceAssignment(self, wr):
@@ -524,6 +605,8 @@ class DienstplanForm(FormBase):
 		
 		self.clear()
 		
+		self.setModified(False)
+		
 		eventId = self.getCurrentEventId()
 		print "event:", eventId
 		query = QtSql.QSqlQuery()
@@ -546,7 +629,7 @@ class DienstplanForm(FormBase):
 			
 			self.addEmployee(dinId, arpId, dieBeginn, dieEnde, diePause)
 			
-		self.setModified(False)
+		
 		
 	def onButtonBoxClicked(self, btn):
 		if self.ui.buttonBox.buttonRole(btn) == QtGui.QDialogButtonBox.ApplyRole:
