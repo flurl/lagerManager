@@ -10,3 +10,5 @@ NEWVER=$(expr $OLDVER + 1)
 echo "Increasing version number to $NEWVER"
 
 sed -i "1s/.*/VERSION=$NEWVER/" version.py 
+
+git add version.py
