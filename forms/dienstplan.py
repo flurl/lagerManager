@@ -5,13 +5,15 @@ from CONSTANTS import *
 import DBConnection
 import config
 from lib.GlobalConfig import globalConf
+import lib.Dienstnehmer
+from lib.Beschaeftigungsbereich import Beschaeftigungsbereich
+import lib.Dienst
 
 from forms.formBase import FormBase
 from ui.forms.dienstplanForm_gui import Ui_DienstplanForm
 
 from sets import Set
 import datetime
-import calendar
 import sip
 
 
@@ -121,11 +123,18 @@ class DienstplanForm(FormBase):
 		
 		pauseCheckBox = QtGui.QCheckBox()
 		pauseCheckBox.setText(u'Pause')
+		pauseCheckBox.setEnabled(False)
+		
+		NAZCheckBox = QtGui.QCheckBox()
+		NAZCheckBox.setText(u'NAZ')
+		NAZCheckBox.setEnabled(False)
+		
 		timeLayout = QtGui.QHBoxLayout()
 		timeLayout.addWidget(beginDateTimeEdit)
 		timeLayout.addWidget(endDateTimeEdit)
 		timeLayout.addWidget(shiftLengthLineEdit)
 		timeLayout.addWidget(pauseCheckBox)
+		timeLayout.addWidget(NAZCheckBox)
 		layout.addLayout(timeLayout)
 		
 		delBtn = QtGui.QPushButton(u'löschen')
@@ -144,7 +153,8 @@ class DienstplanForm(FormBase):
 						'endDateTimeEdit': endDateTimeEdit,
 						'shiftLengthLineEdit': shiftLengthLineEdit,
 						'pauseCheckBox': pauseCheckBox,
-						'frame': frame
+						'frame': frame,
+						'NAZCheckBox': NAZCheckBox
 					}
 		
 		if arpId is not None:
@@ -224,7 +234,6 @@ class DienstplanForm(FormBase):
 	def findEmployeeWidgetRefByEmpId(self, empId):
 		for emp in self.employees:
 			id_ = self.getPKForCombobox(emp['employeeCombo'], 'din_id')
-			print 'empId:', empId, 'cbId:', id_
 			if id_ == empId:
 				return emp
 	
@@ -250,23 +259,14 @@ class DienstplanForm(FormBase):
 			empId = self.getPKForCombobox(waiterWidgetRefs['employeeCombo'], 'din_id')
 			employeesInUse.append(empId)
 			
-			#wpId = self.getPKForCombobox(waiterWidgetRefs['workplaceCombo'], 'arp_id')
-			#workplacesInUse.append(wpId)
 			
 		duplicateWaiters = get_duplicate_items(employeesInUse)
-		#duplicateWorkplaces = get_duplicate_items(workplacesInUse)
 		
 		if len(duplicateWaiters):
 			QtGui.QMessageBox.warning(self, u'Doppelte Einteilung', 
 											u'Der/die Kellner %s wurde doppelt eingeteilt'%duplicateWaiters)
 			return False
 
-		#if len(duplicateWorkplaces):
-		#	QtGui.QMessageBox.warning(self, u'Doppelte Einteilung', 
-		#									u'Der/die Arbeitsplatz/Artbeitsplätze %s wurde doppelt eingeteilt'%duplicateWorkplaces)
-		#	return False
-		
-		#print duplicateWaiters, duplicateWorkplaces
 		
 		failingEmployees = self.checkMonthlyWorkingHours(employeesInUse)
 		if len(failingEmployees) > 0:
@@ -288,20 +288,27 @@ class DienstplanForm(FormBase):
 	def checkMonthlyWorkingHours(self, empIds):
 		print "checkMonthlyWorkingHours"
 		eventProps = self.getEventProperties(self.getCurrentEventId())
-		eventDate = eventProps['ver_datum'].toPyDate()
+		eventDate = eventProps['ver_datum']
 		failingEmployees = []
+				
 		for empId in empIds:
-			remainingHours = self.getRemainingEmployeeHours(empId, eventDate)
 			widgetRef = self.findEmployeeWidgetRefByEmpId(empId)
-			beginDate = widgetRef['beginDateTimeEdit'].dateTime().toPyDateTime()
-			endDate = widgetRef['endDateTimeEdit'].dateTime().toPyDateTime()
-			delta = endDate-beginDate
-			days, seconds = delta.days, delta.seconds
-			hours = days*24.0 + seconds/3600.0
-			print "hours:", hours, "remainingHours", remainingHours, 'beginDate:', beginDate, 'endDate:', endDate, 'days:', days, 'seconds:', seconds
-			if hours > remainingHours:
-				empProps = self.getEmployeeProperties(empId)
-				failingEmployees.append((empProps['din_id'], empProps['din_name'], 'Verbleibende Stunden: %s'%remainingHours))
+			beginDate = widgetRef['beginDateTimeEdit'].dateTime()
+			endDate = widgetRef['endDateTimeEdit'].dateTime()
+			
+			emp = lib.Dienstnehmer.Dienstnehmer(empId)
+			remainingSalary = emp.getRemainingSalary(eventDate, eventProps['ver_id'])
+			duty = lib.Dienst.Dienst()
+			duty['die_beginn'] = beginDate
+			duty['die_ende'] = endDate
+			duty['die_dinid'] = empId
+			
+			dutyEarnings = duty.getEarnings()
+			
+			print 'checkMonthlyWorkingHours remainingSalary:', remainingSalary, 'dutyEarnings:', dutyEarnings
+			
+			if dutyEarnings > remainingSalary:
+				failingEmployees.append((emp['din_id'], emp['din_name'], 'Verbleibendes Gehalt: %s, benötigt: %s'%(remainingSalary, dutyEarnings)))
 			
 		return failingEmployees
 	
@@ -316,72 +323,13 @@ class DienstplanForm(FormBase):
 		else:
 			combo.setStyleSheet('')
 			
-		
-	
-	
-	def getRemainingEmployeeHours(self, dinId, date=None):
-		"""
-		@dinId the employee ID
-		@date supply a date within the month the hours are wanted
-		
-		this function is only able to roughly estimate the remaining hours
-		"""
-		if date is None:
-			date = datetime.datetime.now()
-			
-		year = date.year
-		month = date.month
-		lastDay = calendar.monthrange(year, month)[1]
-		monthBegin = datetime.date(year, month, 1)
-		monthEnd = datetime.date(year, month, lastDay)
-			
-		query = QtSql.QSqlQuery()
-		query.prepare("""
-						select sum(time_to_sec(timediff(die_ende, die_beginn))/3600), count(*) as c
-						from dienste
-						where 1=1
-						and die_dinid = ?
-						and die_beginn between ? and ?
-						and die_verid != ?
-						""")
-		query.addBindValue(dinId)
-		query.addBindValue(QtCore.QDateTime(monthBegin))
-		query.addBindValue(QtCore.QDateTime(monthEnd))
-		query.addBindValue(self.getCurrentEventId())
-		
-		query.exec_()
-		if query.lastError().isValid():
-			print 'Error while selecting employee hours:', query.lastError().text()
-			QtGui.QMessageBox.warning(self, u'Datenbank Fehler', 
-											u'Fehler beim Berechnen der Monatsstunden!\nBitte kontaktieren Sie Ihren Administrator.')
-			return False
-		
-		query.next()
-		
-		hours = query.value(0).toFloat()[0]
-		count = query.value(1).toInt()[0]
-		
-		empProps = self.getEmployeeProperties(dinId)
-		print empProps
-		salary = empProps['din_gehalt']
-		hourlyRate = empProps['din_stundensatz']
-		tipAllowance = self.getFieldOfEmploymentProperties(empProps['din_bebid'])['beb_trinkgeldpauschale']
-		
-		wr = self.findEmployeeWidgetRefByEmpId(dinId)
-		beginDateTime = wr['beginDateTimeEdit'].dateTime()
-		endDateTime = wr['endDateTimeEdit'].dateTime()
-		
-		remainingSalary = salary - hours*hourlyRate - globalConf['considerNAZ']*NACHTARBEITSZUSCHLAG*count - TRINKGELDPAUSCHALE*count*tipAllowance
-		remainingHours = (remainingSalary - globalConf['considerNAZ']*NACHTARBEITSZUSCHLAG*self.considerNAZForShift(beginDateTime, endDateTime) - TRINKGELDPAUSCHALE*tipAllowance)/hourlyRate
-		
-		print 'dinId:', dinId, 'month hours:', hours, 'count:', count, 'remainingHours:', remainingHours
-		
-		return remainingHours
 	
 	
 	def checkDateTime(self, wr):
 		begin = wr['beginDateTimeEdit'].dateTime()
 		end = wr['endDateTimeEdit'].dateTime()
+		empId = self.getPKForCombobox(wr['employeeCombo'], 'din_id')
+		
 		modified = False
 		if end <= begin:
 			wpId = self.getPKForCombobox(wr['workplaceCombo'], 'arp_id')
@@ -392,10 +340,18 @@ class DienstplanForm(FormBase):
 			QtGui.QMessageBox.warning(self, u'Zeiten Fehler', 
 											u'Das End-Datum liegt vor dem Beginn-Datum! Zeitraum wurde angepasst.')
 			
-		delta = end.toPyDateTime()-begin.toPyDateTime()
+		"""delta = end.toPyDateTime()-begin.toPyDateTime()
 		days = delta.days
 		seconds = delta.seconds
-		hours = round(days*24.0+seconds/3600.0, 2)
+		hours = round(days*24.0+seconds/3600.0, 2)"""
+		
+		duty = lib.Dienst.Dienst()
+		duty['die_beginn'] = begin
+		duty['die_ende'] = end
+		duty['die_dinid'] = empId
+		
+		hours = duty.getWorkingHours()
+		NAZ = duty.getNAZ()
 		
 		if hours > (MINHOURSFORPAUSE-0.01):
 			if not wr['pauseCheckBox'].isChecked():
@@ -407,6 +363,17 @@ class DienstplanForm(FormBase):
 				modified = True
 		
 		wr['shiftLengthLineEdit'].setText(unicode(hours))
+		
+		cb = wr['NAZCheckBox']
+		if NAZ > 0:
+			if not cb.isChecked():
+				cb.setChecked(True)
+				modified = True
+		else:
+			if cb.isChecked():
+				cb.setChecked(False)
+				modified = True
+		
 		
 		if modified:
 			self.setModified()
@@ -762,6 +729,8 @@ class DienstplanForm(FormBase):
 			days, seconds = delta.days, delta.seconds
 			workHours = days*24.0 + seconds/3600.0
 			
+			
+			
 			query = QtSql.QSqlQuery()
 			query.prepare('select arp_bebid from arbeitsplaetze where arp_id = ?')
 			query.addBindValue(wpId)
@@ -790,14 +759,23 @@ class DienstplanForm(FormBase):
 				availableEmps.append(query.value(0).toInt()[0])
 			print 'availableEmps:', availableEmps
 			
+			
 			suitableEmpFound = False
 			eventDate = self.getEventProperties(self.getCurrentEventId())['ver_datum'].toPyDate()
 			for empId in availableEmps:
 				if empId in alreadyAssignedEmps:
 					continue
-				remainingHours = self.getRemainingEmployeeHours(empId, eventDate)
-				print "workHours:", workHours, 'remainingHours:', remainingHours, 'empId:', empId, 'eventDate:', eventDate
-				if workHours > remainingHours:
+				
+				duty = lib.Dienst.Dienst()
+				duty['die_beginn'] = begin
+				duty['die_ende'] = end
+				duty['die_dinid'] = empId
+				dutyEarnings = duty.getEarnings()
+				
+				emp = lib.Dienstnehmer.Dienstnehmer(empId)
+				remainingSalary = emp.getRemainingSalary(self.getEventProperties(self.getCurrentEventId())['ver_datum'])
+				
+				if dutyEarnings > remainingSalary:
 					continue
 				else:
 					employeeModel = waiterWidgetRefs['employeeCombo'].model()
@@ -858,8 +836,8 @@ class DienstplanForm(FormBase):
 		return props
 	
 	def getEmployeeProperties(self, dinId):
-		query = QtSql.QSqlQuery()
-		query.prepare("""select din_id, din_name, din_gehalt, din_bebid, din_stundensatz, din_farbe from dienstnehmer where din_id = ?""")
+		"""query = QtSql.QSqlQuery()
+		query.prepare("select din_id, din_name, din_gehalt, din_bebid, din_stundensatz, din_farbe from dienstnehmer where din_id = ?")
 		query.addBindValue(dinId)
 		query.exec_()
 		if query.lastError().isValid():
@@ -879,7 +857,10 @@ class DienstplanForm(FormBase):
 				'din_farbe': query.value(5).toString()
 				}
 		
-		return props
+		return props"""
+	
+		emp = lib.Dienstnehmer.Dienstnehmer(dinId)
+		return emp
 	
 	def getWorkplaceProperties(self, arpId):
 		query = QtSql.QSqlQuery()
@@ -905,8 +886,8 @@ class DienstplanForm(FormBase):
 		
 		
 	def getFieldOfEmploymentProperties(self, bebId):
-		query = QtSql.QSqlQuery()
-		query.prepare("""select beb_id, beb_bezeichnung, beb_trinkgeldpauschale from beschaeftigungsbereiche where beb_id = ?""")
+		"""query = QtSql.QSqlQuery()
+		query.prepare("select beb_id, beb_bezeichnung, beb_trinkgeldpauschale from beschaeftigungsbereiche where beb_id = ?")
 		query.addBindValue(bebId)
 		query.exec_()
 		if query.lastError().isValid():
@@ -923,7 +904,10 @@ class DienstplanForm(FormBase):
 				'beb_trinkgeldpauschale': query.value(2).toInt()[0]
 				}
 		
-		return props
+		return props"""
+	
+		foe = Beschaeftigungsbereich(bebId)
+		return foe
 		
 		
 		
