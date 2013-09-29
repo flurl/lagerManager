@@ -23,3 +23,5 @@ insert into dir_typen (dit_bez, dit_kbez) values
 ('Urlaubsende', 'UREND'), 
 ('Krankenstandsbeginn', 'KSBEG'), 
 ('Krankenstandsende', 'KSEND');
+
+-- appending this comment for testing the pre-commit hook

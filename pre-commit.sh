@@ -13,6 +13,6 @@ sed -i "1s/.*/VERSION=$NEWVER/" version.py
 
 #insert version number in new sql files for 
 #use in the automatic updater
-for FILE in $(git diff --cached --name-status | egrep "^A.*sql/.*\.sql" | cut -f2); do sed '1i #V$NEWVER' $FILE; done
+for FILE in $(git diff --cached --name-status | egrep "^A.*sql/.*\.sql" | cut -f2); do sed -i "1i #V$NEWVER" $FILE; done
 
 git add version.py
