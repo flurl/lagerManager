@@ -66,6 +66,7 @@ class MainWindow(QtGui.QMainWindow):
 		self.connect(self.ui.action_Personal_Beschaeftigungsbereiche, QtCore.SIGNAL('triggered()'), self.openBeschaeftigungsbereicheForm)
 		self.connect(self.ui.action_Personal_Arbeitsplaetze, QtCore.SIGNAL('triggered()'), self.openArbeitsplaetzeForm)
 		self.connect(self.ui.action_Personal_Dienstnehmer, QtCore.SIGNAL('triggered()'), self.openDienstnehmerForm)
+		self.connect(self.ui.action_Personal_DienstnehmerEreignisse, QtCore.SIGNAL('triggered()'), self.openDienstnehmerEreignisseForm)
 		
 		self.connect(self.ui.action_Stammdaten_Perioden, QtCore.SIGNAL('triggered()'), self.openPeriodenForm)
 		self.connect(self.ui.action_Stammdaten_Import, QtCore.SIGNAL('triggered()'), self.openImportForm)
@@ -73,6 +74,7 @@ class MainWindow(QtGui.QMainWindow):
 		self.connect(self.ui.action_Stammdaten_Liefereinheiten, QtCore.SIGNAL('triggered()'), self.openLiefereinheitenForm)
 		self.connect(self.ui.action_Stammdaten_Veranstaltungen, QtCore.SIGNAL('triggered()'), self.openVeranstaltungenForm)
 		self.connect(self.ui.action_Stammdaten_Buchungskonten, QtCore.SIGNAL('triggered()'), self.openBuchungskontenForm)
+		self.connect(self.ui.action_Stammdaten_DNEreignisTypen, QtCore.SIGNAL('triggered()'), self.openDNEreignisTypenForm)
 		self.connect(self.ui.action_Stammdaten_Konfiguration, QtCore.SIGNAL('triggered()'), self.openConfigForm)
 		
 
@@ -187,6 +189,12 @@ class MainWindow(QtGui.QMainWindow):
 		window = self.ui.mdiArea.addSubWindow(form)
 		window.show()
 		
+	def openDienstnehmerEreignisseForm(self):
+		import forms.dienstnehmerEreignisse
+		form = forms.dienstnehmerEreignisse.DienstnehmerEreignisseForm(self)
+		window = self.ui.mdiArea.addSubWindow(form)
+		window.show()
+		
 	def openPeriodenForm(self):
 		import periodenDlg
 		form = periodenDlg.PeriodenDialog(self)
@@ -231,6 +239,12 @@ class MainWindow(QtGui.QMainWindow):
 	def openBuchungskontenForm(self):
 		import forms.buchungskonten
 		form = forms.buchungskonten.BuchungskontenForm(self)
+		window = self.ui.mdiArea.addSubWindow(form)
+		window.show()
+		
+	def openDNEreignisTypenForm(self):
+		import forms.dirTypen
+		form = forms.dirTypen.DirTypenForm(self)
 		window = self.ui.mdiArea.addSubWindow(form)
 		window.show()
 				

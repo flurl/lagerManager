@@ -56,10 +56,44 @@ class DienstnehmerForm(FormBase):
 		if fromIndex != toIndex: 
 				self.tableView.horizontalHeader().moveSection(fromIndex, toIndex)
 		
+		self.createContextMenu()
 		
 		self.connect(self.ui.pushButton_newRecord, QtCore.SIGNAL('clicked()'), self.newRecord)
 		self.connect(self.ui.pushButton_deleteRecord, QtCore.SIGNAL('clicked()'), self.deleteRecord)
 		
+	
+	def createContextMenu(self):
+	
+		#employee incident types context menu
+		query = QtSql.QSqlQuery()
+		query.prepare('select dit_id, dit_kbez from dir_typen')
+		query.exec_()
+		if query.lastError().isValid():
+			print 'Error selecting emp incident types for context menu:', query.lastError().text()
+		else:
+			actions = []
+			while query.next():
+				ditId = query.value(0).toInt()[0]
+				bez = query.value(1).toString()
+				actions.append(QtGui.QAction(bez, self))
+				self.connect(actions[-1], QtCore.SIGNAL('triggered()'), lambda dId=ditId: self.createNewEmpIncident(dId))
+				self.ui.tableView_dienstnehmer.addAction(actions[-1])
+				
+		self.ui.tableView_dienstnehmer.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+	
+	
+	def createNewEmpIncident(self, ditId):
+		idxList = self.ui.tableView_dienstnehmer.selectedIndexes()
+		idx = idxList[0]
+		idx = idx.sibling(idx.row(), 0)
+		empId = self.model.data(idx)
+		
+		import forms.dienstnehmerEreignisse
+		form = forms.dienstnehmerEreignisse.DienstnehmerEreignisseForm(self)
+		form.newRecord(empId, ditId)
+		form.show()
+		
+	
 	
 	def newRecord(self):
 		query = QtSql.QSqlQuery()
