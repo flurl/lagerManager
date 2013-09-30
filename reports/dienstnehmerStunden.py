@@ -133,18 +133,16 @@ class DienstnehmerStundenReport(TextReport):
 	def groupBy(self, data, groupBy='monthly'):
 		
 		newData = []
-		currTimespan = None
 		emps = {}
 		
 		for row in data:
 			if groupBy == 'monthly':
 				timespan = (row[0].year, row[0].month)
 			elif groupBy == 'yearly':
-				timespan = (row[0].year)
+				timespan = (row[0].year, )
 				
-			if timespan != currTimespan:
-				currTimespan = timespan
-				emps[currTimespan] = {}
+			if timespan not in emps:
+				emps[timespan] = {}
 				
 			try:
 				emp = emps[timespan][row[3]] #row[3] = DN-Nr., which should be unique
@@ -173,7 +171,7 @@ class DienstnehmerStundenReport(TextReport):
 		for timespan in emps:
 			for emp in emps[timespan]:
 				e = emps[timespan][emp]
-				newData.append([timespan, e['name'], e['number'], e['totalHours'], e['workingHours'], e['pause'], e['count'], e['salary'], e['NAZ'], e['tipAllowance'], e['sum']])
+				newData.append([u'-'.join([unicode(x) for x in timespan]), e['name'], e['number'], e['totalHours'], e['workingHours'], e['pause'], e['count'], e['salary'], e['NAZ'], e['tipAllowance'], e['sum']])
 		
 		return newData
 	
