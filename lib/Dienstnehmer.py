@@ -6,11 +6,14 @@ from lib import datetimehelper
 from lib.LMDatabaseObject import LMDatabaseObject
 from lib.LMDatabaseRelation import LMDatabaseRelation
 
+#import lib.Gehalt
 
 class Dienstnehmer(LMDatabaseObject):
 	
 	_DBTable = 'dienstnehmer'
+	_dynamicColumns = {'din_stundensatz': 'getHourlyWage'}
 	dienste = LMDatabaseRelation('lib.Dienst.Dienst', 'die_dinid')
+	gehalt = LMDatabaseRelation('din_gehid', 'lib.Gehalt.Gehalt')
 	beschaeftigungsbereich = LMDatabaseRelation('din_bebid', 'lib.Beschaeftigungsbereich.Beschaeftigungsbereich')
 	
 	def __init__(self, pk=None):
@@ -62,6 +65,12 @@ class Dienstnehmer(LMDatabaseObject):
 		return duties
 	
 	
+	def getHourlyWage(self, date=None):
+		hourly = self['gehalt']['stundensatz']
+		print 'getHourlyWage:', date, hourly
+		return hourly
+	
+	
 if __name__ == '__main__':
 	import sys
 	import DBConnection
@@ -108,4 +117,5 @@ if __name__ == '__main__':
 	
 	
 import lib.Dienst 
+import lib.Gehalt
 

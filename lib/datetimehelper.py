@@ -3,8 +3,9 @@
 import calendar
 import datetime
 
+maxDate = datetime.datetime(2099, 12, 31, 23, 59, 59)
 
-def getMonthBeginEnd(self, date=None):
+def getMonthBeginEnd(date=None):
 	if date is None:
 		date = datetime.datetime.now()
 		
@@ -15,3 +16,4 @@ def getMonthBeginEnd(self, date=None):
 	monthEnd = datetime.date(year, month, lastDay)
 	
 	return (monthBegin, monthEnd)
+

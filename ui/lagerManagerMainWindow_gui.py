@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/lagerManagerMainWindow.ui'
 #
-# Created: Sat Sep 28 19:50:01 2013
+# Created: Tue Oct  1 15:09:32 2013
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -121,6 +121,10 @@ class Ui_MainWindow(object):
         self.action_Personal_DienstnehmerEreignisse.setObjectName(_fromUtf8("action_Personal_DienstnehmerEreignisse"))
         self.action_Stammdaten_DNEreignisTypen = QtGui.QAction(MainWindow)
         self.action_Stammdaten_DNEreignisTypen.setObjectName(_fromUtf8("action_Stammdaten_DNEreignisTypen"))
+        self.action_Personal_Gehaelter = QtGui.QAction(MainWindow)
+        self.action_Personal_Gehaelter.setObjectName(_fromUtf8("action_Personal_Gehaelter"))
+        self.action_Personal_Loehne = QtGui.QAction(MainWindow)
+        self.action_Personal_Loehne.setObjectName(_fromUtf8("action_Personal_Loehne"))
         self.menuFile.addAction(self.actionQuit)
         self.menu_Einkauf.addAction(self.action_Report_Einkauf_GesamteLieferungen)
         self.menu_Einkauf.addAction(self.action_Report_Einkauf_Verprobung)
@@ -157,6 +161,8 @@ class Ui_MainWindow(object):
         self.menu_Personal.addAction(self.action_Personal_Beschaeftigungsbereiche)
         self.menu_Personal.addAction(self.action_Personal_Arbeitsplaetze)
         self.menu_Personal.addAction(self.action_Personal_DienstnehmerEreignisse)
+        self.menu_Personal.addAction(self.action_Personal_Gehaelter)
+        self.menu_Personal.addAction(self.action_Personal_Loehne)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menu_Reports.menuAction())
         self.menubar.addAction(self.menu_Lieferungen.menuAction())
@@ -215,4 +221,6 @@ class Ui_MainWindow(object):
         self.action_Stammdaten_Konfiguration.setText(QtGui.QApplication.translate("MainWindow", "&Konfiguration", None, QtGui.QApplication.UnicodeUTF8))
         self.action_Personal_DienstnehmerEreignisse.setText(QtGui.QApplication.translate("MainWindow", "E&reignisse", None, QtGui.QApplication.UnicodeUTF8))
         self.action_Stammdaten_DNEreignisTypen.setText(QtGui.QApplication.translate("MainWindow", "DN Ereignis &Typen", None, QtGui.QApplication.UnicodeUTF8))
+        self.action_Personal_Gehaelter.setText(QtGui.QApplication.translate("MainWindow", "&Gehälter", None, QtGui.QApplication.UnicodeUTF8))
+        self.action_Personal_Loehne.setText(QtGui.QApplication.translate("MainWindow", "&Löhne", None, QtGui.QApplication.UnicodeUTF8))
 
