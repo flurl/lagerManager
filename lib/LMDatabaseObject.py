@@ -4,6 +4,7 @@ from PyQt4 import QtSql, QtCore
 import DBConnection
 from lib.LMDatabaseRelation import LMDatabaseRelation
 
+import collections
 
 class DatabaseError(Exception):
 	pass
@@ -37,6 +38,11 @@ class LMDatabaseObject(object):
 	def __getitem__(self, name):
 		#print "__getitem__:", name, self._relations
 		#try:
+		
+		if hasattr(self, '_dynamicColumns'):
+			if name in self._dynamicColumns.keys():
+				return getattr(self, self._dynamicColumns[name])()
+		
 		if name in self._relations.keys():
 			return self._relations[name]()
 			
@@ -195,12 +201,42 @@ class LMDatabaseObject(object):
 		
 	
 	
-	def find(self, col=None, val=None):
-		if col is not None:
-			if self._columns[col]['type'] in [QtCore.QVariant.String, QtCore.QVariant.DateTime]:
-				val = u"'%s'"%val
+	def find(self, first=None, second=None):
+		filterStr = u''
+		if isinstance(first, basestring):
+			if self._columns[first]['type'] in [QtCore.QVariant.String, QtCore.QVariant.DateTime]:
+				second = u"'%s'"%second
+			filterStr = "%s = %s"%(first, second)
 		
-			self.__model.setFilter("%s = %s"%(col, val))
+		elif isinstance(first, collections.Iterable):
+			for obj in first:
+				col = obj[0]
+				val = obj[1]
+				
+				try:
+					operator = obj[2]
+				except IndexError:
+					operator = '='
+				
+				if self._columns[col]['type'] in [QtCore.QVariant.String, QtCore.QVariant.DateTime]:
+					if isinstance(val, QtCore.QDateTime):
+						val = val.toPyDateTime()
+					elif isinstance(val, QtCore.QDate):
+						val = val.toPyDate()
+					elif isinstance(val, QtCore.QTime):
+						val = val.toPyTime()
+					val = u"'%s'"%val
+					
+				filterStr += 'and %s %s %s ' % (col, operator, val)
+				
+		#remove the first 'and' if it exists
+		before, sep, after = filterStr.partition(u'and')
+		if before == u'':
+			filterStr = after
+			
+		print 'filter', filterStr
+		
+		self.__model.setFilter(filterStr)
 		self.__model.select()
 		return self
 		
