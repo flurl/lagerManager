@@ -297,7 +297,8 @@ class DienstplanForm(FormBase):
 			endDate = widgetRef['endDateTimeEdit'].dateTime()
 			
 			emp = lib.Dienstnehmer.Dienstnehmer(empId)
-			remainingSalary = emp.getRemainingSalary(eventDate, eventProps['ver_id'])
+			print 'shift:', eventDate, eventProps['ver_id']
+			remainingSalary = emp.getRemainingSalary(eventDate.toPyDate(), eventProps['ver_id'])
 			duty = lib.Dienst.Dienst()
 			duty['die_beginn'] = beginDate
 			duty['die_ende'] = endDate
