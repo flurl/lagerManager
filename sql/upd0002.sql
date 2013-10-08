@@ -63,7 +63,7 @@ END;
 
 delimiter ;
 
-select UpdateGehaelter;
+call UpdateGehaelter;
   
 alter table dienstnehmer add foreign key dienstnehmer_gehalt_fk (din_gehid) references gehaelter (geh_id);
 alter table dienstnehmer drop column din_stundensatz;
