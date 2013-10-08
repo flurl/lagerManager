@@ -20,17 +20,18 @@ class DienstnehmerForm(FormBase):
 		self.model = QtSql.QSqlRelationalTableModel()
 		self.model.setTable('dienstnehmer')
 		self.model.setRelation(self.model.fieldIndex('din_bebid'), QtSql.QSqlRelation('beschaeftigungsbereiche', 'beb_id', 'beb_bezeichnung'))
+		self.model.setRelation(self.model.fieldIndex('din_gehid'), QtSql.QSqlRelation('gehaelter', 'geh_id', 'geh_kbez'))
 		self.model.setEditStrategy(QtSql.QSqlTableModel.OnFieldChange)
 		self.model.setSort(self.model.fieldIndex('din_id'), QtCore.Qt.AscendingOrder)
 		self.model.select()
 		
 		# column headers
-		self.model.setHeaderData(0, QtCore.Qt.Horizontal, u'ID')
-		self.model.setHeaderData(1, QtCore.Qt.Horizontal, u'Name')
-		self.model.setHeaderData(2, QtCore.Qt.Horizontal, u'Gehalt')
-		self.model.setHeaderData(3, QtCore.Qt.Horizontal, u'Beschäftigungsbereich')
-		self.model.setHeaderData(4, QtCore.Qt.Horizontal, u'Stundenlohn')
-		self.model.setHeaderData(5, QtCore.Qt.Horizontal, u'Farbe')
+		self.model.setHeaderData(self.model.fieldIndex('din_id'), QtCore.Qt.Horizontal, u'ID')
+		self.model.setHeaderData(self.model.fieldIndex('din_name'), QtCore.Qt.Horizontal, u'Name')
+		self.model.setHeaderData(self.model.fieldIndex('din_gehalt'), QtCore.Qt.Horizontal, u'Max. Lohn')
+		self.model.setHeaderData(self.model.fieldIndex('beb_bezeichnung'), QtCore.Qt.Horizontal, u'Beschäftigungsbereich')
+		self.model.setHeaderData(self.model.fieldIndex('geh_kbez'), QtCore.Qt.Horizontal, u'Gehalt')
+		self.model.setHeaderData(self.model.fieldIndex('din_farbe'), QtCore.Qt.Horizontal, u'Farbe')
 		self.model.setHeaderData(self.model.fieldIndex('din_nummer'), QtCore.Qt.Horizontal, u'Nummer')
 		
 
@@ -46,8 +47,8 @@ class DienstnehmerForm(FormBase):
 		self.tableView.horizontalHeader().setStretchLastSection(True)
 		self.tableView.setSortingEnabled(True)
 		
-		delegate = ColorDialogDelegate()
-		delegate.setColorColumn(5)
+		delegate = ColorDialogDelegate(self.tableView)
+		delegate.setColorColumn(self.model.fieldIndex('din_farbe'))
 		#self.connect(delegate, QtCore.SIGNAL('colorColumnEdit(const QModelIndex&)', self.openColorDialog)
 		self.tableView.setItemDelegate(delegate)
 		
