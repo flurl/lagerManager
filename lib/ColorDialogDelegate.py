@@ -14,7 +14,7 @@ class ColorDialogDelegate(QtSql.QSqlRelationalDelegate):
 				button = QtGui.QPushButton(parent)
 				self.connect(button, QtCore.SIGNAL('clicked()'), lambda i=index: self.openColorDialog(index))
 				return button
-		return QtGui.QItemDelegate.createEditor(self, parent, option, index)
+		return super(ColorDialogDelegate, self).createEditor(parent, option, index)
 	
 	
 	def paint(self, painter, option, index):
