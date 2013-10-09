@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'ui/reports/dienstnehmerStundenReport.ui'
 #
-# Created: Mon Sep  2 16:17:12 2013
-#      by: PyQt4 UI code generator 4.10
+# Created: Wed Oct  9 14:06:59 2013
+#      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,16 +12,7 @@ from PyQt4 import QtCore, QtGui
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
-    def _fromUtf8(s):
-        return s
-
-try:
-    _encoding = QtGui.QApplication.UnicodeUTF8
-    def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig, _encoding)
-except AttributeError:
-    def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig)
+    _fromUtf8 = lambda s: s
 
 class Ui_DienstnehmerStunden(object):
     def setupUi(self, DienstnehmerStunden):
@@ -37,6 +28,9 @@ class Ui_DienstnehmerStunden(object):
         self.comboBox_reportType.addItem(_fromUtf8(""))
         self.comboBox_reportType.addItem(_fromUtf8(""))
         self.horizontalLayout.addWidget(self.comboBox_reportType)
+        self.comboBox_timespan = QtGui.QComboBox(DienstnehmerStunden)
+        self.comboBox_timespan.setObjectName(_fromUtf8("comboBox_timespan"))
+        self.horizontalLayout.addWidget(self.comboBox_timespan)
         self.comboBox_employees = QtGui.QComboBox(DienstnehmerStunden)
         self.comboBox_employees.setObjectName(_fromUtf8("comboBox_employees"))
         self.horizontalLayout.addWidget(self.comboBox_employees)
@@ -71,11 +65,11 @@ class Ui_DienstnehmerStunden(object):
         QtCore.QMetaObject.connectSlotsByName(DienstnehmerStunden)
 
     def retranslateUi(self, DienstnehmerStunden):
-        DienstnehmerStunden.setWindowTitle(_translate("DienstnehmerStunden", "Dienstnehmer Stunden", None))
-        self.comboBox_reportType.setItemText(0, _translate("DienstnehmerStunden", "Jährlich", None))
-        self.comboBox_reportType.setItemText(1, _translate("DienstnehmerStunden", "Monatlich", None))
-        self.comboBox_reportType.setItemText(2, _translate("DienstnehmerStunden", "Täglich", None))
-        self.pushButton_export.setText(_translate("DienstnehmerStunden", "&Exportieren", None))
-        self.pushButton_refresh.setText(_translate("DienstnehmerStunden", "Aktualisieren", None))
+        DienstnehmerStunden.setWindowTitle(QtGui.QApplication.translate("DienstnehmerStunden", "Dienstnehmer Stunden", None, QtGui.QApplication.UnicodeUTF8))
+        self.comboBox_reportType.setItemText(0, QtGui.QApplication.translate("DienstnehmerStunden", "Jährlich", None, QtGui.QApplication.UnicodeUTF8))
+        self.comboBox_reportType.setItemText(1, QtGui.QApplication.translate("DienstnehmerStunden", "Monatlich", None, QtGui.QApplication.UnicodeUTF8))
+        self.comboBox_reportType.setItemText(2, QtGui.QApplication.translate("DienstnehmerStunden", "Täglich", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton_export.setText(QtGui.QApplication.translate("DienstnehmerStunden", "&Exportieren", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton_refresh.setText(QtGui.QApplication.translate("DienstnehmerStunden", "Aktualisieren", None, QtGui.QApplication.UnicodeUTF8))
 
 from reports.reportTextViewWidget import ReportTextViewWidget

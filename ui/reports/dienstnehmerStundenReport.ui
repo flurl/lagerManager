@@ -36,6 +36,9 @@
       </widget>
      </item>
      <item>
+      <widget class="QComboBox" name="comboBox_timespan"/>
+     </item>
+     <item>
       <widget class="QComboBox" name="comboBox_employees"/>
      </item>
      <item>

@@ -80,6 +80,13 @@ class DienstnehmerStundenReport(TextReport):
 		
 		reportType = unicode(self.ui.comboBox_reportType.currentText())
 		
+		dateFilter = self.ui.comboBox_timespan.itemData(self.ui.comboBox_timespan.currentIndex()).toInt()[0]
+		if dateFilter > 0:
+			if reportType == u'Jährlich':
+				data = [row for row in data if row[0].year == dateFilter]
+			else:
+				data = [row for row in data if row[0].month == dateFilter]
+		
 		if reportType == u'Monatlich':
 			data = self.groupBy(data, 'monthly')
 			self.setTableHeaders(['Monat', 'Name', 'DN-Nr.', 'Anwesenheitsst.', 'Arbeitsstunden', 'Pause', 'Anzahl', 'Gehalt', 'NAZ', 'Trinkgeldp.', 'gesamt'])
@@ -92,7 +99,7 @@ class DienstnehmerStundenReport(TextReport):
 			self.setTableHeaders(['Datum', 'Schicht', 'Name', 'DN-Nr.', 'Dienst Beginn', 'Dienst Ende', 'Anwesenheitsst.', 'Arbeitsstunden', 'Pause', 'Anzahl', 'Gehalt', 'NAZ', 'Trinkgeldp.', 'gesamt'])
 			
 		data.sort(key=lambda x: (x[0], x[1]))
-			
+		
 		super(DienstnehmerStundenReport, self).setData(data)
 		
 		return True
@@ -101,10 +108,11 @@ class DienstnehmerStundenReport(TextReport):
 		
 	def setupSignals(self):
 		super(DienstnehmerStundenReport, self).setupSignals()
-		self.connect(self.ui.comboBox_reportType, QtCore.SIGNAL('currentIndexChanged(int)'), lambda: self.setData(None) and self.process())
+		self.connect(self.ui.comboBox_reportType, QtCore.SIGNAL('currentIndexChanged(int)'), lambda: self.setupTimespanCombo() and self.setData(None) and self.process())
 		self.connect(self.ui.pushButton_refresh, QtCore.SIGNAL('clicked()'), self.updateData)
 		self.connect(self.ui.comboBox_employees, QtCore.SIGNAL('currentIndexChanged(int)'), self.updateData)
 		self.connect(self.ui.comboBox_fieldOfEmployment, QtCore.SIGNAL('currentIndexChanged(int)'), self.updateData)
+		self.connect(self.ui.comboBox_timespan, QtCore.SIGNAL('currentIndexChanged(int)'),  lambda: self.setData(None) and self.process())
 		
 		
 	def setupUi(self):
@@ -130,6 +138,31 @@ class DienstnehmerStundenReport(TextReport):
 		self.ui.comboBox_fieldOfEmployment.insertSeparator(-1)
 		self.ui.comboBox_fieldOfEmployment.setCurrentIndex(-1)
 		
+		self.setupTimespanCombo()
+		
+		
+	def setupTimespanCombo(self):
+		combo = self.ui.comboBox_timespan
+		combo.clear()
+		
+		reportType = unicode(self.ui.comboBox_reportType.currentText())
+		
+		if reportType == u'Jährlich':
+			query = QtSql.QSqlQuery()
+			query.prepare("select distinct YEAR(die_beginn) from dienste order by YEAR(die_beginn) DESC")
+			query.exec_()
+			while query.next():
+				combo.addItem(query.value(0).toString(), query.value(0))
+		
+		else:
+			for i in range(1,12):
+				combo.addItem(unicode(i), i)
+				
+		combo.insertSeparator(-1)
+		combo.setCurrentIndex(-1)
+		
+		return True
+		
 		
 	def groupBy(self, data, groupBy='monthly'):
 		
@@ -138,17 +171,17 @@ class DienstnehmerStundenReport(TextReport):
 		
 		for row in data:
 			if groupBy == 'monthly':
-				timespan = (row[0].year, row[0].month)
+				group = (row[0].year, row[0].month)
 			elif groupBy == 'yearly':
-				timespan = (row[0].year, )
+				group = (row[0].year, )
 				
-			if timespan not in emps:
-				emps[timespan] = {}
+			if group not in emps:
+				emps[group] = {}
 				
 			try:
-				emp = emps[timespan][row[3]] #row[3] = DN-Nr., which should be unique
+				emp = emps[group][row[3]] #row[3] = DN-Nr., which should be unique
 			except KeyError:
-				emps[timespan][row[3]] = emp = {'name': row[2],
+				emps[group][row[3]] = emp = {'name': row[2],
 										'number': row[3],
 										'totalHours': 0.0, 
 										'workingHours': 0.0, 
@@ -169,10 +202,10 @@ class DienstnehmerStundenReport(TextReport):
 			emp['tipAllowance'] += row[12]
 			emp['sum'] += row[13]
 			
-		for timespan in emps:
-			for emp in emps[timespan]:
-				e = emps[timespan][emp]
-				newData.append([u'-'.join([unicode(x) for x in timespan]), e['name'], e['number'], e['totalHours'], e['workingHours'], e['pause'], e['count'], e['salary'], e['NAZ'], e['tipAllowance'], e['sum']])
+		for group in emps:
+			for emp in emps[group]:
+				e = emps[group][emp]
+				newData.append([u'-'.join([unicode(x) for x in group]), e['name'], e['number'], e['totalHours'], e['workingHours'], e['pause'], e['count'], e['salary'], e['NAZ'], e['tipAllowance'], e['sum']])
 		
 		return newData
 	
