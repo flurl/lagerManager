@@ -15,6 +15,7 @@ from ui.forms.dienstplanForm_gui import Ui_DienstplanForm
 from sets import Set
 import datetime
 import sip
+import numbers
 
 
 class DienstplanForm(FormBase):
@@ -183,6 +184,8 @@ class DienstplanForm(FormBase):
 		elif dieEnde is not None and isinstance(dieEnde, QtCore.QTime):
 			endDateTimeEdit.setDate(eventProps['ver_datum'].addDays(1))
 			endDateTimeEdit.setTime(dieEnde)
+		elif dieEnde is not None and isinstance(dieEnde, numbers.Number):
+			endDateTimeEdit.setDateTime(beginDateTimeEdit.dateTime().addSecs(dieEnde))
 		else:
 			endDateTimeEdit.setDate(eventProps['ver_datum'])
 			endDateTimeEdit.setTime(eventProps['ver_beginn'])
@@ -663,17 +666,17 @@ class DienstplanForm(FormBase):
 				for waiterWidgetRefs in self.employees:
 					wpId = self.getPKForCombobox(waiterWidgetRefs['workplaceCombo'], 'arp_id')
 					begin = waiterWidgetRefs['beginDateTimeEdit'].time()
-					end = waiterWidgetRefs['endDateTimeEdit'].time()
+					duration = waiterWidgetRefs['endDateTimeEdit'].dateTime().secsTo(waiterWidgetRefs['beginDateTimeEdit'].dateTime())
 					
 					query = QtSql.QSqlQuery()
 					query.prepare("""
-									insert into dienste_vorlagen (div_bezeichnung, div_arpid, div_beginn, div_ende)
+									insert into dienste_vorlagen (div_bezeichnung, div_arpid, div_beginn, div_dauer)
 									values (?, ?, ?, ?)
 									""")
 					query.addBindValue(name)
 					query.addBindValue(wpId)
 					query.addBindValue(begin)
-					query.addBindValue(end)
+					query.addBindValue(duration)
 					query.exec_()
 					if query.lastError().isValid():
 						print 'Error while inserting dienstplan template:', query.lastError().text()
@@ -701,7 +704,7 @@ class DienstplanForm(FormBase):
 		
 		tmplName = self.ui.comboBox_template.currentText()
 		query = QtSql.QSqlQuery()
-		query.prepare('select div_id, div_bezeichnung, div_arpid, div_beginn, div_ende from dienste_vorlagen where div_bezeichnung = ?')
+		query.prepare('select div_id, div_bezeichnung, div_arpid, div_beginn, div_dauer from dienste_vorlagen where div_bezeichnung = ?')
 		query.addBindValue(tmplName)
 		query.exec_()
 		if query.lastError().isValid():
@@ -711,8 +714,8 @@ class DienstplanForm(FormBase):
 		while query.next():
 			wpId = query.value(2).toInt()[0]
 			begin = query.value(3).toTime()
-			end = query.value(4).toTime()
-			wr = self.addEmployee(arpId=wpId, dieBeginn=begin, dieEnde=end)
+			duration = query.value(4).toInt()[0]
+			wr = self.addEmployee(arpId=wpId, dieBeginn=begin, dieEnde=duration)
 			#self.checkDateTime(wr)
 		
 		self.autoAssignEmployees()
@@ -774,7 +777,7 @@ class DienstplanForm(FormBase):
 				dutyEarnings = duty.getEarnings()
 				
 				emp = lib.Dienstnehmer.Dienstnehmer(empId)
-				remainingSalary = emp.getRemainingSalary(self.getEventProperties(self.getCurrentEventId())['ver_datum'])
+				remainingSalary = emp.getRemainingSalary(eventDate)
 				
 				if dutyEarnings > remainingSalary:
 					continue
