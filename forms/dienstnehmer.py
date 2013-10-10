@@ -103,12 +103,19 @@ class DienstnehmerForm(FormBase):
 		query.next()
 		minBebId = query.value(0).toInt()[0]
 		
+		query = QtSql.QSqlQuery()
+		query.prepare("""select min(geh_id) from gehaelter""")
+		query.exec_()
+		query.next()
+		minGehId = query.value(0).toInt()[0]
+		
 		rec = self.model.record()
 		rec.setValue(1, '')
 		rec.setValue(2, 0.0)
 		rec.setValue(self.model.fieldIndex('beb_bezeichnung'), QtCore.QVariant(minBebId))
 		rec.setValue(self.model.fieldIndex('din_stundensatz'), 0.0)
 		rec.setValue(self.model.fieldIndex('din_nummer'), -1)
+		rec.setValue(self.model.fieldIndex('geh_kbez'), minGehId)
 		#self.model.insertRecord(-1, rec)
 		self.model.insertRowIntoTable(rec)
 		self.model.select()
