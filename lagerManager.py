@@ -95,7 +95,6 @@ class MainWindow(QtGui.QMainWindow):
 		
 	def openWindow(self, name, type_='mdi'):
 		if name in self.openWindows:
-			print "window already open"
 			self.ui.mdiArea.setActiveSubWindow(self.openWindows[name].parent())
 		else:
 			module = name.rpartition('.')[0]
@@ -114,24 +113,19 @@ class MainWindow(QtGui.QMainWindow):
 			if type_ == 'mdi':
 				window = self.ui.mdiArea.addSubWindow(window)
 				self.connect(window, QtCore.SIGNAL('windowStateChanged(Qt::WindowStates, Qt::WindowStates)'), self.subWindowStateChanged)
-			print 'openWindow:', id(window)
+			
 			window.show()
 			
 			
 	def deregisterWindow(self, window):
-		print 'deregisterWindow:', id(window)
 		name = self.openWindows[id(window)]
-		
 		del self.openWindows[name]
 		del self.openWindows[id(window)]
-		print "open window count:", len(self.openWindows)/2
 		
 		
 	def subWindowStateChanged(self, oldState, newState):
-		#print 'subWindowStateChanged', int(newState), QtCore.Qt.WindowMaximized, self.__tabbedView
 		if newState != oldState:
 			if not self.__tabbedView and newState & QtCore.Qt.WindowMaximized:
-				print 'calling setTabbedView()'
 				self.setTabbedView()
 			
 			
@@ -158,7 +152,6 @@ class MainWindow(QtGui.QMainWindow):
 			
 			
 	def setTabButtons(self, idx=None):
-		print 'setTabButtons'
 		tabBar = self.ui.mdiArea.findChildren(QtGui.QTabBar)[0]
 		for idx in range(tabBar.count()):
 			widget = QtGui.QWidget(self)
@@ -181,10 +174,7 @@ class MainWindow(QtGui.QMainWindow):
 			widget.setLayout(layout)
 			
 			tabBar.setTabButton(idx, QtGui.QTabBar.RightSide, widget)
-		
-	def closeSubWindow(self, window):
-		print 'closeSubWindow', window, id(window)
-		window.close()
+
 		
 		
 

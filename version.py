@@ -1,4 +1,4 @@
-VERSION=1026
+VERSION=1027
 
 if __name__ == "__main__":
 	print VERSION
