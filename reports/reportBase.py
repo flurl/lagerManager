@@ -71,4 +71,4 @@ class ReportBase(QtGui.QWidget):
 			else:
 				parent = parent.parent()
 				
-		super(FormBase, self).closeEvent(event)
+		super(ReportBase, self).closeEvent(event)
