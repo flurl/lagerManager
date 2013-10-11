@@ -69,7 +69,7 @@ class MainWindow(QtGui.QMainWindow):
 		self.connect(self.ui.action_Dokumente_Dokumenttypen, QtCore.SIGNAL('triggered()'), lambda: self.openWindow('forms.dokumenttypen.DokumenttypenForm'))
 		self.connect(self.ui.action_Dokumente_Dokumente, QtCore.SIGNAL('triggered()'), lambda: self.openWindow('forms.dokumente.DokumenteForm'))		
 		
-		self.connect(self.ui.action_Personal_DienstplanErstellen, QtCore.SIGNAL('triggered()'), lambda: self.openWindow('forms.dienstplan.DienstplanForm'))
+		self.connect(self.ui.action_Personal_DienstplanErstellen, QtCore.SIGNAL('triggered()'), lambda: self.openWindow('forms.dienstplan.DienstplanForm', 'dlg'))
 		self.connect(self.ui.action_Personal_Beschaeftigungsbereiche, QtCore.SIGNAL('triggered()'), lambda: self.openWindow('forms.beschaeftigungsbereiche.BeschaeftigungsbereicheForm'))
 		self.connect(self.ui.action_Personal_Arbeitsplaetze, QtCore.SIGNAL('triggered()'), lambda: self.openWindow('forms.arbeitsplaetze.ArbeitsplaetzeForm'))
 		self.connect(self.ui.action_Personal_Dienstnehmer, QtCore.SIGNAL('triggered()'), lambda: self.openWindow('forms.dienstnehmer.DienstnehmerForm'))
