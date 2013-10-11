@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'ui/forms/lagerartikelAuswahlForm.ui'
 #
-# Created: Wed May 22 22:46:24 2013
-#      by: PyQt4 UI code generator 4.10
+# Created: Fri Oct 11 12:42:35 2013
+#      by: PyQt4 UI code generator 4.9.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,16 +12,7 @@ from PyQt4 import QtCore, QtGui
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
-    def _fromUtf8(s):
-        return s
-
-try:
-    _encoding = QtGui.QApplication.UnicodeUTF8
-    def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig, _encoding)
-except AttributeError:
-    def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig)
+    _fromUtf8 = lambda s: s
 
 class Ui_LagerartikelAuswahlForm(object):
     def setupUi(self, LagerartikelAuswahlForm):
@@ -68,7 +59,7 @@ class Ui_LagerartikelAuswahlForm(object):
         QtCore.QMetaObject.connectSlotsByName(LagerartikelAuswahlForm)
 
     def retranslateUi(self, LagerartikelAuswahlForm):
-        LagerartikelAuswahlForm.setWindowTitle(_translate("LagerartikelAuswahlForm", "Dialog", None))
-        self.pushButton_checkAll.setText(_translate("LagerartikelAuswahlForm", "&Alle aktivieren", None))
-        self.pushButton_uncheckAll.setText(_translate("LagerartikelAuswahlForm", "Alle &deaktivieren", None))
+        LagerartikelAuswahlForm.setWindowTitle(QtGui.QApplication.translate("LagerartikelAuswahlForm", "Lagerartikel Auswahl", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton_checkAll.setText(QtGui.QApplication.translate("LagerartikelAuswahlForm", "&Alle aktivieren", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton_uncheckAll.setText(QtGui.QApplication.translate("LagerartikelAuswahlForm", "Alle &deaktivieren", None, QtGui.QApplication.UnicodeUTF8))
 

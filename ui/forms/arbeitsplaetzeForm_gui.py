@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'ui/forms/arbeitsplaetzeForm.ui'
 #
-# Created: Mon Jun 17 20:00:56 2013
-#      by: PyQt4 UI code generator 4.10
+# Created: Fri Oct 11 12:46:13 2013
+#      by: PyQt4 UI code generator 4.9.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,16 +12,7 @@ from PyQt4 import QtCore, QtGui
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
-    def _fromUtf8(s):
-        return s
-
-try:
-    _encoding = QtGui.QApplication.UnicodeUTF8
-    def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig, _encoding)
-except AttributeError:
-    def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig)
+    _fromUtf8 = lambda s: s
 
 class Ui_ArbeitsplaetzeForm(object):
     def setupUi(self, ArbeitsplaetzeForm):
@@ -54,7 +45,7 @@ class Ui_ArbeitsplaetzeForm(object):
         QtCore.QMetaObject.connectSlotsByName(ArbeitsplaetzeForm)
 
     def retranslateUi(self, ArbeitsplaetzeForm):
-        ArbeitsplaetzeForm.setWindowTitle(_translate("ArbeitsplaetzeForm", "Dialog", None))
-        self.pushButton_newRecord.setText(_translate("ArbeitsplaetzeForm", "&Neu", None))
-        self.pushButton_deleteRecord.setText(_translate("ArbeitsplaetzeForm", "&Löschen", None))
+        ArbeitsplaetzeForm.setWindowTitle(QtGui.QApplication.translate("ArbeitsplaetzeForm", "Arbeitsplätze", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton_newRecord.setText(QtGui.QApplication.translate("ArbeitsplaetzeForm", "&Neu", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton_deleteRecord.setText(QtGui.QApplication.translate("ArbeitsplaetzeForm", "&Löschen", None, QtGui.QApplication.UnicodeUTF8))
 

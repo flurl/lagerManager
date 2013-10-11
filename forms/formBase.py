@@ -93,3 +93,15 @@ class FormBase(QtGui.QDialog):
 		
 	def rollback(self):
 		QtSql.QSqlDatabase.database().rollback()
+		
+		
+	def closeEvent(self, event):
+		parent = self.parent()
+		while parent:
+			if isinstance(parent, QtGui.QMainWindow):
+				parent.deregisterWindow(self)
+				break
+			else:
+				parent = parent.parent()
+				
+		super(FormBase, self).closeEvent(event)

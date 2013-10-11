@@ -519,5 +519,5 @@ class ImportForm(FormBase):
 		pw = unicode(self.ui.lineEdit_password.text())
 		config.config['form_'+self.ident] = {'lastHost': host, 'lastDb': db, 'lastUser': user, 'lastPw': pw}
 		config.config.write()
-		event.accept()
+		super(ImportForm, self).closeEvent(event)
 		

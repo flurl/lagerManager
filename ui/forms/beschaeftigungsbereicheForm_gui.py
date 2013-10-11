@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'ui/forms/beschaeftigungsbereicheForm.ui'
 #
-# Created: Mon Jun 17 19:54:16 2013
-#      by: PyQt4 UI code generator 4.10
+# Created: Fri Oct 11 12:48:21 2013
+#      by: PyQt4 UI code generator 4.9.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,16 +12,7 @@ from PyQt4 import QtCore, QtGui
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
-    def _fromUtf8(s):
-        return s
-
-try:
-    _encoding = QtGui.QApplication.UnicodeUTF8
-    def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig, _encoding)
-except AttributeError:
-    def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig)
+    _fromUtf8 = lambda s: s
 
 class Ui_BeschaeftigungsbereicheForm(object):
     def setupUi(self, BeschaeftigungsbereicheForm):
@@ -54,7 +45,7 @@ class Ui_BeschaeftigungsbereicheForm(object):
         QtCore.QMetaObject.connectSlotsByName(BeschaeftigungsbereicheForm)
 
     def retranslateUi(self, BeschaeftigungsbereicheForm):
-        BeschaeftigungsbereicheForm.setWindowTitle(_translate("BeschaeftigungsbereicheForm", "Dialog", None))
-        self.pushButton_newRecord.setText(_translate("BeschaeftigungsbereicheForm", "&Neu", None))
-        self.pushButton_deleteRecord.setText(_translate("BeschaeftigungsbereicheForm", "&Löschen", None))
+        BeschaeftigungsbereicheForm.setWindowTitle(QtGui.QApplication.translate("BeschaeftigungsbereicheForm", "Beschäftigungsbereiche", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton_newRecord.setText(QtGui.QApplication.translate("BeschaeftigungsbereicheForm", "&Neu", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton_deleteRecord.setText(QtGui.QApplication.translate("BeschaeftigungsbereicheForm", "&Löschen", None, QtGui.QApplication.UnicodeUTF8))
 

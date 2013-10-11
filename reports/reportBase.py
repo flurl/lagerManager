@@ -60,3 +60,15 @@ class ReportBase(QtGui.QWidget):
 		print 'ReportBase:updatePeriod', p
 		self.currentPeriod = p
 		self.updateData()
+		
+		
+	def closeEvent(self, event):
+		parent = self.parent()
+		while parent:
+			if isinstance(parent, QtGui.QMainWindow):
+				parent.deregisterWindow(self)
+				break
+			else:
+				parent = parent.parent()
+				
+		super(FormBase, self).closeEvent(event)

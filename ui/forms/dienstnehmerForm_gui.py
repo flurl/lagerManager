@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'ui/forms/dienstnehmerForm.ui'
 #
-# Created: Tue Jun 18 15:49:20 2013
-#      by: PyQt4 UI code generator 4.10
+# Created: Fri Oct 11 12:46:48 2013
+#      by: PyQt4 UI code generator 4.9.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,16 +12,7 @@ from PyQt4 import QtCore, QtGui
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
-    def _fromUtf8(s):
-        return s
-
-try:
-    _encoding = QtGui.QApplication.UnicodeUTF8
-    def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig, _encoding)
-except AttributeError:
-    def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig)
+    _fromUtf8 = lambda s: s
 
 class Ui_DienstnehmerForm(object):
     def setupUi(self, DienstnehmerForm):
@@ -54,7 +45,7 @@ class Ui_DienstnehmerForm(object):
         QtCore.QMetaObject.connectSlotsByName(DienstnehmerForm)
 
     def retranslateUi(self, DienstnehmerForm):
-        DienstnehmerForm.setWindowTitle(_translate("DienstnehmerForm", "Dialog", None))
-        self.pushButton_newRecord.setText(_translate("DienstnehmerForm", "&Neu", None))
-        self.pushButton_deleteRecord.setText(_translate("DienstnehmerForm", "&Löschen", None))
+        DienstnehmerForm.setWindowTitle(QtGui.QApplication.translate("DienstnehmerForm", "Dienstnehmer", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton_newRecord.setText(QtGui.QApplication.translate("DienstnehmerForm", "&Neu", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton_deleteRecord.setText(QtGui.QApplication.translate("DienstnehmerForm", "&Löschen", None, QtGui.QApplication.UnicodeUTF8))
 

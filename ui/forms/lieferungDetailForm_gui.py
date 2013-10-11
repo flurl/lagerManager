@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'ui/forms/lieferungDetailForm.ui'
 #
-# Created: Mon Jul  8 20:20:12 2013
-#      by: PyQt4 UI code generator 4.10
+# Created: Fri Oct 11 12:45:20 2013
+#      by: PyQt4 UI code generator 4.9.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,16 +12,7 @@ from PyQt4 import QtCore, QtGui
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
-    def _fromUtf8(s):
-        return s
-
-try:
-    _encoding = QtGui.QApplication.UnicodeUTF8
-    def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig, _encoding)
-except AttributeError:
-    def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig)
+    _fromUtf8 = lambda s: s
 
 class Ui_LieferungDetailForm(object):
     def setupUi(self, LieferungDetailForm):
@@ -137,20 +128,20 @@ class Ui_LieferungDetailForm(object):
         QtCore.QMetaObject.connectSlotsByName(LieferungDetailForm)
 
     def retranslateUi(self, LieferungDetailForm):
-        LieferungDetailForm.setWindowTitle(_translate("LieferungDetailForm", "Dialog", None))
-        self.groupBox_lieferung.setTitle(_translate("LieferungDetailForm", "Lieferung", None))
-        self.label.setText(_translate("LieferungDetailForm", "ID", None))
-        self.label_4.setText(_translate("LieferungDetailForm", "Dokumente", None))
-        self.pushButton_addDocument.setText(_translate("LieferungDetailForm", "+", None))
-        self.label_6.setText(_translate("LieferungDetailForm", "Kommentar", None))
-        self.label_3.setText(_translate("LieferungDetailForm", "Datum", None))
-        self.label_lieferant.setText(_translate("LieferungDetailForm", "Lieferant", None))
-        self.groupBox_2.setTitle(_translate("LieferungDetailForm", "Details", None))
-        self.pushButton_newDetail.setText(_translate("LieferungDetailForm", "&Hinzufügen", None))
-        self.pushButton_deleteDetail.setText(_translate("LieferungDetailForm", "&Löschen", None))
-        self.pushButton_selectArticles.setText(_translate("LieferungDetailForm", "&Artikelauswahl", None))
-        self.label_2.setText(_translate("LieferungDetailForm", "Summe netto:", None))
-        self.label_5.setText(_translate("LieferungDetailForm", "brutto:", None))
-        self.label_unit.setText(_translate("LieferungDetailForm", "Einheit:", None))
+        LieferungDetailForm.setWindowTitle(QtGui.QApplication.translate("LieferungDetailForm", "Lieferung Details", None, QtGui.QApplication.UnicodeUTF8))
+        self.groupBox_lieferung.setTitle(QtGui.QApplication.translate("LieferungDetailForm", "Lieferung", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setText(QtGui.QApplication.translate("LieferungDetailForm", "ID", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_4.setText(QtGui.QApplication.translate("LieferungDetailForm", "Dokumente", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton_addDocument.setText(QtGui.QApplication.translate("LieferungDetailForm", "+", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_6.setText(QtGui.QApplication.translate("LieferungDetailForm", "Kommentar", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_3.setText(QtGui.QApplication.translate("LieferungDetailForm", "Datum", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_lieferant.setText(QtGui.QApplication.translate("LieferungDetailForm", "Lieferant", None, QtGui.QApplication.UnicodeUTF8))
+        self.groupBox_2.setTitle(QtGui.QApplication.translate("LieferungDetailForm", "Details", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton_newDetail.setText(QtGui.QApplication.translate("LieferungDetailForm", "&Hinzufügen", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton_deleteDetail.setText(QtGui.QApplication.translate("LieferungDetailForm", "&Löschen", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton_selectArticles.setText(QtGui.QApplication.translate("LieferungDetailForm", "&Artikelauswahl", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_2.setText(QtGui.QApplication.translate("LieferungDetailForm", "Summe netto:", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_5.setText(QtGui.QApplication.translate("LieferungDetailForm", "brutto:", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_unit.setText(QtGui.QApplication.translate("LieferungDetailForm", "Einheit:", None, QtGui.QApplication.UnicodeUTF8))
 
 import lagerManager_rc

@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'ui/forms/importForm.ui'
 #
-# Created: Sun Sep  2 16:47:45 2012
-#      by: PyQt4 UI code generator 4.9.1
+# Created: Fri Oct 11 12:48:46 2013
+#      by: PyQt4 UI code generator 4.9.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -79,7 +79,7 @@ class Ui_ImportForm(object):
         QtCore.QMetaObject.connectSlotsByName(ImportForm)
 
     def retranslateUi(self, ImportForm):
-        ImportForm.setWindowTitle(QtGui.QApplication.translate("ImportForm", "Dialog", None, QtGui.QApplication.UnicodeUTF8))
+        ImportForm.setWindowTitle(QtGui.QApplication.translate("ImportForm", "Import", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("ImportForm", "Periode", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("ImportForm", "Server", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("ImportForm", "Datenbank", None, QtGui.QApplication.UnicodeUTF8))
