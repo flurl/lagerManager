@@ -8,6 +8,7 @@ from lib.GlobalConfig import globalConf
 import lib.Dienstnehmer
 from lib.Beschaeftigungsbereich import Beschaeftigungsbereich
 import lib.Dienst
+import lib.Arbeitsplatz
 
 from forms.formBase import FormBase
 from ui.forms.dienstplanForm_gui import Ui_DienstplanForm
@@ -189,6 +190,9 @@ class DienstplanForm(FormBase):
 		else:
 			endDateTimeEdit.setDate(eventProps['ver_datum'])
 			endDateTimeEdit.setTime(eventProps['ver_beginn'])
+			workplace = lib.Arbeitsplatz.Arbeitsplatz(self.getPKForCombobox(workplaceCombo, 'arp_id'))
+			endDateTimeEdit.setDateTime(endDateTimeEdit.dateTime().addSecs(int(workplace['arp_std_dienst_dauer']*3600)))
+			
 			
 		#set the seconds of the datetimeedit to 0
 		edit = beginDateTimeEdit
