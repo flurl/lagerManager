@@ -9,6 +9,7 @@ import lib.Dienstnehmer
 from lib.Beschaeftigungsbereich import Beschaeftigungsbereich
 import lib.Dienst
 import lib.Arbeitsplatz
+import lib.Schicht
 
 from forms.formBase import FormBase
 from ui.forms.dienstplanForm_gui import Ui_DienstplanForm
@@ -266,6 +267,12 @@ class DienstplanForm(FormBase):
 			empId = self.getPKForCombobox(waiterWidgetRefs['employeeCombo'], 'din_id')
 			employeesInUse.append(empId)
 			
+			failedTimes = self.checkDateTime(waiterWidgetRefs)
+			if failedTimes:
+				QtGui.QMessageBox.warning(self, u'Zeiten Fehler', 
+												u'Beginn und Ende des Dienstes liegen vor Schichtbeginn! Arbeitsplatz: %s'%failedTimes)
+				return False
+			
 			
 		duplicateWaiters = get_duplicate_items(employeesInUse)
 		
@@ -385,6 +392,10 @@ class DienstplanForm(FormBase):
 		
 		if modified:
 			self.setModified()
+			
+		shiftProps = self.getEventProperties(self.getCurrentEventId())
+		if begin < shiftProps['date_time'] and end < shiftProps['date_time']:
+			return [(wr['workplaceCombo'].currentText(), wr['employeeCombo'].currentText())]
 	
 	
 	def checkEmployeeAvailability(self, empIds):
@@ -825,99 +836,19 @@ class DienstplanForm(FormBase):
 	
 		
 	def getEventProperties(self, eventId):
-		query = QtSql.QSqlQuery()
-		query.prepare("select ver_id, ver_datum, ver_bezeichnung, ver_beginn, ver_checkpointid from veranstaltungen where ver_id = ?")
-		query.addBindValue(eventId)
-		query.exec_()
-		if query.lastError().isValid():
-			print 'Error while selecting dienstplan:', query.lastError().text()
-			QtGui.QMessageBox.warning(self, u'Datenbank Fehler', 
-											u'Fehler beim Laden der Schicht!\nBitte kontaktieren Sie Ihren Administrator.')
-			return False
-		
-		query.next()
-		
-		props = {
-				'ver_id': query.value(0).toInt()[0],
-				'ver_datum': query.value(1).toDate(),
-				'ver_bezeichnung': query.value(2).toString(),
-				'ver_beginn': query.value(3).toTime(),
-				'ver_checkpointid': query.value(4).toInt()[0]
-				}
-		
-		return props
+		shift = lib.Schicht.Schicht(eventId)
+		return shift
 	
 	def getEmployeeProperties(self, dinId):
-		"""query = QtSql.QSqlQuery()
-		query.prepare("select din_id, din_name, din_gehalt, din_bebid, din_stundensatz, din_farbe from dienstnehmer where din_id = ?")
-		query.addBindValue(dinId)
-		query.exec_()
-		if query.lastError().isValid():
-			print 'Error while selecting dienstnehmer:', query.lastError().text()
-			QtGui.QMessageBox.warning(self, u'Datenbank Fehler', 
-											u'Fehler beim Laden des Dienstnehmers!\nBitte kontaktieren Sie Ihren Administrator.')
-			return False
-		
-		query.next()
-		
-		props = {
-				'din_id': query.value(0).toInt()[0],
-				'din_name': query.value(1).toString(),
-				'din_gehalt': query.value(2).toFloat()[0],
-				'din_bebid': query.value(3).toInt()[0],
-				'din_stundensatz': query.value(4).toFloat()[0],
-				'din_farbe': query.value(5).toString()
-				}
-		
-		return props"""
-	
 		emp = lib.Dienstnehmer.Dienstnehmer(dinId)
 		return emp
 	
 	def getWorkplaceProperties(self, arpId):
-		query = QtSql.QSqlQuery()
-		query.prepare("""select arp_id, arp_bezeichnung, arp_std_dienst_dauer, arp_bebid from arbeitsplaetze where arp_id = ?""")
-		query.addBindValue(arpId)
-		query.exec_()
-		if query.lastError().isValid():
-			print 'Error while selecting arbeitsplaetze:', query.lastError().text()
-			QtGui.QMessageBox.warning(self, u'Datenbank Fehler', 
-											u'Fehler beim Laden des Arbeitsplatzes!\nBitte kontaktieren Sie Ihren Administrator.')
-			return False
-		
-		query.next()
-		
-		props = {
-				'arp_id': query.value(0).toInt()[0],
-				'arp_bezeichnung': query.value(1).toString(),
-				'arp_std_dienst_dauer': query.value(2).toFloat()[0],
-				'arp_bebid': query.value(3).toInt()[0]
-				}
-		
-		return props
+		wp = lib.Arbeitsplatz.Arbeitsplatz(arpId)
+		return wp
 		
 		
 	def getFieldOfEmploymentProperties(self, bebId):
-		"""query = QtSql.QSqlQuery()
-		query.prepare("select beb_id, beb_bezeichnung, beb_trinkgeldpauschale from beschaeftigungsbereiche where beb_id = ?")
-		query.addBindValue(bebId)
-		query.exec_()
-		if query.lastError().isValid():
-			print 'Error while selecting beschaeftigungsbereiche:', query.lastError().text()
-			QtGui.QMessageBox.warning(self, u'Datenbank Fehler', 
-											u'Fehler beim Laden des Beschäftigungsbereichs!\nBitte kontaktieren Sie Ihren Administrator.')
-			return False
-		
-		query.next()
-		
-		props = {
-				'beb_id': query.value(0).toInt()[0],
-				'beb_bezeichnung': query.value(1).toString(),
-				'beb_trinkgeldpauschale': query.value(2).toInt()[0]
-				}
-		
-		return props"""
-	
 		foe = Beschaeftigungsbereich(bebId)
 		return foe
 		
