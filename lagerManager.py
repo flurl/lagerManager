@@ -95,7 +95,10 @@ class MainWindow(QtGui.QMainWindow):
 		
 	def openWindow(self, name, type_='mdi'):
 		if name in self.openWindows:
-			self.ui.mdiArea.setActiveSubWindow(self.openWindows[name].parent())
+			if type_ == 'mdi':
+				self.ui.mdiArea.setActiveSubWindow(self.openWindows[name].parent())
+			else:
+				self.openWindows[name].show()
 		else:
 			module = name.rpartition('.')[0]
 			className = name.rpartition('.')[2]
