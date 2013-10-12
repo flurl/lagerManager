@@ -572,6 +572,10 @@ class DienstplanForm(FormBase):
 	def load(self):
 		print "load"
 		if not self.askToContinueIfModified():
+			cb = self.ui.comboBox_event
+			oldState = cb.blockSignals(True)
+			cb.setCurrentIndex(cb.previousIndex())
+			cb.blockSignals(oldState)
 			return False
 		
 		self.clear()

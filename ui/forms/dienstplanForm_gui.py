@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'ui/forms/dienstplanForm.ui'
 #
-# Created: Fri Aug 23 23:44:13 2013
-#      by: PyQt4 UI code generator 4.10
+# Created: Sat Oct 12 01:16:47 2013
+#      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,16 +12,7 @@ from PyQt4 import QtCore, QtGui
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
-    def _fromUtf8(s):
-        return s
-
-try:
-    _encoding = QtGui.QApplication.UnicodeUTF8
-    def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig, _encoding)
-except AttributeError:
-    def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig)
+    _fromUtf8 = lambda s: s
 
 class Ui_DienstplanForm(object):
     def setupUi(self, DienstplanForm):
@@ -34,7 +25,7 @@ class Ui_DienstplanForm(object):
         self.label = QtGui.QLabel(DienstplanForm)
         self.label.setObjectName(_fromUtf8("label"))
         self.horizontalLayout.addWidget(self.label)
-        self.comboBox_event = QtGui.QComboBox(DienstplanForm)
+        self.comboBox_event = LMComboBox(DienstplanForm)
         self.comboBox_event.setObjectName(_fromUtf8("comboBox_event"))
         self.horizontalLayout.addWidget(self.comboBox_event)
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
@@ -79,7 +70,7 @@ class Ui_DienstplanForm(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName(_fromUtf8("scrollArea"))
         self.scrollAreaWidgetContents = QtGui.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 1148, 572))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 1132, 555))
         self.scrollAreaWidgetContents.setObjectName(_fromUtf8("scrollAreaWidgetContents"))
         self.gridLayout = QtGui.QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
@@ -112,13 +103,14 @@ class Ui_DienstplanForm(object):
         QtCore.QMetaObject.connectSlotsByName(DienstplanForm)
 
     def retranslateUi(self, DienstplanForm):
-        DienstplanForm.setWindowTitle(_translate("DienstplanForm", "Dienstplan", None))
-        self.label.setText(_translate("DienstplanForm", "Veranstaltung", None))
-        self.pushButton_refresh.setText(_translate("DienstplanForm", "Aktualisieren", None))
-        self.label_2.setText(_translate("DienstplanForm", "Voreinstellung", None))
-        self.pushButton_loadTemplate.setText(_translate("DienstplanForm", "&Laden", None))
-        self.pushButton_saveTemplate.setText(_translate("DienstplanForm", "&Speichern", None))
-        self.pushButton_autoAssignEmps.setText(_translate("DienstplanForm", "DN autom. zuordnen", None))
-        self.groupBox_event.setTitle(_translate("DienstplanForm", "GroupBox", None))
-        self.pushButton_addEmployee.setText(_translate("DienstplanForm", "&Hinzufügen", None))
+        DienstplanForm.setWindowTitle(QtGui.QApplication.translate("DienstplanForm", "Dienstplan", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setText(QtGui.QApplication.translate("DienstplanForm", "Veranstaltung", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton_refresh.setText(QtGui.QApplication.translate("DienstplanForm", "Aktualisieren", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_2.setText(QtGui.QApplication.translate("DienstplanForm", "Voreinstellung", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton_loadTemplate.setText(QtGui.QApplication.translate("DienstplanForm", "&Laden", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton_saveTemplate.setText(QtGui.QApplication.translate("DienstplanForm", "&Speichern", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton_autoAssignEmps.setText(QtGui.QApplication.translate("DienstplanForm", "DN autom. zuordnen", None, QtGui.QApplication.UnicodeUTF8))
+        self.groupBox_event.setTitle(QtGui.QApplication.translate("DienstplanForm", "GroupBox", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton_addEmployee.setText(QtGui.QApplication.translate("DienstplanForm", "&Hinzufügen", None, QtGui.QApplication.UnicodeUTF8))
 
+from lib.LMComboBox import LMComboBox

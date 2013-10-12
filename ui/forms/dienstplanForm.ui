@@ -24,7 +24,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBox_event"/>
+      <widget class="LMComboBox" name="comboBox_event"/>
      </item>
      <item>
       <spacer name="horizontalSpacer">
@@ -121,8 +121,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>1148</width>
-           <height>572</height>
+           <width>1132</width>
+           <height>555</height>
           </rect>
          </property>
          <layout class="QGridLayout" name="gridLayout">
@@ -177,6 +177,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>LMComboBox</class>
+   <extends>QComboBox</extends>
+   <header>lib.LMComboBox</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
