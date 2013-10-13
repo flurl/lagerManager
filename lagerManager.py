@@ -18,6 +18,8 @@ from ui.lagerManagerMainWindow_gui import Ui_MainWindow
 #from articleSelectionDialog import ArticleSelectionDialog
 from CONSTANTS import *
 import DBConnection
+import lagerManager_rc
+import Updater
 
 import GLOBALS
 from version import VERSION
@@ -38,16 +40,14 @@ class MainWindow(QtGui.QMainWindow):
 		
 		self.openConnectDlg()
 		
+		splash.show()
+		self.checkDbUpdate()
+		
 		self.statusBar().addPermanentWidget(QtGui.QLabel('V'+unicode(VERSION)), 1)
 		self.statusBar().addPermanentWidget(QtGui.QLabel('Verbindung: '+DBConnection.connName))
 		
 	def _setupForm(self):
 		mdi = self.ui.mdiArea
-		#mdi.setViewMode(QtGui.QMdiArea.TabbedView)
-		#mdi.setDocumentMode(True)
-		
-		#tabBar = mdi.findChildren(QtGui.QTabBar)[0]
-		#tabBar.setTabsClosable(True)
 		
 		self.connect(self.ui.actionQuit, QtCore.SIGNAL('triggered()'), self.close)
 		
@@ -179,12 +179,28 @@ class MainWindow(QtGui.QMainWindow):
 			tabBar.setTabButton(idx, QtGui.QTabBar.RightSide, widget)
 
 		
+	def checkDbUpdate(self):
+		splash.showMessage("checking for db updates")
+		u = Updater.Updater()
+		if u.checkForDatabaseUpdates():
+			splash.showMessage(u'Installing updates')
+			u.installDatabaseUpdates()
+			
+		splash.showMessage("update check finished")
 		
-
-				
+		
+		
 if __name__ == "__main__":
 	app = QtGui.QApplication(sys.argv)
 	app.setQuitOnLastWindowClosed(True)
+	
+	# Create and display the splash screen
+	pixmap = QtGui.QPixmap(':/images/splashscreen.png')
+	splash = QtGui.QSplashScreen(pixmap, QtCore.Qt.WindowStaysOnTopHint)
+	
 	win = MainWindow()
 	win.show()
+	
+	splash.finish(win)
+	
 	sys.exit(app.exec_())
