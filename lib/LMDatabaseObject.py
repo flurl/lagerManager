@@ -36,7 +36,6 @@ class LMDatabaseObject(object):
 		
 	
 	def __getitem__(self, name):
-		#print "__getitem__:", name, self._relations
 		#try:
 		
 		if hasattr(self, '_dynamicColumns'):
@@ -84,11 +83,9 @@ class LMDatabaseObject(object):
 		
 	def __loadTableColumns(self):
 		if 'definitions' in self.__readCache[self._DBTable]['columns']:
-			print "definitions cache HIT", self._DBTable
 			self._columns = self.__readCache[self._DBTable]['columns']['definitions']
 			self.primaryKey = self.__readCache[self._DBTable]['columns']['primaryKey']
 		else:
-			print "definitions cache miss", self._DBTable
 			self._columns = {}
 			table = self._DBTable
 			
@@ -96,7 +93,6 @@ class LMDatabaseObject(object):
 			rec = driver.record(table)
 			
 			for i in range(rec.count()):
-				#print "field ",i, rec.field(i)
 				field = rec.field(i)
 				"""print field.name()
 				print field.type()
@@ -113,15 +109,12 @@ class LMDatabaseObject(object):
 			
 			self.__readCache[self._DBTable]['columns']['definitions'] = self._columns
 			self.__readCache[self._DBTable]['columns']['primaryKey'] = self.primaryKey
-		#print self._columns
 		
 		
 	def __setupRelations(self):
 		d = self.__class__.__dict__
 		for var in d:
-			#print "searching for relations...", var
 			if isinstance(d[var], LMDatabaseRelation):
-				#print "appending %s to relations" %var
 				d[var].register(self)
 				self._relations[var] = d[var]
 		
@@ -233,8 +226,6 @@ class LMDatabaseObject(object):
 		before, sep, after = filterStr.partition(u'and')
 		if before == u'':
 			filterStr = after
-			
-		print 'filter', filterStr
 		
 		self.__model.setFilter(filterStr)
 		self.__model.select()
@@ -245,11 +236,8 @@ class LMDatabaseObject(object):
 		
 	def get(self, pk):
 		if pk in self.__readCache[self._DBTable]['queries']['get'].keys():
-			print 'cache hit',  self._DBTable, pk
-			#sprint 'get():', self._DBTable, pk, '\n', self.__readCache
 			query = self.__readCache[self._DBTable]['queries']['get'][pk]
 		else:
-			print 'cache miss', self._DBTable, pk, '\n'
 			query = "select %s from %s where %s = %s" % (','.join(self._columns.keys()), self._DBTable, self.primaryKey, pk)
 			query = self.runQuery(query)
 			
@@ -261,6 +249,5 @@ class LMDatabaseObject(object):
 			
 		self.__readCache[self._DBTable]['queries']['get'][pk] = query
 			
-		#print "get", self._columns
 		
 	
