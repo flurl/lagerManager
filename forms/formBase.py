@@ -79,6 +79,11 @@ class FormBase(QtGui.QDialog):
 		index = model.index(row, col)
 		pk = model.data(index).toInt()[0]
 		return pk
+	
+	@property
+	def cfgKey(self):
+		return 'form_'+self.ident
+	
 			
 			
 			
