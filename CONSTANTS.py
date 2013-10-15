@@ -1,11 +1,11 @@
 import os
-CONFFILE = os.path.join(os.path.expanduser('~'),'.lagerManager.cfg')
+CONFFILE = os.path.join(os.path.expanduser('~'), '.lagerManager.cfg')
 
 ZOOMINFACTOR = 1.5
-ZOOMOUTFACTOR = 1/ZOOMINFACTOR
+ZOOMOUTFACTOR = 1 / ZOOMINFACTOR
 
 EINGANGSRECHNUNGID = 1
 
-NACHTARBEITSZUSCHLAG = 20.7 #per shift
-TRINKGELDPAUSCHALE = 0.25 #per hour
+NACHTARBEITSZUSCHLAG = 20.7  # per shift
+TRINKGELDPAUSCHALE = 0.25  # per hour
 MINHOURSFORPAUSE = 6.0
