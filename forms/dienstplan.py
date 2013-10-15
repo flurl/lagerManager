@@ -33,6 +33,11 @@ class DienstplanForm(FormBase):
 		self.__loading = False
 		super(DienstplanForm, self).__init__(parent)
 		self.load()
+		
+		self.setWindowFlags( QtCore.Qt.Window | QtCore.Qt.WindowSystemMenuHint
+                            | QtCore.Qt.WindowMinimizeButtonHint
+                            | QtCore.Qt.WindowMaximizeButtonHint
+                            | QtCore.Qt.WindowCloseButtonHint)
 	
 	
 	def setupUi(self):
