@@ -5,6 +5,7 @@ import DBConnection
 from lib.LMDatabaseRelation import LMDatabaseRelation
 
 import collections
+import copy
 
 class DatabaseError(Exception):
 	pass
@@ -83,8 +84,8 @@ class LMDatabaseObject(object):
 		
 	def __loadTableColumns(self):
 		if 'definitions' in self.__readCache[self._DBTable]['columns']:
-			self._columns = self.__readCache[self._DBTable]['columns']['definitions']
-			self.primaryKey = self.__readCache[self._DBTable]['columns']['primaryKey']
+			self._columns = copy.deepcopy(self.__readCache[self._DBTable]['columns']['definitions'])
+			self.primaryKey = copy.deepcopy(self.__readCache[self._DBTable]['columns']['primaryKey'])
 		else:
 			self._columns = {}
 			table = self._DBTable
