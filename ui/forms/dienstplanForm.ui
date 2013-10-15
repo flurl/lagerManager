@@ -153,7 +153,14 @@
              </layout>
             </item>
             <item>
-             <widget class="QGraphicsView" name="graphicsView_timeTable"/>
+             <widget class="QGraphicsView" name="graphicsView_timeTable">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>1</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>

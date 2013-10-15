@@ -29,6 +29,7 @@ class DienstplanForm(FormBase):
 		self.employees = []
 		self.modified = False
 		self.unmodifiedEmpCombos = []
+		self.__drawTimer = QtCore.QTimer()
 		super(DienstplanForm, self).__init__(parent)
 		self.load()
 	
@@ -147,6 +148,7 @@ class DienstplanForm(FormBase):
 		frame.setFrameShape(QtGui.QFrame.Box)
 		#frame.setFrameShadow(QtGui.QFrame.Sunken)
 		frame.setLayout(layout)
+		frame.showEvent = lambda e, f=frame: self.onFrameShown(f, e)
 		#insert before the push button; -2 because there are already 2 widget in the layout: the button and the spacer
 		self.ui.verticalLayout_employees.insertWidget(self.ui.verticalLayout_employees.count()-2, frame)
 		
@@ -247,6 +249,7 @@ class DienstplanForm(FormBase):
 	
 	
 	def setModified(self, state=True):
+		self.drawTimeTable()
 		self.modified = state
 		return True
 	
@@ -618,7 +621,6 @@ class DienstplanForm(FormBase):
 			diePause = query.value(5).toFloat()[0]
 			
 			self.addEmployee(dinId, arpId, dieBeginn, dieEnde, diePause)
-			
 		
 		
 	def onButtonBoxClicked(self, btn):
@@ -851,6 +853,85 @@ class DienstplanForm(FormBase):
 	def getFieldOfEmploymentProperties(self, bebId):
 		foe = Beschaeftigungsbereich(bebId)
 		return foe
+	
+	
+	def drawTimeTable(self):
+		"""delay the drawing of the time table
+		this is an ugly workaround to give QT time to settle things,
+		otherwise there where scaling issues of the scene within the graphicsView_timeTable
+		TODO: handle that in a somehow more sane way"""
+		if self.__drawTimer.isActive():
+			self.__drawTimer.stop()
+			
+		self.__drawTimer.singleShot(500, self.reallyDrawTimeTable)
+	
+	
+	def reallyDrawTimeTable(self):
+		gv = self.ui.graphicsView_timeTable
+		scene = QtGui.QGraphicsScene()
+		gv.setScene(scene)
 		
+		shift = self.getEventProperties(self.getCurrentEventId())
+		beginHour = shift['ver_beginn'].hour()
 		
+		black = QtGui.QPen(QtGui.QColor(0xdd, 0xdd, 0xdd))
+		red = QtGui.QPen(QtGui.QColor(0xff, 0xdd, 0xdd))
+		red.setWidth(5)
 		
+		font =  QtGui.QFont()
+		font.setPixelSize(30)
+		for x in range (24):
+			time = x + beginHour - 12
+			if time < 0:
+				time = 24 - time
+			elif time > 24:
+				time = time - 24
+				
+			txt = scene.addSimpleText(u'%s'%time, font)
+			
+			if time == beginHour:
+				color = red
+			else:
+				color = black
+			
+			x=x*100
+			txt.setPos(x,0)
+			scene.addLine(x,0,x,1000, color)
+		
+		gv.fitInView(scene.sceneRect())
+		
+		for wr in self.employees:
+			empProps = self.getEmployeeProperties(self.getPKForCombobox(wr['employeeCombo'], 'din_id'))
+			empColor = QtGui.QColor(empProps['din_farbe'])
+			complementaryColor = QtGui.QColor(255-empColor.red(), 255-empColor.green(), 255-empColor.blue())
+			brush = QtGui.QBrush(empColor)
+			pen = QtGui.QPen(complementaryColor)
+			
+			begin = wr['beginDateTimeEdit'].dateTime()
+			beginDelta = shift['date_time'].secsTo(begin)/3600.0
+			
+			end = wr['endDateTimeEdit'].dateTime()
+			shiftLen = begin.secsTo(end)/3600.0
+			
+			x = (12 + beginDelta) * 100
+			point = wr['frame'].mapToGlobal(QtCore.QPoint(0,0))
+			y = gv.mapToScene(gv.mapFromGlobal(point)).y()+30
+			scene.addRect(x, y, shiftLen*100, 50, pen, brush)
+			
+			font.setPixelSize(30)
+			font.setBold(True)
+			txt = scene.addText(u'%s'%empProps['din_name'], font)
+			txt.setPos(x+5, y+5)
+			txt.setDefaultTextColor(complementaryColor)
+		
+		gv.fitInView(scene.itemsBoundingRect())
+			
+		
+	def resizeEvent(self, event):
+		super(DienstplanForm, self).resizeEvent(event)
+		self.drawTimeTable()
+	
+	
+	def onFrameShown(self, frame, event):
+		super(QtGui.QFrame, frame).showEvent(event)
+		self.drawTimeTable()

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/forms/dienstplanForm.ui'
 #
-# Created: Sat Oct 12 01:16:47 2013
+# Created: Tue Oct 15 04:20:23 2013
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -85,6 +85,11 @@ class Ui_DienstplanForm(object):
         self.verticalLayout_employees.addItem(spacerItem2)
         self.horizontalLayout_2.addLayout(self.verticalLayout_employees)
         self.graphicsView_timeTable = QtGui.QGraphicsView(self.scrollAreaWidgetContents)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(1)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.graphicsView_timeTable.sizePolicy().hasHeightForWidth())
+        self.graphicsView_timeTable.setSizePolicy(sizePolicy)
         self.graphicsView_timeTable.setObjectName(_fromUtf8("graphicsView_timeTable"))
         self.horizontalLayout_2.addWidget(self.graphicsView_timeTable)
         self.gridLayout.addLayout(self.horizontalLayout_2, 0, 0, 1, 1)
