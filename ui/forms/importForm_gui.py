@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'ui/forms/importForm.ui'
 #
-# Created: Fri Oct 11 12:48:46 2013
-#      by: PyQt4 UI code generator 4.9.3
+# Created: Tue Oct 15 21:10:28 2013
+#      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -17,7 +17,7 @@ except AttributeError:
 class Ui_ImportForm(object):
     def setupUi(self, ImportForm):
         ImportForm.setObjectName(_fromUtf8("ImportForm"))
-        ImportForm.resize(197, 201)
+        ImportForm.resize(211, 212)
         self.gridLayout = QtGui.QGridLayout(ImportForm)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
         self.verticalLayout = QtGui.QVBoxLayout()
@@ -57,19 +57,11 @@ class Ui_ImportForm(object):
         self.lineEdit_password.setObjectName(_fromUtf8("lineEdit_password"))
         self.formLayout.setWidget(4, QtGui.QFormLayout.FieldRole, self.lineEdit_password)
         self.verticalLayout.addLayout(self.formLayout)
-        self.horizontalLayout_3 = QtGui.QHBoxLayout()
-        self.horizontalLayout_3.setObjectName(_fromUtf8("horizontalLayout_3"))
-        self.checkBox_initialImport = QtGui.QCheckBox(ImportForm)
-        self.checkBox_initialImport.setObjectName(_fromUtf8("checkBox_initialImport"))
-        self.horizontalLayout_3.addWidget(self.checkBox_initialImport)
-        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.horizontalLayout_3.addItem(spacerItem)
-        self.verticalLayout.addLayout(self.horizontalLayout_3)
         self.gridLayout.addLayout(self.verticalLayout, 0, 0, 1, 1)
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
-        spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem1)
+        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem)
         self.pushButton_import = QtGui.QPushButton(ImportForm)
         self.pushButton_import.setObjectName(_fromUtf8("pushButton_import"))
         self.horizontalLayout.addWidget(self.pushButton_import)
@@ -85,6 +77,5 @@ class Ui_ImportForm(object):
         self.label_3.setText(QtGui.QApplication.translate("ImportForm", "Datenbank", None, QtGui.QApplication.UnicodeUTF8))
         self.label_4.setText(QtGui.QApplication.translate("ImportForm", "User", None, QtGui.QApplication.UnicodeUTF8))
         self.label_5.setText(QtGui.QApplication.translate("ImportForm", "Paßwort", None, QtGui.QApplication.UnicodeUTF8))
-        self.checkBox_initialImport.setText(QtGui.QApplication.translate("ImportForm", "Initialer Import", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_import.setText(QtGui.QApplication.translate("ImportForm", "&Importieren", None, QtGui.QApplication.UnicodeUTF8))
 

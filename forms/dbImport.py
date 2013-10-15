@@ -9,6 +9,8 @@ import _mssql
 from forms.formBase import FormBase
 from ui.forms.importForm_gui import Ui_ImportForm
 import config
+import DBConnection
+
 
 class ImportForm(FormBase):
 	
@@ -18,7 +20,7 @@ class ImportForm(FormBase):
 	def setupUi(self):
 		super(ImportForm, self).setupUi()
 		try:
-			c = config.config['form_'+self.ident]
+			c = config.config[self.cfgKey]['connection'][DBConnection.connName]
 			self.ui.lineEdit_host.setText(c['lastHost'])
 			self.ui.lineEdit_database.setText(c['lastDb'])
 			self.ui.lineEdit_user.setText(c['lastUser'])
@@ -55,7 +57,6 @@ class ImportForm(FormBase):
 		s = self.connectToSource()
 		periodId = self.getCurrentPeriodId()
 		checkpointId = self.getCheckpointIdForPeriod(periodId)
-		initialImport = self.ui.checkBox_initialImport.isChecked()
 		
 		try:
 			
@@ -74,14 +75,14 @@ class ImportForm(FormBase):
 			print 'importing checkpoints'
 			
 			query = QtSql.QSqlQuery()
-			if initialImport:
-				print 'deleting'
-				query = QtSql.QSqlQuery()
-				query.prepare('delete from journal_checkpoints where checkpoint_periode = ?')
-				query.addBindValue(periodId)
-				query.exec_()
-				if query.lastError().isValid():
-					print 'Error in query:', query.lastError().text()
+		
+			print 'deleting'
+			query = QtSql.QSqlQuery()
+			query.prepare('delete from journal_checkpoints where checkpoint_periode = ?')
+			query.addBindValue(periodId)
+			query.exec_()
+			if query.lastError().isValid():
+				print 'Error in query:', query.lastError().text()
 				
 			query.prepare('select ifnull(max(checkpoint_id), 0) from journal_checkpoints where checkpoint_periode = ?')
 			query.addBindValue(periodId)
@@ -126,14 +127,14 @@ class ImportForm(FormBase):
 			print 'importing journal daten'
 			
 			query = QtSql.QSqlQuery()
-			if initialImport:
-				print 'deleting'
-				query = QtSql.QSqlQuery()
-				query.prepare('delete from journal_daten where daten_periode = ?')
-				query.addBindValue(periodId)
-				query.exec_()
-				if query.lastError().isValid():
-					print 'Error in query:', query.lastError().text()
+		
+			print 'deleting'
+			query = QtSql.QSqlQuery()
+			query.prepare('delete from journal_daten where daten_periode = ?')
+			query.addBindValue(periodId)
+			query.exec_()
+			if query.lastError().isValid():
+				print 'Error in query:', query.lastError().text()
 				
 			query.prepare('select ifnull(max(daten_rechnung_id), 0) from journal_daten where daten_periode = ?')
 			query.addBindValue(periodId)
@@ -172,13 +173,13 @@ class ImportForm(FormBase):
 			print 'importing journal details'
 			
 			query = QtSql.QSqlQuery()
-			if initialImport:
-				print 'deleting'
-				query.prepare('delete from journal_details where detail_periode = ?')
-				query.addBindValue(periodId)
-				query.exec_()
-				if query.lastError().isValid():
-					print 'Error in query:', query.lastError().text()
+		
+			print 'deleting'
+			query.prepare('delete from journal_details where detail_periode = ?')
+			query.addBindValue(periodId)
+			query.exec_()
+			if query.lastError().isValid():
+				print 'Error in query:', query.lastError().text()
 			
 			query.prepare('select ifnull(max(detail_id), 0) from journal_details where detail_periode = ?')
 			query.addBindValue(periodId)
@@ -231,13 +232,13 @@ class ImportForm(FormBase):
 			print 'importing rechnungen'
 			
 			query = QtSql.QSqlQuery()
-			if initialImport:
-				print 'deleting'
-				query.prepare('delete from rechnungen_basis where rechnung_periode = ?')
-				query.addBindValue(periodId)
-				query.exec_()
-				if query.lastError().isValid():
-					print 'Error in query:', query.lastError().text()
+		
+			print 'deleting'
+			query.prepare('delete from rechnungen_basis where rechnung_periode = ?')
+			query.addBindValue(periodId)
+			query.exec_()
+			if query.lastError().isValid():
+				print 'Error in query:', query.lastError().text()
 			
 			query.prepare('select ifnull(max(rechnung_id), 0) from rechnungen_basis where rechnung_periode = ?')
 			query.addBindValue(periodId)
@@ -287,13 +288,13 @@ class ImportForm(FormBase):
 			print 'importing artikel basis'
 			
 			query = QtSql.QSqlQuery()
-			if initialImport:
-				print 'deleting'
-				query.prepare('delete from artikel_basis where artikel_periode = ?')
-				query.addBindValue(periodId)
-				query.exec_()
-				if query.lastError().isValid():
-					print 'Error in query:', query.lastError().text()
+			
+			print 'deleting'
+			query.prepare('delete from artikel_basis where artikel_periode = ?')
+			query.addBindValue(periodId)
+			query.exec_()
+			if query.lastError().isValid():
+				print 'Error in query:', query.lastError().text()
 			
 			query.prepare('select ifnull(max(artikel_id), 0) from artikel_basis where artikel_periode = ?')
 			query.addBindValue(periodId)
@@ -517,7 +518,20 @@ class ImportForm(FormBase):
 		db = unicode(self.ui.lineEdit_database.text())
 		user = unicode(self.ui.lineEdit_user.text())
 		pw = unicode(self.ui.lineEdit_password.text())
-		config.config['form_'+self.ident] = {'lastHost': host, 'lastDb': db, 'lastUser': user, 'lastPw': pw}
+	
+		cfgKey = self.cfgKey
+	
+		try:
+			tmp = config.config[cfgKey]
+		except KeyError:
+			config.config[cfgKey] = {}
+			
+		try:
+			tmp = config.config[cfgKey]['connection']
+		except KeyError:
+			config.config[cfgKey]['connection'] = {}
+	
+		config.config[cfgKey]['connection'][DBConnection.connName] = {'lastHost': host, 'lastDb': db, 'lastUser': user, 'lastPw': pw}
 		config.config.write()
 		super(ImportForm, self).closeEvent(event)
 		

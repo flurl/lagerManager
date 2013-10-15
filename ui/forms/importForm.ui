@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>197</width>
-    <height>201</height>
+    <width>211</width>
+    <height>212</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -74,30 +74,6 @@
           <enum>QLineEdit::PasswordEchoOnEdit</enum>
          </property>
         </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
-       <item>
-        <widget class="QCheckBox" name="checkBox_initialImport">
-         <property name="text">
-          <string>Initialer Import</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </item>
