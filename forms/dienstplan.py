@@ -886,8 +886,8 @@ class DienstplanForm(FormBase):
 		
 		font =  QtGui.QFont()
 		font.setPixelSize(30)
-		for x in range (24):
-			time = x + beginHour - 12
+		for x in range (18):
+			time = x + beginHour - 6
 			if time < 0:
 				time = 24 - time
 			elif time > 24:
@@ -919,7 +919,7 @@ class DienstplanForm(FormBase):
 			end = wr['endDateTimeEdit'].dateTime()
 			shiftLen = begin.secsTo(end)/3600.0
 			
-			x = (12 + beginDelta) * 100
+			x = (6 + beginDelta) * 100
 			point = wr['frame'].mapToGlobal(QtCore.QPoint(0,0))
 			y = gv.mapToScene(gv.mapFromGlobal(point)).y()+30
 			scene.addRect(x, y, shiftLen*100, 50, pen, brush)
