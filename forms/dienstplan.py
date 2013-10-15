@@ -30,6 +30,7 @@ class DienstplanForm(FormBase):
 		self.modified = False
 		self.unmodifiedEmpCombos = []
 		self.__drawTimer = QtCore.QTimer()
+		self.__loading = False
 		super(DienstplanForm, self).__init__(parent)
 		self.load()
 	
@@ -250,7 +251,9 @@ class DienstplanForm(FormBase):
 	
 	def setModified(self, state=True):
 		self.drawTimeTable()
-		self.modified = state
+		#don't modify state while loading
+		if not self.__loading:
+			self.modified = state
 		return True
 	
 		
@@ -588,13 +591,14 @@ class DienstplanForm(FormBase):
 			
 			
 	def load(self):
-		print "load"
 		if not self.askToContinueIfModified():
 			cb = self.ui.comboBox_event
 			oldState = cb.blockSignals(True)
 			cb.setCurrentIndex(cb.previousIndex())
 			cb.blockSignals(oldState)
 			return False
+		
+		self.__loading = True
 		
 		self.clear()
 		
@@ -621,6 +625,8 @@ class DienstplanForm(FormBase):
 			diePause = query.value(5).toFloat()[0]
 			
 			self.addEmployee(dinId, arpId, dieBeginn, dieEnde, diePause)
+		
+		self.__loading = False
 		
 		
 	def onButtonBoxClicked(self, btn):
