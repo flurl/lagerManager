@@ -878,7 +878,7 @@ class DienstplanForm(FormBase):
 		gv.setScene(scene)
 		
 		shift = self.getEventProperties(self.getCurrentEventId())
-		beginHour = shift['ver_beginn'].hour()
+		shiftBegin = shift['date_time']
 		
 		black = QtGui.QPen(QtGui.QColor(0xdd, 0xdd, 0xdd))
 		red = QtGui.QPen(QtGui.QColor(0xff, 0x44, 0x44))
@@ -887,22 +887,26 @@ class DienstplanForm(FormBase):
 		font =  QtGui.QFont()
 		font.setPixelSize(30)
 		for x in range (18):
-			time = x + beginHour - 6
+			time = x + shiftBegin.time().hour() - 6
+			print 'time:', time
 			if time < 0:
-				time = 24 - time
+				time = 24 + time
 			elif time > 24:
 				time = time - 24
 				
 			txt = scene.addSimpleText(u'%s'%time, font)
 			
-			if time == beginHour:
-				color = red
-			else:
-				color = black
-			
 			x=x*100
 			txt.setPos(x,0)
-			scene.addLine(x,0,x,1000, color)
+			scene.addLine(x,0,x,1000, black)
+			
+		tmpTime = shiftBegin.time()
+		tmpTime.setHMS(shiftBegin.time().hour(), 0, 0)
+		tmpDateTime = QtCore.QDateTime(shiftBegin)
+		tmpDateTime.setTime(tmpTime)
+		
+		shiftBeginX = (tmpDateTime.addSecs(-6*3600).secsTo(shiftBegin)/3600.0) * 100
+		scene.addLine(shiftBeginX, 0, shiftBeginX, 1000, red)
 		
 		gv.fitInView(scene.sceneRect())
 		
@@ -919,7 +923,8 @@ class DienstplanForm(FormBase):
 			end = wr['endDateTimeEdit'].dateTime()
 			shiftLen = begin.secsTo(end)/3600.0
 			
-			x = (6 + beginDelta) * 100
+			x = shiftBeginX + beginDelta * 100
+			
 			point = wr['frame'].mapToGlobal(QtCore.QPoint(0,0))
 			y = gv.mapToScene(gv.mapFromGlobal(point)).y()+30
 			scene.addRect(x, y, shiftLen*100, 50, pen, brush)
