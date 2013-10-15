@@ -23,9 +23,9 @@ class Dienstnehmer(LMDatabaseObject):
 		
 	def getRemainingSalary(self, date=None, excludeDutyId=None):
 		remainingSalary = self['din_gehalt']
-		print 'BP1 remainingSalary:', remainingSalary
-		for d in self.getDuties(date, excludeDutyId):
-			print 'BP2 remainingSalary:', remainingSalary
+		duties = self.getDuties(date, excludeDutyId)
+		for d in duties:
+			earnings = d.getEarnings()
 			remainingSalary -= d.getEarnings()
 			
 		print "BP3 remainingSalary for %s is %s" % (self['din_name'], remainingSalary)
@@ -67,7 +67,6 @@ class Dienstnehmer(LMDatabaseObject):
 	
 	def getHourlyWage(self, date=None):
 		hourly = self['gehalt']['stundensatz']
-		print 'getHourlyWage:', date, hourly
 		return hourly
 	
 	

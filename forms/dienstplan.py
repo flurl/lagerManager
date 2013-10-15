@@ -888,7 +888,6 @@ class DienstplanForm(FormBase):
 		font.setPixelSize(30)
 		for x in range (18):
 			time = x + shiftBegin.time().hour() - 6
-			print 'time:', time
 			if time < 0:
 				time = 24 + time
 			elif time > 24:
