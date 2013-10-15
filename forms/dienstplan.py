@@ -881,7 +881,7 @@ class DienstplanForm(FormBase):
 		beginHour = shift['ver_beginn'].hour()
 		
 		black = QtGui.QPen(QtGui.QColor(0xdd, 0xdd, 0xdd))
-		red = QtGui.QPen(QtGui.QColor(0xff, 0xdd, 0xdd))
+		red = QtGui.QPen(QtGui.QColor(0xff, 0x44, 0x44))
 		red.setWidth(5)
 		
 		font =  QtGui.QFont()
