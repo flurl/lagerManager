@@ -10,6 +10,7 @@ from ui.lagerManagerMainWindow_gui import Ui_MainWindow
 import DBConnection
 import lagerManager_rc  # @UnusedImport
 import Updater
+from lib.GlobalConfig import globalConf
 
 
 from version import VERSION
@@ -30,6 +31,11 @@ class MainWindow(QtGui.QMainWindow):
 
         splash.show()
         self.checkDbUpdate()
+
+        palette = self.palette()
+        palette.setColor(QtGui.QPalette.Window,
+                         QtGui.QColor(globalConf['baseColor']))
+        self.setPalette(palette)
 
         self.statusBar().addPermanentWidget(
                                         QtGui.QLabel('V' + unicode(VERSION)),
@@ -168,6 +174,7 @@ class MainWindow(QtGui.QMainWindow):
                             QtCore.SIGNAL('windowStateChanged(Qt::WindowStates, Qt::WindowStates)'),
                             self.subWindowStateChanged)
 
+            window.setPalette(self.palette())
             window.show()
 
     def deregisterWindow(self, window):
