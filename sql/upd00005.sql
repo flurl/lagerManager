@@ -1,1 +1,0 @@
-insert into config (cfg_key, cfg_valueS) values ('baseColor', '#E5F9FF');
