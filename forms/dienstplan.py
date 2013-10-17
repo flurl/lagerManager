@@ -253,7 +253,7 @@ class DienstplanForm(FormBase):
         self.connect(delBtn,
                      QtCore.SIGNAL('clicked()'),
                      (lambda f=frame, wr=widgetRef:
-                      self.deleteWidget(f)and self.employees.remove(wr)))
+                      self.deleteWidget(f) and self.employees.remove(wr)))
         
         self.connect(employeeCombo,
                      QtCore.SIGNAL('currentIndexChanged(int)'),
@@ -285,12 +285,38 @@ class DienstplanForm(FormBase):
                       self.unmodifiedEmpCombos.remove(wr['employeeCombo'])))
         self.connect(workplaceCombo,
                      QtCore.SIGNAL('currentIndexChanged(int)'),
-                     lambda i, wr=widgetRef: self.checkEmployeeWorkplaceAssignment(wr))
+                     lambda i, wr=widgetRef: (self.checkEmployeeWorkplaceAssignment(wr),
+                                              self.sortWidgets()))
         
         self.employees.append(widgetRef)
         self.checkDateTime(widgetRef)
         
+        self.sortWidgets()
+        
         return widgetRef
+    
+    def sortWidgets(self):
+        l = self.ui.verticalLayout_employees
+        for wr in self.employees:
+            self.ui.verticalLayout_employees.removeWidget(wr['frame'])
+        
+        foeIds = []
+        for wr in self.employees:
+            foeId = self.getWorkplaceProperties(self.
+                                               getPKForCombobox(wr['workplaceCombo'],
+                                                                'arp_id'))['arp_bebid']
+            if not foeIds:
+                l.insertWidget(0, wr['frame'])
+                foeIds = [foeId]
+                continue
+            
+            for i in reversed(range(len(foeIds))):
+                if foeIds[i] < foeId:
+                    i += 1
+                    break
+            
+            l.insertWidget(i, wr['frame'])
+            foeIds.insert(i, foeId)
     
     def findEmployeeWidgetRefByEmpId(self, empId):
         for emp in self.employees:
