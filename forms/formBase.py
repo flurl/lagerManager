@@ -4,6 +4,10 @@ from PyQt4 import QtCore, QtGui, QtSql
 from DBConnection import dbConn
 
 
+class ComboBoxPKError(Exception):
+    pass
+
+
 class FormBase(QtGui.QDialog):
     
     def __init__(self, parent):
@@ -74,6 +78,8 @@ class FormBase(QtGui.QDialog):
     def getPKForCombobox(self, combo, pkName):
         model = combo.model()
         row = combo.currentIndex()
+        if row == -1:
+            raise ComboBoxPKError()
         col = model.fieldIndex(pkName)
         index = model.index(row, col)
         pk = model.data(index).toInt()[0]
