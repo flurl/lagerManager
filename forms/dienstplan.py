@@ -6,7 +6,7 @@ import sip
 from PyQt4 import QtCore, QtGui, QtSql
 
 from CONSTANTS import MINHOURSFORPAUSE
-from forms.formBase import FormBase
+from forms.formBase import FormBase, ComboBoxPKError
 import lib.Arbeitsplatz
 from lib.Beschaeftigungsbereich import Beschaeftigungsbereich
 import lib.Dienst
@@ -24,7 +24,6 @@ class DienstplanForm(FormBase):
     def __init__(self, parent):
         self.employees = []
         self.modified = False
-        self.unmodifiedEmpCombos = []
         self.__drawTimer = QtCore.QTimer()
         self.__loading = False
         super(DienstplanForm, self).__init__(parent)
@@ -182,6 +181,10 @@ class DienstplanForm(FormBase):
         if arpId is not None:
             idx = workplaceModel.match(workplaceModel.index(0, 0), 0, arpId)[0]
             workplaceCombo.setCurrentIndex(idx.row())
+        else:
+            workplaceCombo.insertSeparator(-1)
+            workplaceCombo.setCurrentIndex(-1)
+            employeeCombo.setEnabled(False)
             
         self.checkEmployeeWorkplaceAssignment(widgetRef)
             
@@ -189,7 +192,8 @@ class DienstplanForm(FormBase):
             idx = employeeModel.match(employeeModel.index(0, 0), 0, dinId)[0]
             employeeCombo.setCurrentIndex(idx.row())
         else:
-            self.unmodifiedEmpCombos.append(widgetRef['employeeCombo'])
+            employeeCombo.insertSeparator(-1)
+            employeeCombo.setCurrentIndex(-1)
             
         if dieBeginn is not None and isinstance(dieBeginn, QtCore.QDateTime):
             beginDateTimeEdit.setDateTime(dieBeginn)
@@ -208,12 +212,15 @@ class DienstplanForm(FormBase):
         elif dieEnde is not None and isinstance(dieEnde, numbers.Number):
             endDateTimeEdit.setDateTime(beginDateTimeEdit.dateTime().addSecs(dieEnde))
         else:
-            endDateTimeEdit.setDate(eventProps['ver_datum'])
-            endDateTimeEdit.setTime(eventProps['ver_beginn'])
-            workplace = lib.Arbeitsplatz.Arbeitsplatz(self.
+            try:
+                workplace = lib.Arbeitsplatz.Arbeitsplatz(self.
                                                       getPKForCombobox(workplaceCombo, 'arp_id'))
-            endDateTimeEdit.setDateTime(endDateTimeEdit.dateTime().
-                                        addSecs(int(workplace['arp_std_dienst_dauer'] * 3600)))
+                endDateTimeEdit.setDate(eventProps['ver_datum'])
+                endDateTimeEdit.setTime(eventProps['ver_beginn'])
+                endDateTimeEdit.setDateTime(endDateTimeEdit.dateTime().
+                                            addSecs(int(workplace['arp_std_dienst_dauer'] * 3600)))
+            except ComboBoxPKError:
+                endDateTimeEdit.setDateTime(QtCore.QDateTime())
         
         # set the seconds of the datetimeedit to 0
         edit = beginDateTimeEdit
@@ -278,11 +285,6 @@ class DienstplanForm(FormBase):
         self.connect(employeeCombo,
                      QtCore.SIGNAL('currentIndexChanged(int)'),
                      lambda i, wr=widgetRef: self.setEmployeeFrameColor(wr))
-        self.connect(employeeCombo,
-                     QtCore.SIGNAL('currentIndexChanged(int)'),
-                     (lambda i, wr=widgetRef:
-                      (wr['employeeCombo'] in self.unmodifiedEmpCombos) and
-                      self.unmodifiedEmpCombos.remove(wr['employeeCombo'])))
         self.connect(workplaceCombo,
                      QtCore.SIGNAL('currentIndexChanged(int)'),
                      lambda i, wr=widgetRef: (self.checkEmployeeWorkplaceAssignment(wr),
@@ -302,9 +304,13 @@ class DienstplanForm(FormBase):
         
         foeIds = []
         for wr in self.employees:
-            foeId = self.getWorkplaceProperties(self.
-                                               getPKForCombobox(wr['workplaceCombo'],
-                                                                'arp_id'))['arp_bebid']
+            try:
+                foeId = self.getWorkplaceProperties(self.
+                                                   getPKForCombobox(wr['workplaceCombo'],
+                                                                    'arp_id'))['arp_bebid']
+            except ComboBoxPKError:
+                foeId = 0
+                
             if not foeIds:
                 l.insertWidget(0, wr['frame'])
                 foeIds = [foeId]
@@ -343,8 +349,22 @@ class DienstplanForm(FormBase):
         print "validateRoster"
         employeesInUse = []
         for waiterWidgetRefs in self.employees:
-            empId = self.getPKForCombobox(waiterWidgetRefs['employeeCombo'], 'din_id')
+            try:
+                empId = self.getPKForCombobox(waiterWidgetRefs['employeeCombo'], 'din_id')
+            except ComboBoxPKError:
+                QtGui.QMessageBox.warning(self, u'Einteilungsfehler',
+                                                u'Ein oder mehreren Diensten \
+                                                wurde kein DN zugewiesen')
+                return False
             employeesInUse.append(empId)
+            
+            try:
+                self.getPKForCombobox(waiterWidgetRefs['workplaceCombo'], 'arp_id')
+            except ComboBoxPKError:
+                QtGui.QMessageBox.warning(self, u'Einteilungsfehler',
+                                                u'Ein oder mehreren Diensten \
+                                                wurde kein Arbeitsplatz zugewiesen')
+                return False
             
             failedTimes = self.checkDateTime(waiterWidgetRefs)
             if failedTimes:
@@ -410,7 +430,10 @@ class DienstplanForm(FormBase):
     def checkEmployeeHours(self, widgetRef):
         print "checkEmployeeHours"
         combo = widgetRef['employeeCombo']
-        empId = self.getPKForCombobox(combo, 'din_id')
+        try:
+            empId = self.getPKForCombobox(combo, 'din_id')
+        except ComboBoxPKError:
+            return
         failed = self.checkMonthlyWorkingHours([empId])
         if len(failed) > 0:
             combo.setStyleSheet('QFrame {background-color:red;}')
@@ -420,7 +443,10 @@ class DienstplanForm(FormBase):
     def checkDateTime(self, wr):
         begin = wr['beginDateTimeEdit'].dateTime()
         end = wr['endDateTimeEdit'].dateTime()
-        empId = self.getPKForCombobox(wr['employeeCombo'], 'din_id')
+        try:
+            empId = self.getPKForCombobox(wr['employeeCombo'], 'din_id')
+        except ComboBoxPKError:
+            return False
         
         modified = False
         if end <= begin:
@@ -556,13 +582,31 @@ class DienstplanForm(FormBase):
         return 0
     
     def checkEmployeeWorkplaceAssignment(self, wr):
-        wpProps = self.getWorkplaceProperties(
-                                              self.getPKForCombobox(wr['workplaceCombo'],
-                                                                    'arp_id'))
-        wr['employeeCombo'].model().setFilter('dienstnehmer.din_bebid = %s' % wpProps['arp_bebid'])
+        try:
+            pk = self.getPKForCombobox(wr['workplaceCombo'], 'arp_id')
+        except ComboBoxPKError:
+            return
+    
+        wpProps = self.getWorkplaceProperties(pk)
+        eventProps = self.getEventProperties(self.getCurrentEventId())
+        combo = wr['employeeCombo']
+        # if the combo is not enabled, no workplace has been selected until now
+        # this means we init the end datetime the first time
+        if not combo.isEnabled():
+            combo.setEnabled(True)
+            edit = wr['endDateTimeEdit']
+            edit.setDate(eventProps['ver_datum'])
+            edit.setTime(eventProps['ver_beginn'])
+            edit.setDateTime(edit.dateTime().addSecs(int(wpProps['arp_std_dienst_dauer'] * 3600)))
+        combo.model().setFilter('dienstnehmer.din_bebid = %s' %
+                                              wpProps['arp_bebid'])
     
     def setEmployeeFrameColor(self, wr):
-        empProps = self.getEmployeeProperties(self.getPKForCombobox(wr['employeeCombo'], 'din_id'))
+        try:
+            empProps = self.getEmployeeProperties(self.getPKForCombobox(wr['employeeCombo'],
+                                                                        'din_id'))
+        except ComboBoxPKError:
+            return
         color = empProps['din_farbe']
         print 'color:', empProps['din_farbe'], 'background-color:%s;' % color
         wr['frame'].setStyleSheet('QFrame {background-color:%s;} \
@@ -576,16 +620,6 @@ class DienstplanForm(FormBase):
     def save(self):
         if not self.validateRoster():
             return False
-        
-        if len(self.unmodifiedEmpCombos):
-            answer = QtGui.QMessageBox.question(self, u'Dienstnehmer nicht modifiziert',
-                                                    u'Ein oder mehrere Dienstnehmer Drop-Downs \
-                                                    wurden nicht verändert.\nTrotzdem fortfahren?',
-                                                    QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
-            if answer == QtGui.QMessageBox.No:
-                return False
-            else:
-                self.unmodifiedEmpCombos = []
         
         try:
             self.beginTransaction()
@@ -961,8 +995,12 @@ class DienstplanForm(FormBase):
         gv.fitInView(scene.sceneRect())
         
         for wr in self.employees:
-            empProps = self.getEmployeeProperties(self.
-                                                  getPKForCombobox(wr['employeeCombo'], 'din_id'))
+            try:
+                empProps = self.getEmployeeProperties(self.
+                                                   getPKForCombobox(wr['employeeCombo'], 'din_id'))
+            except ComboBoxPKError:
+                continue
+            
             empColor = QtGui.QColor(empProps['din_farbe'])
             complementaryColor = QtGui.QColor(255 - empColor.red(),
                                               255 - empColor.green(),
