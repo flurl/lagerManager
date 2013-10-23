@@ -13,8 +13,8 @@
   <property name="windowTitle">
    <string>Dienstplan</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="0" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QLabel" name="label">
@@ -51,7 +51,7 @@
      </item>
     </layout>
    </item>
-   <item>
+   <item row="1" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
       <widget class="QLabel" name="label_2">
@@ -99,7 +99,7 @@
      </item>
     </layout>
    </item>
-   <item>
+   <item row="2" column="0">
     <widget class="QGroupBox" name="groupBox_event">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -108,7 +108,7 @@
       </sizepolicy>
      </property>
      <property name="title">
-      <string>GroupBox</string>
+      <string>Dienstplan</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
@@ -121,8 +121,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>1132</width>
-           <height>555</height>
+           <width>1148</width>
+           <height>572</height>
           </rect>
          </property>
          <layout class="QGridLayout" name="gridLayout">
@@ -131,11 +131,22 @@
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_employees">
               <item>
-               <widget class="QPushButton" name="pushButton_addEmployee">
-                <property name="text">
-                 <string>&amp;Hinzufügen</string>
-                </property>
-               </widget>
+               <layout class="QHBoxLayout" name="horizontalLayout_8">
+                <item>
+                 <widget class="QPushButton" name="pushButton_addEmployee">
+                  <property name="text">
+                   <string>&amp;Hinzufügen</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="pushButton_sort">
+                  <property name="text">
+                   <string>&amp;Sortieren</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </item>
               <item>
                <spacer name="verticalSpacer">
@@ -171,7 +182,7 @@
      </layout>
     </widget>
    </item>
-   <item>
+   <item row="3" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
       <widget class="QDialogButtonBox" name="buttonBox">

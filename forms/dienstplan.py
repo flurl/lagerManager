@@ -78,6 +78,9 @@ class DienstplanForm(FormBase):
         self.connect(self.ui.pushButton_addEmployee,
                      QtCore.SIGNAL('clicked()'),
                      lambda: self.setModified(True) and self.addEmployee())
+        self.connect(self.ui.pushButton_sort,
+                     QtCore.SIGNAL('clicked()'),
+                     self.sortWidgets)
         self.connect(self.ui.buttonBox,
                      QtCore.SIGNAL('accepted()'),
                      self.accept)
@@ -99,6 +102,11 @@ class DienstplanForm(FormBase):
         self.connect(self.ui.pushButton_autoAssignEmps,
                      QtCore.SIGNAL('clicked()'),
                      self.autoAssignEmployees)
+        #always scroll to bottom
+        sBar = self.ui.scrollArea.verticalScrollBar()
+        self.connect(sBar,
+                     QtCore.SIGNAL('rangeChanged(int,int)'),
+                     lambda min_, max_, scroll=sBar: scroll.setValue(max_))
         
     def addEmployee(self, dinId=None, arpId=None, dieBeginn=None,
                     dieEnde=None, diePause=None):
@@ -287,13 +295,10 @@ class DienstplanForm(FormBase):
                      lambda i, wr=widgetRef: self.setEmployeeFrameColor(wr))
         self.connect(workplaceCombo,
                      QtCore.SIGNAL('currentIndexChanged(int)'),
-                     lambda i, wr=widgetRef: (self.checkEmployeeWorkplaceAssignment(wr),
-                                              self.sortWidgets()))
+                     lambda i, wr=widgetRef: self.checkEmployeeWorkplaceAssignment(wr))
         
         self.employees.append(widgetRef)
         self.checkDateTime(widgetRef)
-        
-        self.sortWidgets()
         
         return widgetRef
     
@@ -323,6 +328,8 @@ class DienstplanForm(FormBase):
             
             l.insertWidget(i, wr['frame'])
             foeIds.insert(i, foeId)
+        
+        self.drawTimeTable()
     
     def findEmployeeWidgetRefByEmpId(self, empId):
         for emp in self.employees:
@@ -711,6 +718,7 @@ class DienstplanForm(FormBase):
             self.addEmployee(dinId, arpId, dieBeginn, dieEnde, diePause)
         
         self.__loading = False
+        self.sortWidgets()
         
     def onButtonBoxClicked(self, btn):
         if self.ui.buttonBox.buttonRole(btn) == QtGui.QDialogButtonBox.ApplyRole:
@@ -842,6 +850,7 @@ class DienstplanForm(FormBase):
         
         self.autoAssignEmployees()
         self.setModified()
+        self.sortWidgets()
         
     def autoAssignEmployees(self):
         alreadyAssignedEmps = []
