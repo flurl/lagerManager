@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
+
 import numbers
 from sets import Set
 import sip
@@ -353,7 +355,7 @@ class DienstplanForm(FormBase):
                     new.add(item)
             return list(new)
         
-        print "validateRoster"
+        print("validateRoster")
         employeesInUse = []
         for waiterWidgetRefs in self.employees:
             try:
@@ -404,7 +406,7 @@ class DienstplanForm(FormBase):
         return True
     
     def checkMonthlyWorkingHours(self, empIds):
-        print "checkMonthlyWorkingHours"
+        print("checkMonthlyWorkingHours")
         eventProps = self.getEventProperties(self.getCurrentEventId())
         eventDate = eventProps['ver_datum']
         failingEmployees = []
@@ -415,7 +417,7 @@ class DienstplanForm(FormBase):
             endDate = widgetRef['endDateTimeEdit'].dateTime()
             
             emp = lib.Dienstnehmer.Dienstnehmer(empId)
-            print 'shift:', eventDate, eventProps['ver_id']
+            print('shift:', eventDate, eventProps['ver_id'])
             remainingSalary = emp.getRemainingSalary(eventDate.toPyDate(), eventProps['ver_id'])
             duty = lib.Dienst.Dienst()
             duty['die_beginn'] = beginDate
@@ -435,7 +437,7 @@ class DienstplanForm(FormBase):
         return failingEmployees
     
     def checkEmployeeHours(self, widgetRef):
-        print "checkEmployeeHours"
+        print("checkEmployeeHours")
         combo = widgetRef['employeeCombo']
         try:
             empId = self.getPKForCombobox(combo, 'din_id')
@@ -504,7 +506,7 @@ class DienstplanForm(FormBase):
             return [(wr['workplaceCombo'].currentText(), wr['employeeCombo'].currentText())]
     
     def checkEmployeeAvailability(self, empIds):
-        print "checkEmployeeAvailability"
+        print("checkEmployeeAvailability")
         failingEmployees = []
         for empId in empIds:
             widgetRef = self.findEmployeeWidgetRefByEmpId(empId)
@@ -582,10 +584,10 @@ class DienstplanForm(FormBase):
               'outOfNAZ:', timeOutOfNAZ / 3600)
         
         if timeWithinNAZ > timeOutOfNAZ:
-            print "Considering NAZ"
+            print("Considering NAZ")
             return 1
             
-        print "Not considering NAZ"
+        print("Not considering NAZ")
         return 0
     
     def checkEmployeeWorkplaceAssignment(self, wr):
@@ -615,7 +617,7 @@ class DienstplanForm(FormBase):
         except ComboBoxPKError:
             return
         color = empProps['din_farbe']
-        print 'color:', empProps['din_farbe'], 'background-color:%s;' % color
+        print('color:', empProps['din_farbe'], 'background-color:%s;' % color)
         wr['frame'].setStyleSheet('QFrame {background-color:%s;} \
                                    QComboBox QAbstractItemView {background: transparent;} \
                                    QCheckBox {background: white;}' % color)
@@ -638,7 +640,7 @@ class DienstplanForm(FormBase):
             query.exec_()
             if query.lastError().isValid():
                 self.rollback()
-                print 'Error while deleting dienstplan for event:', query.lastError().text()
+                print('Error while deleting dienstplan for event:', query.lastError().text())
                 QtGui.QMessageBox.warning(self, u'Datenbank Fehler',
                                                 u'Fehler beim Speichern des Dienstplans!\n\
                                                 Bitte kontaktieren Sie Ihren Administrator.')
@@ -666,7 +668,7 @@ class DienstplanForm(FormBase):
                 query.exec_()
                 if query.lastError().isValid():
                     self.rollback()
-                    print 'Error while inserting dienstplan:', query.lastError().text()
+                    print('Error while inserting dienstplan:', query.lastError().text())
                     QtGui.QMessageBox.warning(self, u'Datenbank Fehler',
                                                     u'Fehler beim Speichern des Dienstplans!\n\
                                                     Bitte kontaktieren Sie Ihren Administrator.')
@@ -674,7 +676,7 @@ class DienstplanForm(FormBase):
                 
             self.commit()
         except Exception as e:
-            print "exception in save()", e
+            print("exception in save()", e)
             self.rollback()
         
         self.setModified(False)
@@ -695,14 +697,14 @@ class DienstplanForm(FormBase):
         self.setModified(False)
         
         eventId = self.getCurrentEventId()
-        print "event:", eventId
+        print("event:", eventId)
         query = QtSql.QSqlQuery()
         query.prepare("select die_id, die_dinid, die_arpid, die_beginn, die_ende, die_pause \
                        from dienste where die_verid = ?")
         query.addBindValue(eventId)
         query.exec_()
         if query.lastError().isValid():
-            print 'Error while selecting dienstplan:', query.lastError().text()
+            print('Error while selecting dienstplan:', query.lastError().text())
             QtGui.QMessageBox.warning(self, u'Datenbank Fehler',
                                             u'Fehler beim Laden des Dienstplans!\n\
                                             Bitte kontaktieren Sie Ihren Administrator.')
@@ -755,7 +757,7 @@ class DienstplanForm(FormBase):
             query.addBindValue(name)
             query.exec_()
             if query.lastError().isValid():
-                print 'Error while selecting dienste_vorlagen:', query.lastError().text()
+                print('Error while selecting dienste_vorlagen:', query.lastError().text())
                 QtGui.QMessageBox.warning(self, u'Datenbank Fehler',
                                                 u'Fehler beim Selektieren der Dienstvorlagen!\n\
                                                 Bitte kontaktieren Sie Ihren Administrator.')
@@ -780,7 +782,7 @@ class DienstplanForm(FormBase):
                 query.addBindValue(name)
                 query.exec_()
                 if query.lastError().isValid():
-                    print 'Error while deleting dienste_vorlagen:', query.lastError().text()
+                    print('Error while deleting dienste_vorlagen:', query.lastError().text())
                     QtGui.QMessageBox.warning(self, u'Datenbank Fehler',
                                                     u'Fehler beim Löschen der Dienstvorlagen!\n\
                                                     Bitte kontaktieren Sie Ihren Administrator.')
@@ -815,7 +817,7 @@ class DienstplanForm(FormBase):
             
             except Exception as e:
                 self.rollback()
-                print e
+                print(e)
                 return False
             else:
                 self.commit()
@@ -837,7 +839,7 @@ class DienstplanForm(FormBase):
         query.addBindValue(tmplName)
         query.exec_()
         if query.lastError().isValid():
-            print 'Error while getting dienstplan template:', query.lastError().text()
+            print('Error while getting dienstplan template:', query.lastError().text())
             QtGui.QMessageBox.warning(self, u'Datenbank Fehler',
                                             u'Fehler beim Laden der Dienstplan Vorlage!\n\
                                             Bitte kontaktieren Sie Ihren Administrator.')
@@ -865,20 +867,20 @@ class DienstplanForm(FormBase):
             query.addBindValue(wpId)
             query.exec_()
             if query.lastError().isValid():
-                print 'Error while selecting arp_bebid for arbeitsplatz:', query.lastError().text()
+                print('Error while selecting arp_bebid for arbeitsplatz:', query.lastError().text())
                 QtGui.QMessageBox.warning(self, u'Datenbank Fehler',
                                                 u'Fehler beim Laden der Dienstplan Vorlage!\n\
                                                 Bitte kontaktieren Sie Ihren Administrator.')
                 return
             query.next()
             bebId = query.value(0).toInt()[0]
-            print 'bebId', bebId, 'wpId', wpId
+            print('bebId', bebId, 'wpId', wpId)
             query = QtSql.QSqlQuery()
             query.prepare('select din_id from dienstnehmer where din_bebid = ? order by RAND()')
             query.addBindValue(bebId)
             query.exec_()
             if query.lastError().isValid():
-                print 'Error while selecting dienstnehmer:', query.lastError().text()
+                print('Error while selecting dienstnehmer:', query.lastError().text())
                 QtGui.QMessageBox.warning(self, u'Datenbank Fehler',
                                                 u'Fehler beim Laden der Dienstplan Vorlage!\n\
                                                 Bitte kontaktieren Sie Ihren Administrator.')
@@ -886,9 +888,9 @@ class DienstplanForm(FormBase):
             
             availableEmps = []
             while query.next():
-                print 'BP1', query.value(0).toInt()[0]
+                print('BP1', query.value(0).toInt()[0])
                 availableEmps.append(query.value(0).toInt()[0])
-            print 'availableEmps:', availableEmps
+            print('availableEmps:', availableEmps)
             
             suitableEmpFound = False
             eventDate = self.getEventProperties(self.getCurrentEventId())['ver_datum'].toPyDate()
@@ -916,7 +918,7 @@ class DienstplanForm(FormBase):
                     break
                 
             if not suitableEmpFound:
-                print 'No suitable employee found for workplace %s' % wpId
+                print('No suitable employee found for workplace %s' % wpId)
                 QtGui.QMessageBox.warning(self,
                                           u'Dienstnehmer Fehler',
                                           u'Kein passender Dienstnehmer gefunden \
