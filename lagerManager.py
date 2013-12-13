@@ -52,6 +52,9 @@ class MainWindow(QtGui.QMainWindow):
         self.connect(self.ui.action_Report_Lager_Lagerstand,
                     QtCore.SIGNAL('triggered()'),
                     lambda: self.openWindow('reports.lagerstand.LagerstandReport'))
+        self.connect(self.ui.action_Report_Lager_AktuellerLagerstand,
+                    QtCore.SIGNAL('triggered()'),
+                    lambda: self.openWindow('reports.lagerstandTextuell.LagerstandTextuellReport'))
         self.connect(self.ui.action_Report_Lager_MinimumLagerstand,
                     QtCore.SIGNAL('triggered()'),
                     lambda: self.openWindow('reports.minimumLagerstand.MinimumLagerstandReport'))
