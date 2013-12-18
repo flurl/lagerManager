@@ -791,8 +791,8 @@ class DienstplanForm(FormBase):
                 for waiterWidgetRefs in self.employees:
                     wpId = self.getPKForCombobox(waiterWidgetRefs['workplaceCombo'], 'arp_id')
                     begin = waiterWidgetRefs['beginDateTimeEdit'].time()
-                    duration = (waiterWidgetRefs['endDateTimeEdit'].
-                                dateTime().secsTo(waiterWidgetRefs['beginDateTimeEdit'].
+                    duration = (waiterWidgetRefs['beginDateTimeEdit'].
+                                dateTime().secsTo(waiterWidgetRefs['endDateTimeEdit'].
                                                   dateTime()))
                     
                     query = QtSql.QSqlQuery()
