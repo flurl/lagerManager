@@ -155,7 +155,7 @@ class DienstnehmerStundenReport(TextReport):
 				combo.addItem(query.value(0).toString(), query.value(0))
 		
 		else:
-			for i in range(1,12):
+			for i in range(1,13):
 				combo.addItem(unicode(i), i)
 				
 		combo.insertSeparator(-1)
