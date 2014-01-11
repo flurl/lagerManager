@@ -64,6 +64,9 @@ class MainWindow(QtGui.QMainWindow):
         self.connect(self.ui.action_Report_Verbrauch_Artikel,
                     QtCore.SIGNAL('triggered()'),
                     lambda: self.openWindow('reports.verbrauch.VerbrauchReport'))
+        self.connect(self.ui.action_Report_Umsaetze_UmsatzTag,
+                    QtCore.SIGNAL('triggered()'),
+                    lambda: self.openWindow('reports.umsatzProTag.UmsatzProTagReport'))
         self.connect(self.ui.action_Report_Umsaetze_UmsatzAufwand,
                     QtCore.SIGNAL('triggered()'),
                     lambda: self.openWindow('reports.umsatzAufwand.UmsatzAufwandReport'))
