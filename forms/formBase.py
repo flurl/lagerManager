@@ -56,7 +56,7 @@ class FormBase(QtGui.QDialog):
         query.exec_()
         query.next()
         id_ = query.value(0)
-        if id_.isNull():
+        if id_.isNull() or id_.toInt()[0] == 0:
             return None
         else:
             return id_.toInt()[0]
@@ -104,7 +104,9 @@ class FormBase(QtGui.QDialog):
     def closeEvent(self, event):
         parent = self.parent()
         while parent:
+            print('searching for parent')
             if isinstance(parent, QtGui.QMainWindow):
+                print('parent found, deregistering window')
                 parent.deregisterWindow(self)
                 break
             else:
