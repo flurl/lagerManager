@@ -46,6 +46,8 @@ class LieferungDetailForm(FormBase):
 	def setupUi(self):
 		super(LieferungDetailForm, self).setupUi()
 		
+		self.ui.dateTimeEdit_flag.hide()
+		
 		self.detailModel = QtSql.QSqlRelationalTableModel()
 		self.detailModel.setTable('lieferungen_details')
 		self.detailModel.setRelation(1, QtSql.QSqlRelation('lieferungen', 'lieferung_id', 'datum'))
@@ -74,6 +76,7 @@ class LieferungDetailForm(FormBase):
 		self.connect(self.ui.pushButton_deleteDetail, QtCore.SIGNAL('clicked()'), self.deleteDetail)
 		self.connect(self.ui.pushButton_addDocument, QtCore.SIGNAL('clicked()'), self.chooseFile)
 		self.connect(self.ui.pushButton_selectArticles, QtCore.SIGNAL('clicked()'), self.openArticleSelection)
+		self.connect(self.ui.pushButton_updateFlag, QtCore.SIGNAL('clicked()'), lambda: (self.ui.dateTimeEdit_flag.setDateTime(QtCore.QDateTime.currentDateTime()), self.accept()))
 		#self.connect(self.ui.lineEdit_dokId, QtCore.SIGNAL('textChanged (const QString&)'), self.displayImageFromDb)
 		#self.connect(self.ui.label_document, QtCore.SIGNAL('clicked()'), self.showImage)
 		self.connect(self.detailModel, QtCore.SIGNAL('dataChanged(const QModelIndex&,const QModelIndex&)'), self.articleChanged)
@@ -158,6 +161,7 @@ class LieferungDetailForm(FormBase):
 		mapper.addMapping(self.ui.dateEdit_datum, 2)
 		mapper.addMapping(self.ui.plainTextEdit_comment, self.model.fieldIndex('lie_kommentar'))
 		mapper.addMapping(self.ui.lineEdit_totalNet, self.model.fieldIndex('lie_summe'))
+		mapper.addMapping(self.ui.dateTimeEdit_flag, self.model.fieldIndex('lie_flag'))
 		mapper.setSubmitPolicy(QtGui.QDataWidgetMapper.ManualSubmit)
 		
 		

@@ -67,6 +67,7 @@ class LieferungForm(FormBase):
 		#self.masterModel.setHeaderData(3, QtCore.Qt.Horizontal, 'Dokument')
 		self.masterModel.setHeaderData(3, QtCore.Qt.Horizontal, 'Ist Verbrauch')
 		self.masterModel.setHeaderData(4, QtCore.Qt.Horizontal, 'Kommentar')
+		self.masterModel.setHeaderData(self.masterModel.fieldIndex('lie_flag'), QtCore.Qt.Horizontal, 'Flag')
 		
 		# table view
 		self.masterTableView = self.ui.tableView_lieferungen

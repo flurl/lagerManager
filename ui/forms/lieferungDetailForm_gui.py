@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'ui/forms/lieferungDetailForm.ui'
 #
-# Created: Fri Oct 11 12:45:20 2013
-#      by: PyQt4 UI code generator 4.9.3
+# Created: Tue Jan 28 21:36:11 2014
+#      by: PyQt4 UI code generator 4.10.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,7 +12,16 @@ from PyQt4 import QtCore, QtGui
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
-    _fromUtf8 = lambda s: s
+    def _fromUtf8(s):
+        return s
+
+try:
+    _encoding = QtGui.QApplication.UnicodeUTF8
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig, _encoding)
+except AttributeError:
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig)
 
 class Ui_LieferungDetailForm(object):
     def setupUi(self, LieferungDetailForm):
@@ -64,6 +73,8 @@ class Ui_LieferungDetailForm(object):
         self.dateEdit_datum.setCalendarPopup(True)
         self.dateEdit_datum.setObjectName(_fromUtf8("dateEdit_datum"))
         self.horizontalLayout_5.addWidget(self.dateEdit_datum)
+        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_5.addItem(spacerItem)
         self.formLayout.setLayout(1, QtGui.QFormLayout.FieldRole, self.horizontalLayout_5)
         self.label_lieferant = QtGui.QLabel(self.groupBox_lieferung)
         self.label_lieferant.setObjectName(_fromUtf8("label_lieferant"))
@@ -85,8 +96,8 @@ class Ui_LieferungDetailForm(object):
         self.pushButton_selectArticles = QtGui.QPushButton(self.groupBox_2)
         self.pushButton_selectArticles.setObjectName(_fromUtf8("pushButton_selectArticles"))
         self.horizontalLayout.addWidget(self.pushButton_selectArticles)
-        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem)
+        spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem1)
         self.verticalLayout.addLayout(self.horizontalLayout)
         self.tableView_details = QtGui.QTableView(self.groupBox_2)
         self.tableView_details.setObjectName(_fromUtf8("tableView_details"))
@@ -106,8 +117,8 @@ class Ui_LieferungDetailForm(object):
         self.lineEdit_totalGross = QtGui.QLineEdit(self.groupBox_2)
         self.lineEdit_totalGross.setObjectName(_fromUtf8("lineEdit_totalGross"))
         self.horizontalLayout_3.addWidget(self.lineEdit_totalGross)
-        spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.horizontalLayout_3.addItem(spacerItem1)
+        spacerItem2 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_3.addItem(spacerItem2)
         self.verticalLayout.addLayout(self.horizontalLayout_3)
         self.gridLayout.addWidget(self.groupBox_2, 2, 0, 1, 1)
         self.horizontalLayout_2 = QtGui.QHBoxLayout()
@@ -115,6 +126,15 @@ class Ui_LieferungDetailForm(object):
         self.label_unit = QtGui.QLabel(LieferungDetailForm)
         self.label_unit.setObjectName(_fromUtf8("label_unit"))
         self.horizontalLayout_2.addWidget(self.label_unit)
+        spacerItem3 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_2.addItem(spacerItem3)
+        self.dateTimeEdit_flag = QtGui.QDateTimeEdit(LieferungDetailForm)
+        self.dateTimeEdit_flag.setReadOnly(True)
+        self.dateTimeEdit_flag.setObjectName(_fromUtf8("dateTimeEdit_flag"))
+        self.horizontalLayout_2.addWidget(self.dateTimeEdit_flag)
+        self.pushButton_updateFlag = QtGui.QPushButton(LieferungDetailForm)
+        self.pushButton_updateFlag.setObjectName(_fromUtf8("pushButton_updateFlag"))
+        self.horizontalLayout_2.addWidget(self.pushButton_updateFlag)
         self.buttonBox = QtGui.QDialogButtonBox(LieferungDetailForm)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
@@ -128,20 +148,21 @@ class Ui_LieferungDetailForm(object):
         QtCore.QMetaObject.connectSlotsByName(LieferungDetailForm)
 
     def retranslateUi(self, LieferungDetailForm):
-        LieferungDetailForm.setWindowTitle(QtGui.QApplication.translate("LieferungDetailForm", "Lieferung Details", None, QtGui.QApplication.UnicodeUTF8))
-        self.groupBox_lieferung.setTitle(QtGui.QApplication.translate("LieferungDetailForm", "Lieferung", None, QtGui.QApplication.UnicodeUTF8))
-        self.label.setText(QtGui.QApplication.translate("LieferungDetailForm", "ID", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_4.setText(QtGui.QApplication.translate("LieferungDetailForm", "Dokumente", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton_addDocument.setText(QtGui.QApplication.translate("LieferungDetailForm", "+", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_6.setText(QtGui.QApplication.translate("LieferungDetailForm", "Kommentar", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_3.setText(QtGui.QApplication.translate("LieferungDetailForm", "Datum", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_lieferant.setText(QtGui.QApplication.translate("LieferungDetailForm", "Lieferant", None, QtGui.QApplication.UnicodeUTF8))
-        self.groupBox_2.setTitle(QtGui.QApplication.translate("LieferungDetailForm", "Details", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton_newDetail.setText(QtGui.QApplication.translate("LieferungDetailForm", "&Hinzufügen", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton_deleteDetail.setText(QtGui.QApplication.translate("LieferungDetailForm", "&Löschen", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton_selectArticles.setText(QtGui.QApplication.translate("LieferungDetailForm", "&Artikelauswahl", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_2.setText(QtGui.QApplication.translate("LieferungDetailForm", "Summe netto:", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_5.setText(QtGui.QApplication.translate("LieferungDetailForm", "brutto:", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_unit.setText(QtGui.QApplication.translate("LieferungDetailForm", "Einheit:", None, QtGui.QApplication.UnicodeUTF8))
+        LieferungDetailForm.setWindowTitle(_translate("LieferungDetailForm", "Lieferung Details", None))
+        self.groupBox_lieferung.setTitle(_translate("LieferungDetailForm", "Lieferung", None))
+        self.label.setText(_translate("LieferungDetailForm", "ID", None))
+        self.label_4.setText(_translate("LieferungDetailForm", "Dokumente", None))
+        self.pushButton_addDocument.setText(_translate("LieferungDetailForm", "+", None))
+        self.label_6.setText(_translate("LieferungDetailForm", "Kommentar", None))
+        self.label_3.setText(_translate("LieferungDetailForm", "Datum", None))
+        self.label_lieferant.setText(_translate("LieferungDetailForm", "Lieferant", None))
+        self.groupBox_2.setTitle(_translate("LieferungDetailForm", "Details", None))
+        self.pushButton_newDetail.setText(_translate("LieferungDetailForm", "&Hinzufügen", None))
+        self.pushButton_deleteDetail.setText(_translate("LieferungDetailForm", "&Löschen", None))
+        self.pushButton_selectArticles.setText(_translate("LieferungDetailForm", "&Artikelauswahl", None))
+        self.label_2.setText(_translate("LieferungDetailForm", "Summe netto:", None))
+        self.label_5.setText(_translate("LieferungDetailForm", "brutto:", None))
+        self.label_unit.setText(_translate("LieferungDetailForm", "Einheit:", None))
+        self.pushButton_updateFlag.setText(_translate("LieferungDetailForm", "OK && &Flag Updaten", None))
 
 import lagerManager_rc
