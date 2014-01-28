@@ -39,35 +39,10 @@
           </property>
          </widget>
         </item>
-        <item row="4" column="1">
-         <layout class="QHBoxLayout" name="horizontalLayout_4">
-          <item>
-           <widget class="QPlainTextEdit" name="plainTextEdit_comment"/>
-          </item>
-         </layout>
-        </item>
-        <item row="7" column="0">
-         <widget class="QLabel" name="label_4">
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_lieferant">
           <property name="text">
-           <string>Dokumente</string>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="1">
-         <layout class="QHBoxLayout" name="layout_documents">
-          <item>
-           <widget class="QPushButton" name="pushButton_addDocument">
-            <property name="text">
-             <string>+</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="label_6">
-          <property name="text">
-           <string>Kommentar</string>
+           <string>Lieferant</string>
           </property>
          </widget>
         </item>
@@ -105,12 +80,44 @@
           </item>
          </layout>
         </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_lieferant">
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_6">
           <property name="text">
-           <string>Lieferant</string>
+           <string>Kommentar</string>
           </property>
          </widget>
+        </item>
+        <item row="4" column="1">
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <widget class="QPlainTextEdit" name="plainTextEdit_comment">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>50</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="7" column="0">
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>Dokumente</string>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="1">
+         <layout class="QHBoxLayout" name="layout_documents">
+          <item>
+           <widget class="QPushButton" name="pushButton_addDocument">
+            <property name="text">
+             <string>+</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>
