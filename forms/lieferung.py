@@ -165,6 +165,7 @@ class LieferungForm(FormBase):
 		record.setValue(2, QtCore.QVariant(date.strftime('%Y-%m-%d')))
 		record.setValue(self.masterModel.fieldIndex('lie_summe'), 0.0)
 		record.setValue(self.masterModel.fieldIndex('lie_ist_verbrauch'), QtCore.QVariant(0 if self.ui.radioButton_lieferung.isChecked() else 1))
+		record.setValue(self.masterModel.fieldIndex('lie_flag'), QtCore.QVariant(datetime.datetime(1970,1,1).strftime('%Y-%m-%d')))
 		self.masterModel.insertRecord(-1, record)
 		self.masterModel.submitAll()
 		id_ = self.masterModel.query().lastInsertId().toInt()[0]
