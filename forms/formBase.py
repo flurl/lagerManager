@@ -125,21 +125,26 @@ class FormBase(QtGui.QDialog):
             config.config[cfgKey] = {}
             cfg  = config.config[cfgKey]
         
-        cfg['geometry'] = unicode(self.saveGeometry().toBase64())
+        if self.parentWidget().metaObject().className() == 'QMdiSubWindow':
+            win = self.parentWidget()
+        else:
+            win = self
+        
+        cfg['geometry'] = (win.x(), win.y(), win.width(), win.height())
         config.config.write()
         
     def restoreWindowGeometry(self):
         try:
             geometry = config.config[self.cfgKey]['geometry']
-            geometry = QtCore.QByteArray.fromBase64(geometry)
         except KeyError:
             return
         
         if self.parentWidget().metaObject().className() == 'QMdiSubWindow':
-            self.parentWidget().restoreGeometry(geometry)
+            win = self.parentWidget()
         else:
-            self.restoreGeometry(geometry)
+            win = self
             
+        win.resize(int(geometry[2]),int(geometry[3]))
             
     def accept(self):
         self.saveWindowGeometry()
