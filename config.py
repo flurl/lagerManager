@@ -3,4 +3,4 @@ from configobj import ConfigObj
 
 from CONSTANTS import CONFFILE
 
-config = ConfigObj(CONFFILE)
+config = ConfigObj(CONFFILE, encoding='UTF-8')

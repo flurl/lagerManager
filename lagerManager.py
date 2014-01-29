@@ -184,9 +184,12 @@ class MainWindow(QtGui.QMainWindow):
             window.show()
 
     def deregisterWindow(self, window):
-        name = self.openWindows[id(window)]
-        del self.openWindows[name]
-        del self.openWindows[id(window)]
+        try:
+            name = self.openWindows[id(window)]
+            del self.openWindows[name]
+            del self.openWindows[id(window)]
+        except KeyError:
+            print('window with id %s not found in open windows dict.' % id(window))
 
     def subWindowStateChanged(self, oldState, newState):
         if newState != oldState:

@@ -2,6 +2,7 @@
 from PyQt4 import QtCore, QtGui, QtSql
 
 from DBConnection import dbConn
+import config 
 
 
 class ComboBoxPKError(Exception):
@@ -29,16 +30,16 @@ class FormBase(QtGui.QDialog):
     def setupSignals(self):
         try:
             self.connect(self.ui.comboBox_period,
-                         QtCore.SIGNAL('currentIndexChanged(int)'),
-                         lambda: self.updatePeriod(self.getCurrentPeriodId()))
+                        QtCore.SIGNAL('currentIndexChanged(int)'),
+                        lambda: self.updatePeriod(self.getCurrentPeriodId()))
             self.populatePeriodCB()
         except AttributeError:
             pass
     
     def populatePeriodCB(self):
         query = "select periode_id, periode_bezeichnung \
-                 from perioden \
-                 order by periode_bezeichnung desc"
+                from perioden \
+                order by periode_bezeichnung desc"
         results = self.db.exec_(query)
     
         while results.next():
@@ -101,15 +102,51 @@ class FormBase(QtGui.QDialog):
     def rollback(self):
         QtSql.QSqlDatabase.database().rollback()
         
-    def closeEvent(self, event):
+    def showEvent(self, event):
+        self.restoreWindowGeometry()
+        super(FormBase, self).showEvent(event)
+        
+    def deregisterWindow(self):
         parent = self.parent()
         while parent:
-            print('searching for parent')
             if isinstance(parent, QtGui.QMainWindow):
-                print('parent found, deregistering window')
                 parent.deregisterWindow(self)
                 break
             else:
                 parent = parent.parent()
-                
-        super(FormBase, self).closeEvent(event)
+        
+        
+    def saveWindowGeometry(self):
+        cfgKey = self.cfgKey
+        
+        try:
+            cfg  = config.config[cfgKey]
+        except KeyError:
+            config.config[cfgKey] = {}
+            cfg  = config.config[cfgKey]
+        
+        cfg['geometry'] = unicode(self.saveGeometry().toBase64())
+        config.config.write()
+        
+    def restoreWindowGeometry(self):
+        try:
+            geometry = config.config[self.cfgKey]['geometry']
+            geometry = QtCore.QByteArray.fromBase64(geometry)
+        except KeyError:
+            return
+        
+        if self.parentWidget().metaObject().className() == 'QMdiSubWindow':
+            self.parentWidget().restoreGeometry(geometry)
+        else:
+            self.restoreGeometry(geometry)
+            
+            
+    def accept(self):
+        self.saveWindowGeometry()
+        self.deregisterWindow()
+        super(FormBase, self).accept()
+
+    def reject(self):
+        self.saveWindowGeometry()
+        self.deregisterWindow()
+        super(FormBase, self).reject()
