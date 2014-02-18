@@ -65,7 +65,7 @@ class InventurReport(TextReport):
 		i = 0
 		data = []
 		for k in sorted(articles.keys()):
-			data.append([k, articles[k], values.get(k, 0.0), values.get(k, 0.0)*articles[k]])
+			data.append([k, round(articles[k], 2), round(values.get(k, 0.0), 2), round(values.get(k, 0.0)*articles[k], 2)])
 		
 		self.setData(data)
 		self.process()
