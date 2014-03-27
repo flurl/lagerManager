@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/forms/lieferungDetailForm.ui'
 #
-# Created: Tue Jan 28 21:53:16 2014
+# Created: Thu Mar 27 20:59:08 2014
 #      by: PyQt4 UI code generator 4.10.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -26,7 +26,7 @@ except AttributeError:
 class Ui_LieferungDetailForm(object):
     def setupUi(self, LieferungDetailForm):
         LieferungDetailForm.setObjectName(_fromUtf8("LieferungDetailForm"))
-        LieferungDetailForm.resize(687, 693)
+        LieferungDetailForm.resize(687, 802)
         self.gridLayout = QtGui.QGridLayout(LieferungDetailForm)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
         self.groupBox_lieferung = QtGui.QGroupBox(LieferungDetailForm)

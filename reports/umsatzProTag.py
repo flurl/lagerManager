@@ -18,7 +18,6 @@ class UmsatzProTagReport(TextReport):
 		
 		#self.updateData()
 		self.updateData()
-		print "BP1"
 		self.process()
 		
 	def updateData(self):
@@ -41,10 +40,10 @@ and detail_periode = {0}
 and daten_periode = {0}
 and checkpoint_periode = {0}
 group by checkpoint_info, detail_kellner
-order by str_to_date(checkpoint_info, '%d.%m.%Y')
+order by str_to_date(checkpoint_info, '%d.%m.%Y'), detail_kellner
 		"""
 		
 		query = query.format(self._getCurrentPeriodId())
-		print query
+		
 		return query
 	

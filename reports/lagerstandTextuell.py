@@ -16,7 +16,7 @@ class LagerstandTextuellReport(InventurReport):
 		self.setHeader('Lagerstand')
 		self.setFooter('here could be a nice footer')
 		
-		self.updateData()
+		#self.updateData()
 		
 		
 	def mkConsQuery(self):
@@ -73,6 +73,6 @@ class LagerstandTextuellReport(InventurReport):
 				group by checkpoint_id, checkpoint_info, a.artikel_bezeichnung
 				order by 1
 				""" % {'period_id': self._getCurrentPeriodId()}
-		print query
+		#print query
 		return query
 		
