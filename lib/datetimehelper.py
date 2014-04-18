@@ -17,3 +17,7 @@ def getMonthBeginEnd(date=None):
 	
 	return (monthBegin, monthEnd)
 
+
+def now():
+    return datetime.datetime.now()
+
