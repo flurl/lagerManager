@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'ui/forms/dienstnehmerEreignisseForm.ui'
 #
-# Created: Sat Sep 28 19:47:47 2013
-#      by: PyQt4 UI code generator 4.9.1
+# Created: Fri Apr 18 17:51:00 2014
+#      by: PyQt4 UI code generator 4.10.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,7 +12,16 @@ from PyQt4 import QtCore, QtGui
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
-    _fromUtf8 = lambda s: s
+    def _fromUtf8(s):
+        return s
+
+try:
+    _encoding = QtGui.QApplication.UnicodeUTF8
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig, _encoding)
+except AttributeError:
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig)
 
 class Ui_DienstnehmerEreignisseForm(object):
     def setupUi(self, DienstnehmerEreignisseForm):
@@ -37,7 +46,7 @@ class Ui_DienstnehmerEreignisseForm(object):
         self.horizontalLayout_2.addWidget(self.comboBox_period)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.gridLayout.addLayout(self.verticalLayout, 0, 0, 2, 2)
-        self.tableView = QtGui.QTableView(DienstnehmerEreignisseForm)
+        self.tableView = FilterableTableView(DienstnehmerEreignisseForm)
         self.tableView.setObjectName(_fromUtf8("tableView"))
         self.gridLayout.addWidget(self.tableView, 2, 0, 1, 1)
 
@@ -45,7 +54,8 @@ class Ui_DienstnehmerEreignisseForm(object):
         QtCore.QMetaObject.connectSlotsByName(DienstnehmerEreignisseForm)
 
     def retranslateUi(self, DienstnehmerEreignisseForm):
-        DienstnehmerEreignisseForm.setWindowTitle(QtGui.QApplication.translate("DienstnehmerEreignisseForm", "Dienstnehmer Ereignisse", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton_newRecord.setText(QtGui.QApplication.translate("DienstnehmerEreignisseForm", "&Neu", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton_deleteRecord.setText(QtGui.QApplication.translate("DienstnehmerEreignisseForm", "&Löschen", None, QtGui.QApplication.UnicodeUTF8))
+        DienstnehmerEreignisseForm.setWindowTitle(_translate("DienstnehmerEreignisseForm", "Dienstnehmer Ereignisse", None))
+        self.pushButton_newRecord.setText(_translate("DienstnehmerEreignisseForm", "&Neu", None))
+        self.pushButton_deleteRecord.setText(_translate("DienstnehmerEreignisseForm", "&Löschen", None))
 
+from lib.FilterableTableView import FilterableTableView

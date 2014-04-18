@@ -53,10 +53,17 @@
     </layout>
    </item>
    <item row="2" column="0">
-    <widget class="QTableView" name="tableView"/>
+    <widget class="FilterableTableView" name="tableView"/>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>FilterableTableView</class>
+   <extends>QTableView</extends>
+   <header>lib.FilterableTableView</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
