@@ -512,7 +512,7 @@ class DienstplanForm(FormBase):
             widgetRef = self.findEmployeeWidgetRefByEmpId(empId)
             beginDate = widgetRef['beginDateTimeEdit'].dateTime()
             endDate = widgetRef['endDateTimeEdit'].dateTime()
-
+            
             query = QtSql.QSqlQuery()
             query.prepare('select count(*) from dienste \
                            where die_dinid = ? and die_verid != ? \
@@ -538,57 +538,13 @@ class DienstplanForm(FormBase):
             
             count = query.value(0).toInt()[0]
 
-            if count != 0:
+            if count != 0 or not lib.Dienstnehmer.Dienstnehmer(empId).isAvailableForDate(beginDate):
                 empProps = self.getEmployeeProperties(empId)
                 failingEmployees.append((empProps['din_id'], empProps['din_name']))
             
         return failingEmployees
     
-    def considerNAZForShift(self, beginDateTime, endDateTime, shiftId=None):
-        if not globalConf['considerNAZ']:
-            return 0
-        
-        NAZBegin = QtCore.QDateTime(beginDateTime)
-        NAZBegin.setTime(QtCore.QTime(22, 0))
-        
-        NAZEnd = QtCore.QDateTime(beginDateTime)
-        NAZEnd.setTime(QtCore.QTime(6, 0))
-        
-        midnight = QtCore.QDateTime(beginDateTime)
-        midnight.setTime(QtCore.QTime(0, 0))
-        
-        if beginDateTime.time() < QtCore.QTime(6, 0):
-            NAZBegin = NAZBegin.addDays(-1)
-        else:
-            NAZEnd = NAZEnd.addDays(1)
-            midnight = midnight.addDays(1)
-        
-        timeOutOfNAZ = 0
-        interval0 = beginDateTime.secsTo(NAZBegin)
-        interval1 = endDateTime.secsTo(NAZEnd)
-        
-        if interval0 > 0:
-            timeOutOfNAZ += interval0
-        
-        if interval1 < 0:
-            timeOutOfNAZ += abs(interval1)
-            
-        timeWithinNAZ = beginDateTime.secsTo(endDateTime) - timeOutOfNAZ
-        
-        print("checking NAZ: begin:", beginDateTime.toPyDateTime(),
-              "end:", endDateTime.toPyDateTime(),
-              "NAZBegin: ", NAZBegin.toPyDateTime(),
-              "NAZEnd:", NAZEnd.toPyDateTime(),
-              "shiftLen:", beginDateTime.secsTo(endDateTime) / 3600,
-              'withinNAZ:', timeWithinNAZ / 3600,
-              'outOfNAZ:', timeOutOfNAZ / 3600)
-        
-        if timeWithinNAZ > timeOutOfNAZ:
-            print("Considering NAZ")
-            return 1
-            
-        print("Not considering NAZ")
-        return 0
+    
     
     def checkEmployeeWorkplaceAssignment(self, wr):
         try:
@@ -607,8 +563,8 @@ class DienstplanForm(FormBase):
             edit.setDate(eventProps['ver_datum'])
             edit.setTime(eventProps['ver_beginn'])
             edit.setDateTime(edit.dateTime().addSecs(int(wpProps['arp_std_dienst_dauer'] * 3600)))
-        combo.model().setFilter('dienstnehmer.din_bebid = %s' %
-                                              wpProps['arp_bebid'])
+        combo.model().setFilter("dienstnehmer.din_bebid = %s and empIsAvailableForDate(din_id, '%s') = 1" %
+                                              (wpProps['arp_bebid'], eventProps['ver_datum'].toPyDate().isoformat()))
     
     def setEmployeeFrameColor(self, wr):
         try:
