@@ -212,7 +212,7 @@ class ImportForm(FormBase):
 				query.bindValue(4, float(row[4]))
 				query.bindValue(5, row[5])
 				query.bindValue(6, float(row[6]))
-				query.bindValue(7, row[7])
+				query.bindValue(7, str(row[7]))
 				query.bindValue(8, row[8])
 				query.bindValue(9, row[9])
 				query.bindValue(10, row[10])

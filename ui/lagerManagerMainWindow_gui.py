@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'ui/lagerManagerMainWindow.ui'
 #
-# Created: Fri Dec 13 17:03:56 2013
-#      by: PyQt4 UI code generator 4.10.3
+# Created: Wed May  7 18:03:18 2014
+#      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -136,6 +136,8 @@ class Ui_MainWindow(object):
         self.action_Personal_Loehne.setObjectName(_fromUtf8("action_Personal_Loehne"))
         self.action_Report_Lager_AktuellerLagerstand = QtGui.QAction(MainWindow)
         self.action_Report_Lager_AktuellerLagerstand.setObjectName(_fromUtf8("action_Report_Lager_AktuellerLagerstand"))
+        self.action_Report_Personal_Bonierzeiten = QtGui.QAction(MainWindow)
+        self.action_Report_Personal_Bonierzeiten.setObjectName(_fromUtf8("action_Report_Personal_Bonierzeiten"))
         self.menuFile.addAction(self.actionQuit)
         self.menu_Einkauf.addAction(self.action_Report_Einkauf_GesamteLieferungen)
         self.menu_Einkauf.addAction(self.action_Report_Einkauf_Verprobung)
@@ -149,6 +151,7 @@ class Ui_MainWindow(object):
         self.menu_Lagerstand.addAction(self.action_Report_Lager_MinimumLagerstand)
         self.menu_Lagerstand.addAction(self.action_Report_Lager_Inventur)
         self.menu_Personal_2.addAction(self.action_Report_Personal_DienstnehmerStunden)
+        self.menu_Personal_2.addAction(self.action_Report_Personal_Bonierzeiten)
         self.menu_Reports.addAction(self.menu_Lagerstand.menuAction())
         self.menu_Reports.addAction(self.menu_Verbrauch.menuAction())
         self.menu_Reports.addAction(self.menu_Umsaetze.menuAction())
@@ -236,4 +239,5 @@ class Ui_MainWindow(object):
         self.action_Personal_Gehaelter.setText(_translate("MainWindow", "&Gehälter", None))
         self.action_Personal_Loehne.setText(_translate("MainWindow", "&Löhne", None))
         self.action_Report_Lager_AktuellerLagerstand.setText(_translate("MainWindow", "&Aktueller Lagerstand", None))
+        self.action_Report_Personal_Bonierzeiten.setText(_translate("MainWindow", "&Bonierzeiten", None))
 

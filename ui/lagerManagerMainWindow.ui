@@ -75,6 +75,7 @@
       <string>&amp;Personal</string>
      </property>
      <addaction name="action_Report_Personal_DienstnehmerStunden"/>
+     <addaction name="action_Report_Personal_Bonierzeiten"/>
     </widget>
     <addaction name="menu_Lagerstand"/>
     <addaction name="menu_Verbrauch"/>
@@ -315,6 +316,11 @@
   <action name="action_Report_Lager_AktuellerLagerstand">
    <property name="text">
     <string>&amp;Aktueller Lagerstand</string>
+   </property>
+  </action>
+  <action name="action_Report_Personal_Bonierzeiten">
+   <property name="text">
+    <string>&amp;Bonierzeiten</string>
    </property>
   </action>
  </widget>

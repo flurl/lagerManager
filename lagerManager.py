@@ -85,6 +85,9 @@ class MainWindow(QtGui.QMainWindow):
         self.connect(self.ui.action_Report_Personal_DienstnehmerStunden,
                     QtCore.SIGNAL('triggered()'),
                     lambda: self.openWindow('reports.dienstnehmerStunden.DienstnehmerStundenReport'))
+        self.connect(self.ui.action_Report_Personal_Bonierzeiten,
+                    QtCore.SIGNAL('triggered()'),
+                    lambda: self.openWindow('reports.bonierzeiten.Bonierzeiten'))
 
         self.connect(self.ui.action_Lieferungen_Lieferungen,
                     QtCore.SIGNAL('triggered()'),
