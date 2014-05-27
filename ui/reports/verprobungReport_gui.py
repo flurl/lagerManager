@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'ui/reports/verprobungReport.ui'
 #
-# Created: Thu Jun 27 15:55:52 2013
-#      by: PyQt4 UI code generator 4.10
+# Created: Tue May 27 23:09:41 2014
+#      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -33,6 +33,9 @@ class Ui_Verprobung(object):
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
+        self.pushButton_export = QtGui.QPushButton(Verprobung)
+        self.pushButton_export.setObjectName(_fromUtf8("pushButton_export"))
+        self.horizontalLayout.addWidget(self.pushButton_export)
         self.pushButton_refresh = QtGui.QPushButton(Verprobung)
         self.pushButton_refresh.setObjectName(_fromUtf8("pushButton_refresh"))
         self.horizontalLayout.addWidget(self.pushButton_refresh)
@@ -136,6 +139,7 @@ class Ui_Verprobung(object):
 
     def retranslateUi(self, Verprobung):
         Verprobung.setWindowTitle(_translate("Verprobung", "Verprobung", None))
+        self.pushButton_export.setText(_translate("Verprobung", "PushButton", None))
         self.pushButton_refresh.setText(_translate("Verprobung", "Aktualisieren", None))
         self.label.setText(_translate("Verprobung", "Voreinstellung", None))
         self.pushButton.setText(_translate("Verprobung", "Voreinstellung &speichern", None))
