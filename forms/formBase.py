@@ -155,3 +155,9 @@ class FormBase(QtGui.QDialog):
         self.saveWindowGeometry()
         self.deregisterWindow()
         super(FormBase, self).reject()
+        
+    def currentSourceIndex(self, tableView):
+        """maps the current selection to the index of the proxy's current source"""
+        idx = tableView.selectionModel().currentIndex()#.row()
+        idx = tableView.model().mapToSource(idx)
+        return idx

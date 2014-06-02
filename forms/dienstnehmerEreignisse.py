@@ -73,16 +73,6 @@ class DienstnehmerEreignisseForm(FormBase):
         
         
     def deleteRecord(self):
-        """selected = self.tableView.selectionModel().selectedRows(0);
-        print selected
-        for i in range(len(selected)):
-            self.model.removeRows(selected[i].row(), 1);"""
-        self.model.removeRows(self.currentSourceIndex().row(), 1)
+        self.model.removeRows(self.currentSourceIndex(self.ui.tableView).row(), 1)
         self.model.submitAll()
-        
-    def currentSourceIndex(self):
-        """maps the current selection to the index of the proxy's current source"""
-        idx = self.ui.tableView.selectionModel().currentIndex()#.row()
-        idx = self.ui.tableView.model().mapToSource(idx)
-        return idx
-    
+
