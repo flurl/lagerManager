@@ -29,7 +29,7 @@ class Bonierzeiten(TextReport):
 	def mkQuery(self):
 		"""return the query"""
 		query = """
-				select checkpoint_id, checkpoint_info, detail_kellner, min(detail_bonier_datum), max(detail_bonier_datum), round(TIMESTAMPDIFF(SECOND,min(detail_bonier_datum),max(detail_bonier_datum))/3600, 2)
+				select checkpoint_id, checkpoint_info, detail_kellner, min(detail_bonier_datum), max(detail_bonier_datum), round(TIMESTAMPDIFF(SECOND,min(detail_bonier_datum),max(detail_bonier_datum))/3600, 2), round(sum(detail_absmenge*detail_preis), 2)
 from journal_details, journal_daten, journal_checkpoints
 where 1=1
 and daten_checkpoint_tag = checkpoint_id
