@@ -34,6 +34,7 @@ from journal_details, journal_daten, journal_checkpoints
 where 1=1
 and daten_checkpoint_tag = checkpoint_id
 and detail_journal = daten_rechnung_id
+and detail_istUmsatz = 1
 and detail_periode = %s
 group by checkpoint_id, checkpoint_info, detail_kellner
 order by 1 desc, 3
