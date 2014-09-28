@@ -64,6 +64,9 @@ class MainWindow(QtGui.QMainWindow):
         self.connect(self.ui.action_Report_Verbrauch_Artikel,
                     QtCore.SIGNAL('triggered()'),
                     lambda: self.openWindow('reports.verbrauch.VerbrauchReport'))
+        self.connect(self.ui.action_Report_Verbrauch_AktuellerVerbrauch,
+                    QtCore.SIGNAL('triggered()'),
+                    lambda: self.openWindow('reports.verbrauchTextuell.VerbrauchTextuellReport'))
         self.connect(self.ui.action_Report_Umsaetze_UmsatzTag,
                     QtCore.SIGNAL('triggered()'),
                     lambda: self.openWindow('reports.umsatzProTag.UmsatzProTagReport'))
@@ -76,6 +79,9 @@ class MainWindow(QtGui.QMainWindow):
         self.connect(self.ui.action_Report_Umsaetze_DurchschUmsatzWochentag,
                     QtCore.SIGNAL('triggered()'),
                     lambda: self.openWindow('reports.durchschnittUmsatzProTag.DurchschnittUmsatzProTagReport'))
+        self.connect(self.ui.action_Report_Umsaetze_VerkaufteArtikel,
+                    QtCore.SIGNAL('triggered()'),
+                    lambda: self.openWindow('reports.verkaufteArtikel.VerkaufteArtikelReport'))
         self.connect(self.ui.action_Report_Einkauf_GesamteLieferungen,
                     QtCore.SIGNAL('triggered()'),
                     lambda: self.openWindow('reports.gesamteLieferungen.GesamteLieferungenReport'))
