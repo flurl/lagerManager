@@ -27,6 +27,11 @@ class VerkaufteArtikelReport(TextReport):
 		
 	def setupUi(self):
 		super(VerkaufteArtikelReport, self).setupUi()
+		self.connect(self.ui.comboBox_period, QtCore.SIGNAL('currentIndexChanged(int)'), self.setupCPCombobox)
+		self.setupCPCombobox()
+		
+	def setupCPCombobox(self):
+		self.ui.comboBox_checkpoint.clear()
 		
 		query = "select checkpoint_id, checkpoint_info from journal_checkpoints where checkpoint_periode = %s" % self._getCurrentPeriodId()
 		results = self.db.exec_(query)
