@@ -66,7 +66,7 @@ class VerkaufteArtikelReport(TextReport):
 			article = unicode(results.value(3).toString())
 			price = round(results.value(4).toFloat()[0], 2)
 			table = unicode(results.value(5).toString()) if self.ui.checkBox_showTableCode.isChecked() else u''
-			time = unicode(results.value(5).toString()) if self.ui.checkBox_showDate.isChecked() else u''
+			time = unicode(results.value(6).toString()) if self.ui.checkBox_showDate.isChecked() else u''
 			
 			if lastDate != date and lastDate is not None:
 				data.append([None])
