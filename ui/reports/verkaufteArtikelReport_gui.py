@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/reports/verkaufteArtikelReport.ui'
 #
-# Created: Sat Sep 27 23:40:50 2014
+# Created: Sat Oct 18 18:05:26 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -52,6 +52,9 @@ class Ui_VerkaufteArtikelReport(object):
         self.checkBox_showTableCode = QtGui.QCheckBox(VerkaufteArtikelReport)
         self.checkBox_showTableCode.setObjectName(_fromUtf8("checkBox_showTableCode"))
         self.horizontalLayout.addWidget(self.checkBox_showTableCode)
+        self.checkBox_showDate = QtGui.QCheckBox(VerkaufteArtikelReport)
+        self.checkBox_showDate.setObjectName(_fromUtf8("checkBox_showDate"))
+        self.horizontalLayout.addWidget(self.checkBox_showDate)
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
         self.pushButton_export = QtGui.QPushButton(VerkaufteArtikelReport)
@@ -76,6 +79,7 @@ class Ui_VerkaufteArtikelReport(object):
         self.radioButton_umsatz.setText(_translate("VerkaufteArtikelReport", "nur &Umsatz", None))
         self.radioButton_aufwand.setText(_translate("VerkaufteArtikelReport", "nur Auf&wand", None))
         self.checkBox_showTableCode.setText(_translate("VerkaufteArtikelReport", "&Tischbereiche anzeigen", None))
+        self.checkBox_showDate.setText(_translate("VerkaufteArtikelReport", "&Datum anzeigen", None))
         self.pushButton_export.setText(_translate("VerkaufteArtikelReport", "&Exportieren", None))
 
 from reports.reportTextViewWidget import ReportTextViewWidget
