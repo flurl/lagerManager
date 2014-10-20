@@ -101,6 +101,8 @@ class LagerstandReport(GraphicsReport):
 			allArticles.update(articles.keys())
 		
 		extraData = {}
+		self.articlesMinimum = {}
+		self.articlesMaximum = {}
 		for i in range(len(days)):
 			dp[i] = {}
 			articles = days[i]
@@ -122,6 +124,12 @@ class LagerstandReport(GraphicsReport):
 					dp[i][article] = dp[i-1].get(article, 0.0) + articles.get(article, 0.0)
 				if dp[i][article] < 0.0:
 					self.negativeArticles.add(article)
+				if (not article in self.articlesMinimum) or (dp[i][article] < self.articlesMinimum[article]):
+					self.articlesMinimum[article] = dp[i][article]
+				elif (not article in self.articlesMaximum) or (dp[i][article] > self.articlesMaximum[article]):
+					self.articlesMaximum[article] = dp[i][article]
+					
+				
 		
 		#print dp
 		self.dp = copy.deepcopy(dp)
@@ -176,8 +184,9 @@ class LagerstandReport(GraphicsReport):
 		
 		for a in sorted(list(articles)):
 			vl = QtGui.QVBoxLayout()
-			
-			cb = QtGui.QCheckBox(a)
+			min_ = self.articlesMinimum[a]
+			max_ = self.articlesMaximum[a]
+			cb = QtGui.QCheckBox(a + u': '+unicode(round(min_, 2))+u' - '+unicode(round(max_,2)))
 			vl.addWidget(cb, 0)
 			
 			lineEdit = QtGui.QLineEdit()
@@ -340,14 +349,15 @@ class LagerstandReport(GraphicsReport):
 	
 	def onCheckAllNegativeChanged(self, state):
 		for cb in self.articleCheckboxes:
-			if unicode(cb.text()) in self.negativeArticles:
-				if state == QtCore.Qt.Checked:
-					ss = "QCheckBox {color: red; background-color: #fff;}"
-				#cb.setCheckState(state)
-				else:
-					ss = self.ui.checkBox_ignorePrefix.styleSheet()
-					
-				cb.setStyleSheet(ss)
+			for art in self.negativeArticles:
+				if unicode(cb.text()).startswith(art):
+					if state == QtCore.Qt.Checked:
+						ss = "QCheckBox {color: red; background-color: #fff;}"
+					#cb.setCheckState(state)
+					else:
+						ss = self.ui.checkBox_ignorePrefix.styleSheet()
+						
+					cb.setStyleSheet(ss)
 			
 			
 	def _onArticleFilterChanged(self, newText):
