@@ -186,8 +186,10 @@ class LagerstandReport(GraphicsReport):
 			vl = QtGui.QVBoxLayout()
 			min_ = self.articlesMinimum[a]
 			max_ = self.articlesMaximum[a]
-			cb = QtGui.QCheckBox(a + u': '+unicode(round(min_, 2))+u' - '+unicode(round(max_,2)))
+			cb = QtGui.QCheckBox(a)
 			vl.addWidget(cb, 0)
+			label = QtGui.QLabel(unicode(round(min_, 2))+u' - '+unicode(round(max_,2)))
+			vl.addWidget(label)
 			
 			lineEdit = QtGui.QLineEdit()
 			vl.addWidget(lineEdit, 0)
