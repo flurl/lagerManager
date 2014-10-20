@@ -17,6 +17,8 @@ class LagerstandReport(GraphicsReport):
 	
 	def __init__(self, parent=None):
 		GraphicsReport.__init__(self, parent)
+		self.articlesMinimum = {}
+		self.articlesMaximum = {}
 		
 		nop = lambda x: x
 		me = self
@@ -101,8 +103,6 @@ class LagerstandReport(GraphicsReport):
 			allArticles.update(articles.keys())
 		
 		extraData = {}
-		self.articlesMinimum = {}
-		self.articlesMaximum = {}
 		for i in range(len(days)):
 			dp[i] = {}
 			articles = days[i]
@@ -184,12 +184,15 @@ class LagerstandReport(GraphicsReport):
 		
 		for a in sorted(list(articles)):
 			vl = QtGui.QVBoxLayout()
-			min_ = self.articlesMinimum[a]
-			max_ = self.articlesMaximum[a]
 			cb = QtGui.QCheckBox(a)
 			vl.addWidget(cb, 0)
-			label = QtGui.QLabel(unicode(round(min_, 2))+u' - '+unicode(round(max_,2)))
-			vl.addWidget(label)
+			try:
+				min_ = self.articlesMinimum[a]
+				max_ = self.articlesMaximum[a]
+				label = QtGui.QLabel(unicode(round(min_, 2))+u' - '+unicode(round(max_,2)))
+				vl.addWidget(label)
+			except KeyError:
+				pass
 			
 			lineEdit = QtGui.QLineEdit()
 			vl.addWidget(lineEdit, 0)
