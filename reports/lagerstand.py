@@ -183,6 +183,7 @@ class LagerstandReport(GraphicsReport):
 		self.connect(cb, QtCore.SIGNAL('stateChanged(int)'), self.onCheckAllNegativeChanged)
 		
 		for a in sorted(list(articles)):
+			containerWidget = QtGui.QWidget()
 			vl = QtGui.QVBoxLayout()
 			cb = QtGui.QCheckBox(a)
 			vl.addWidget(cb, 0)
@@ -198,7 +199,8 @@ class LagerstandReport(GraphicsReport):
 			vl.addWidget(lineEdit, 0)
 			lineEdit.hide()
 			
-			layout.addLayout(vl)
+			containerWidget.setLayout(vl)
+			layout.addWidget(containerWidget)
 			
 			func = lambda i, le=lineEdit: le.show()
 			self.connect(cb, QtCore.SIGNAL('stateChanged (int)'), func)
@@ -336,10 +338,11 @@ class LagerstandReport(GraphicsReport):
 	
 	def filterArticlesList(self, text):
 		for cb in self.articleCheckboxes:
+			parent = cb.parent()
 			if unicode(text).upper() in unicode(cb.text()).upper():
-				cb.show()
+				parent.show()
 			else:
-				cb.hide()
+				parent.hide()
 
 		
 	def _onRefreshBtnClicked(self):
