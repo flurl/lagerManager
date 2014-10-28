@@ -103,6 +103,8 @@ class LagerstandReport(GraphicsReport):
 			allArticles.update(articles.keys())
 		
 		extraData = {}
+		self.articlesMinimum = {}
+		self.articlesMaximum = {}
 		for i in range(len(days)):
 			dp[i] = {}
 			articles = days[i]
