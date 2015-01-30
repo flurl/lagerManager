@@ -38,10 +38,10 @@ class TextReport(ReportBase):
     def __init__(self, parent):
         ReportBase.__init__(self, parent)
 
-        self.__header = u''
-        self.__footer = u''
-        self.__tableHeaders = []
-        self.__repeatTableHeadersAfterBlankLine = False
+        self._header = u''
+        self._footer = u''
+        self._tableHeaders = []
+        self._repeatTableHeadersAfterBlankLine = False
 
         self.setData([])
 
@@ -51,42 +51,42 @@ class TextReport(ReportBase):
                     self.exportData)
 
     def setHeader(self, header):
-        self.__header = header
+        self._header = header
 
     def setFooter(self, footer):
-        self.__footer = footer
+        self._footer = footer
 
     def setTableHeaders(self, headers, repeat=False):
         """
         @headers a list of table headers
         @repeat defines if the headers should be repeated after each blank line
         """
-        self.__tableHeaders = headers
+        self._tableHeaders = headers
         self.setTableHeadersRepeat(repeat)
 
     def setTableHeadersRepeat(self, repeat):
-        self.__repeatTableHeadersAfterBlankLine = repeat
+        self._repeatTableHeadersAfterBlankLine = repeat
 
     def setData(self, data):
         """override this method for custom data set,
         otherwise supply a query"""
         if isinstance(data, basestring):
             results = self.db.exec_(data)
-            self.__data = []
+            self._data = []
             while results.next():
                 record = results.record()
-                self.__data.append([record.value(i).toString()
+                self._data.append([record.value(i).toString()
                                    for i in range(record.count())])
         elif isinstance(data, collections.Iterable):
-            self.__data = data
+            self._data = data
         else:
             raise
 
     def process(self):
         elements = []
-        elements.append(Heading(self.__header))
+        elements.append(Heading(self._header))
         elements.append(self.processData())
-        elements.append(Footer(self.__footer))
+        elements.append(Footer(self._footer))
 
         self.ui.textView.setText(''.join(unicode(e) for e in elements))
 
@@ -97,7 +97,7 @@ class TextReport(ReportBase):
         output += self.mkTableHeaders()
         blankLine = False
 
-        for row in self.__data:
+        for row in self._data:
             output += u'<tr>'
             for cell in row:
                 if cell is None:
@@ -121,9 +121,9 @@ class TextReport(ReportBase):
 
     def mkTableHeaders(self):
         output = u''
-        if len(self.__tableHeaders) > 0:
+        if len(self._tableHeaders) > 0:
             output += u'<tr>'
-            for h in self.__tableHeaders:
+            for h in self._tableHeaders:
                 output += u'<th>%s</th>' % (h,)
             output += u'</tr>'
         return output
@@ -137,4 +137,4 @@ class TextReport(ReportBase):
                                                     '', 'CSV Files (*.csv)')
         with open(filename, 'wb') as f:
             writer = UnicodeWriter(f)
-            writer.writerows(self.__data)
+            writer.writerows(self._data)
