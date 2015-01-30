@@ -36,9 +36,11 @@ and daten_checkpoint_tag = checkpoint_id
 and detail_journal = daten_rechnung_id
 and detail_istUmsatz = 1
 and detail_periode = %s
+and daten_periode = %s
+and checkpoint_periode = %s
 group by checkpoint_id, checkpoint_info, detail_kellner
 order by 1 desc, 3
-		""" % self._getCurrentPeriodId()
+		""" % (self._getCurrentPeriodId(),self._getCurrentPeriodId(), self._getCurrentPeriodId())
 		
 		return query
 	
