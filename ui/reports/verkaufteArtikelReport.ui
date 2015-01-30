@@ -92,7 +92,7 @@
       </layout>
      </item>
      <item>
-      <widget class="ReportTextViewWidget" name="textView" native="true"/>
+      <widget class="FilterableTableView" name="tableView"/>
      </item>
     </layout>
    </item>
@@ -100,10 +100,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>ReportTextViewWidget</class>
-   <extends>QWidget</extends>
-   <header>reports.reportTextViewWidget</header>
-   <container>1</container>
+   <class>FilterableTableView</class>
+   <extends>QTableView</extends>
+   <header>lib.FilterableTableView</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -5,22 +5,22 @@ import copy
 from PyQt4 import QtCore, QtGui, QtSql
 
 from ui.reports.verkaufteArtikelReport_gui import Ui_VerkaufteArtikelReport
-from textReport import TextReport
+from tableReport import TableReport
 
 
 
-class VerkaufteArtikelReport(TextReport):
+class VerkaufteArtikelReport(TableReport):
 	
 	uiClass = Ui_VerkaufteArtikelReport
 	ident = 'verkaufteArtikel'
 	
 	def __init__(self, parent=None):
-		TextReport.__init__(self, parent)
+		TableReport.__init__(self, parent)
 				
 		self.setHeader('Verkaufte Artikel')
 		self.setFooter('here could be a nice footer')
 		
-		self.setTableHeaders(['Datum', 'Kellner', 'Menge', 'Artikel', 'Preis', 'Tisch', 'Zeit'])
+		self.setTableHeaders(['Datum', 'Kellner', 'Menge', 'Artikel', 'Preis', 'Artikelgruppe', 'Tisch', 'Zeit'])
 		
 		self.updateData()
 		self.process()
@@ -65,8 +65,9 @@ class VerkaufteArtikelReport(TextReport):
 			amount = round(results.value(2).toFloat()[0], 2)
 			article = unicode(results.value(3).toString())
 			price = round(results.value(4).toFloat()[0], 2)
+			group = unicode(results.value(5).toString())
 			
-			index = 5
+			index = 6
 			if self.ui.checkBox_showTableCode.isChecked():
 				table = unicode(results.value(index).toString())
 				index += 1
@@ -82,7 +83,7 @@ class VerkaufteArtikelReport(TextReport):
 			if lastDate != date and lastDate is not None:
 				data.append([None])
 				lastDate = date
-			data.append([date, waiter, amount, article, price, table, time])
+			data.append([date, waiter, amount, article, price, group, table, time])
 		
 		self.setData(data)
 		self.process()
@@ -102,7 +103,7 @@ class VerkaufteArtikelReport(TextReport):
 		
 		query = """
 				select checkpoint_info, 
-				detail_kellner, sum(detail_absmenge), detail_artikel_text, detail_preis %(table_code)s %(date)s
+				detail_kellner, sum(detail_absmenge), detail_artikel_text, detail_preis, detail_gruppe %(table_code)s %(date)s
 from journal_details, journal_daten, journal_checkpoints, rechnungen_basis
 where 1=1
 and (daten_checkpoint_tag = checkpoint_id or daten_checkpoint_monat = checkpoint_id or daten_checkpoint_jahr = checkpoint_id)
@@ -114,7 +115,7 @@ and checkpoint_periode = %(period_id)s
 and checkpoint_id = %(checkpoint_id)s
 and rechnung_periode = %(period_id)s
 %(umsatz_where)s
-group by checkpoint_info, detail_artikel_text, detail_preis, detail_kellner %(table_code)s %(date)s
+group by checkpoint_info, detail_artikel_text, detail_preis, detail_kellner, detail_gruppe %(table_code)s %(date)s
 order by str_to_date(checkpoint_info, '%%d.%%m.%%Y'), detail_kellner %(date)s %(table_code)s , detail_artikel_text, detail_preis
 		""" % {'period_id': self._getCurrentPeriodId(), 'checkpoint_id': cpId, 'umsatz_where': umsatzWhere, 'table_code': ', rechnung_tischCode' if self.ui.checkBox_showTableCode.isChecked() else '', 'date': ', detail_bonier_datum' if self.ui.checkBox_showDate.isChecked() else ''}
 		

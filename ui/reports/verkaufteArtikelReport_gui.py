@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/reports/verkaufteArtikelReport.ui'
 #
-# Created: Sat Oct 18 18:05:26 2014
+# Created: Tue Nov 11 17:50:27 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -64,9 +64,9 @@ class Ui_VerkaufteArtikelReport(object):
         self.comboBox_period.setObjectName(_fromUtf8("comboBox_period"))
         self.horizontalLayout.addWidget(self.comboBox_period)
         self.verticalLayout.addLayout(self.horizontalLayout)
-        self.textView = ReportTextViewWidget(VerkaufteArtikelReport)
-        self.textView.setObjectName(_fromUtf8("textView"))
-        self.verticalLayout.addWidget(self.textView)
+        self.tableView = FilterableTableView(VerkaufteArtikelReport)
+        self.tableView.setObjectName(_fromUtf8("tableView"))
+        self.verticalLayout.addWidget(self.tableView)
         self.gridLayout.addLayout(self.verticalLayout, 1, 0, 1, 1)
 
         self.retranslateUi(VerkaufteArtikelReport)
@@ -82,4 +82,4 @@ class Ui_VerkaufteArtikelReport(object):
         self.checkBox_showDate.setText(_translate("VerkaufteArtikelReport", "&Datum anzeigen", None))
         self.pushButton_export.setText(_translate("VerkaufteArtikelReport", "&Exportieren", None))
 
-from reports.reportTextViewWidget import ReportTextViewWidget
+from lib.FilterableTableView import FilterableTableView
