@@ -81,7 +81,10 @@ class FormBase(QtGui.QDialog):
         row = combo.currentIndex()
         if row == -1:
             raise ComboBoxPKError()
-        col = model.fieldIndex(pkName)
+        if isinstance(pkName, int):
+            col = pkName
+        else:
+            col = model.fieldIndex(pkName)
         index = model.index(row, col)
         pk = model.data(index).toInt()[0]
         return pk
