@@ -133,6 +133,11 @@ class DienstplanForm(FormBase):
         employeeCombo.setModelColumn(employeeModel.fieldIndex('din_name'))
         workLayout.addWidget(employeeCombo)
         
+        dutyCountLineEdit = QtGui.QLineEdit()
+        dutyCountLineEdit.setReadOnly(True)
+        dutyCountLineEdit.setFixedWidth(50)
+        workLayout.addWidget(dutyCountLineEdit)
+        
         layout.addLayout(workLayout)
         
         beginDateTimeEdit = QtGui.QDateTimeEdit()
@@ -180,6 +185,7 @@ class DienstplanForm(FormBase):
         
         widgetRef = {'workplaceCombo': workplaceCombo,
                      'employeeCombo': employeeCombo,
+                     'dutyCountLineEdit': dutyCountLineEdit,
                      'beginDateTimeEdit': beginDateTimeEdit,
                      'endDateTimeEdit': endDateTimeEdit,
                      'shiftLengthLineEdit': shiftLengthLineEdit,
@@ -201,6 +207,7 @@ class DienstplanForm(FormBase):
         if dinId is not None:
             idx = employeeModel.match(employeeModel.index(0, 0), 0, dinId)[0]
             employeeCombo.setCurrentIndex(idx.row())
+            self.getEmployeeDutyCount(widgetRef)
         else:
             employeeCombo.insertSeparator(-1)
             employeeCombo.setCurrentIndex(-1)
@@ -448,7 +455,22 @@ class DienstplanForm(FormBase):
             combo.setStyleSheet('QFrame {background-color:red;}')
         else:
             combo.setStyleSheet('')
-    
+        self.getEmployeeDutyCount(widgetRef)
+        
+        
+    def getEmployeeDutyCount(self, widgetRef):
+        combo = widgetRef['employeeCombo']
+        try:
+            empId = self.getPKForCombobox(combo, 'din_id')
+        except ComboBoxPKError:
+            return
+        emp = lib.Dienstnehmer.Dienstnehmer(empId)
+        eventProps = self.getEventProperties(self.getCurrentEventId())
+        eventDate = eventProps['ver_datum'].toPyDate()
+        dutyCount = len(emp.getDuties(eventDate))
+        widgetRef['dutyCountLineEdit'].setText(unicode(dutyCount))
+        
+
     def checkDateTime(self, wr):
         begin = wr['beginDateTimeEdit'].dateTime()
         end = wr['endDateTimeEdit'].dateTime()
