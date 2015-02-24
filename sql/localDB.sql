@@ -436,4 +436,5 @@ alter table dienstnehmer add unique key (din_nummer);
 insert into config (cfg_key, cfg_valueI) values ('considerNAZ', 1);
 
 --20150224
-insert into config (cfg_key, cfg_valueI) values ('trinkgeldpauschale', 0.2725);
+insert into config (cfg_key, cfg_valueF) values ('trinkgeldpauschale', 0.2725);
+insert into config (cfg_key, cfg_valueF) values ('nachtarbeitszuschlag', 20.7);
