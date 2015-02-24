@@ -238,8 +238,8 @@ class DienstnehmerStundenReport(TextReport):
 				and din_bebid = beb_id
 				{empIdWhere}
 				{foeIdWhere}
-				and ver_datum between '{pStart}' and '{pEnd}
-				order by ver_datum desc'
+				and ver_datum between '{pStart}' and '{pEnd}'
+				order by ver_datum desc
 				"""
 		
 		fields = 'die_id'
