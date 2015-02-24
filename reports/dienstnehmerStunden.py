@@ -6,6 +6,7 @@ from textReport import TextReport
 
 import lib.Dienst
 
+from lib.GlobalConfig import globalConf
 from CONSTANTS import *
 
 
@@ -59,7 +60,7 @@ class DienstnehmerStundenReport(TextReport):
 			count = 1
 			shiftSalary = d.getEarnings()
 			shiftNAZ = d.getNAZ()
-			tipAllowance = emp['beschaeftigungsbereich']['beb_trinkgeldpauschale']*workingHours*TRINKGELDPAUSCHALE
+			tipAllowance = emp['beschaeftigungsbereich']['beb_trinkgeldpauschale']*workingHours*globalConf['trinkgeldpauschale']
 			shiftSum = shiftSalary
 			shiftSalary = shiftSalary - shiftNAZ - tipAllowance
 		

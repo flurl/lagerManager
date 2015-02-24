@@ -30,17 +30,7 @@ class Dienstnehmer(LMDatabaseObject):
             
         print "BP3 remainingSalary for %s is %s" % (self['din_name'], remainingSalary)
         return remainingSalary
-    
-    
-    """def getRemainingHours(self, date=None):
-        wr = self.findEmployeeWidgetRefByEmpId(dinId)
-        beginDateTime = wr['beginDateTimeEdit'].dateTime()
-        endDateTime = wr['endDateTimeEdit'].dateTime()
-        
-        remainingSalary = self.getRemainingSalary(date)
-        remainingHours = (remainingSalary - globalConf['considerNAZ']*NACHTARBEITSZUSCHLAG*self.considerNAZForShift(beginDateTime, endDateTime) - TRINKGELDPAUSCHALE*tipAllowance)/hourlyRate
-        
-        return remainingHours"""
+	
     
     def getDuties(self, date=None, excludeDutyId=None):
         monthBegin, monthEnd = datetimehelper.getMonthBeginEnd(date)

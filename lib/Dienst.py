@@ -27,7 +27,7 @@ class Dienst(LMDatabaseObject):
 		foe = Beschaeftigungsbereich(emp['din_bebid'])
 		
 		hours = self.getWorkingHours()
-		salary = hours*emp.getHourlyWage(self['die_beginn'])+self.getNAZ()+foe['beb_trinkgeldpauschale']*TRINKGELDPAUSCHALE*hours
+		salary = hours*emp.getHourlyWage(self['die_beginn'])+self.getNAZ()+foe['beb_trinkgeldpauschale']*globalConf['trinkgeldpauschale']*hours
 		
 		return salary
 		
