@@ -36,10 +36,11 @@ class Dienstnehmer(LMDatabaseObject):
         monthBegin, monthEnd = datetimehelper.getMonthBeginEnd(date)
         
         query = """select die_id
-                from dienste
+                from dienste, veranstaltungen
                 where 1=1
                 and die_dinid = ?
-                and die_beginn between ? and ?"""
+                and die_verid = ver_id
+                and ver_datum between ? and ?"""
                 
         if excludeDutyId is not None:
             query +=  " and die_verid != %s" % excludeDutyId
