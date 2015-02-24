@@ -77,7 +77,7 @@ class Dienst(LMDatabaseObject):
 		
 		if timeWithinNAZ > timeOutOfNAZ:
 			print "Considering NAZ"
-			return NACHTARBEITSZUSCHLAG
+			return globalConf['nachtarbeitszuschlag']
 			
 		print "Not considering NAZ"
 		return 0
