@@ -44,12 +44,25 @@
       </layout>
      </item>
      <item>
-      <widget class="QWidget" name="widget" native="true"/>
+      <widget class="QWidget" name="widget" native="true">
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="FilterableTableView" name="tableView"/>
+        </item>
+       </layout>
+      </widget>
      </item>
     </layout>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>FilterableTableView</class>
+   <extends>QTableView</extends>
+   <header>lib.FilterableTableView</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

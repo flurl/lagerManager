@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/reports/defaultTableReport.ui'
 #
-# Created: Tue Nov 11 17:34:31 2014
+# Created: Thu May 21 18:21:51 2015
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -44,6 +44,12 @@ class Ui_DefaultTableReport(object):
         self.verticalLayout.addLayout(self.horizontalLayout)
         self.widget = QtGui.QWidget(DefaultTableReport)
         self.widget.setObjectName(_fromUtf8("widget"))
+        self.horizontalLayout_2 = QtGui.QHBoxLayout(self.widget)
+        self.horizontalLayout_2.setMargin(0)
+        self.horizontalLayout_2.setObjectName(_fromUtf8("horizontalLayout_2"))
+        self.tableView = FilterableTableView(self.widget)
+        self.tableView.setObjectName(_fromUtf8("tableView"))
+        self.horizontalLayout_2.addWidget(self.tableView)
         self.verticalLayout.addWidget(self.widget)
         self.gridLayout.addLayout(self.verticalLayout, 1, 0, 1, 1)
 
@@ -54,3 +60,4 @@ class Ui_DefaultTableReport(object):
         DefaultTableReport.setWindowTitle(_translate("DefaultTableReport", "Report", None))
         self.pushButton_export.setText(_translate("DefaultTableReport", "&Exportieren", None))
 
+from lib.FilterableTableView import FilterableTableView
