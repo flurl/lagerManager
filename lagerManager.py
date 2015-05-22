@@ -94,6 +94,9 @@ class MainWindow(QtGui.QMainWindow):
         self.connect(self.ui.action_Report_Personal_Bonierzeiten,
                     QtCore.SIGNAL('triggered()'),
                     lambda: self.openWindow('reports.bonierzeiten.Bonierzeiten'))
+        self.connect(self.ui.action_Report_Artikel_Rezepturen,
+                    QtCore.SIGNAL('triggered()'),
+                    lambda: self.openWindow('reports.rezepturen.RezepturenReport'))
 
         self.connect(self.ui.action_Lieferungen_Lieferungen,
                     QtCore.SIGNAL('triggered()'),

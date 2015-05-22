@@ -79,11 +79,18 @@
      <addaction name="action_Report_Umsaetze_DurchschUmsatzWochentag"/>
      <addaction name="action_Report_Umsaetze_VerkaufteArtikel"/>
     </widget>
+    <widget class="QMenu" name="menu_Artikel">
+     <property name="title">
+      <string>&amp;Artikel</string>
+     </property>
+     <addaction name="action_Report_Artikel_Rezepturen"/>
+    </widget>
     <addaction name="menu_Lagerstand"/>
     <addaction name="menu_Verbrauch"/>
     <addaction name="menu_Umsaetze"/>
     <addaction name="menu_Einkauf"/>
     <addaction name="menu_Personal_2"/>
+    <addaction name="menu_Artikel"/>
    </widget>
    <widget class="QMenu" name="menu_Lieferungen">
     <property name="title">
@@ -333,6 +340,11 @@
   <action name="action_Report_Umsaetze_VerkaufteArtikel">
    <property name="text">
     <string>&amp;Verkaufte Artikel</string>
+   </property>
+  </action>
+  <action name="action_Report_Artikel_Rezepturen">
+   <property name="text">
+    <string>&amp;Rezepturen</string>
    </property>
   </action>
  </widget>

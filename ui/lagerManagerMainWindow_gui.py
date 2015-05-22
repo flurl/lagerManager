@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/lagerManagerMainWindow.ui'
 #
-# Created: Sat Sep 27 22:20:28 2014
+# Created: Thu May 21 18:17:46 2015
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -52,6 +52,8 @@ class Ui_MainWindow(object):
         self.menu_Verbrauch.setObjectName(_fromUtf8("menu_Verbrauch"))
         self.menu_Umsaetze = QtGui.QMenu(self.menu_Reports)
         self.menu_Umsaetze.setObjectName(_fromUtf8("menu_Umsaetze"))
+        self.menu_Artikel = QtGui.QMenu(self.menu_Reports)
+        self.menu_Artikel.setObjectName(_fromUtf8("menu_Artikel"))
         self.menu_Lieferungen = QtGui.QMenu(self.menubar)
         self.menu_Lieferungen.setObjectName(_fromUtf8("menu_Lieferungen"))
         self.menuStammdaten = QtGui.QMenu(self.menubar)
@@ -142,6 +144,8 @@ class Ui_MainWindow(object):
         self.action_Report_Verbrauch_AktuellerVerbrauch.setObjectName(_fromUtf8("action_Report_Verbrauch_AktuellerVerbrauch"))
         self.action_Report_Umsaetze_VerkaufteArtikel = QtGui.QAction(MainWindow)
         self.action_Report_Umsaetze_VerkaufteArtikel.setObjectName(_fromUtf8("action_Report_Umsaetze_VerkaufteArtikel"))
+        self.action_Report_Artikel_Rezepturen = QtGui.QAction(MainWindow)
+        self.action_Report_Artikel_Rezepturen.setObjectName(_fromUtf8("action_Report_Artikel_Rezepturen"))
         self.menuFile.addAction(self.actionQuit)
         self.menu_Einkauf.addAction(self.action_Report_Einkauf_GesamteLieferungen)
         self.menu_Einkauf.addAction(self.action_Report_Einkauf_Verprobung)
@@ -158,11 +162,13 @@ class Ui_MainWindow(object):
         self.menu_Umsaetze.addAction(self.action_Report_Umsaetze_AufwanddetailsProTag)
         self.menu_Umsaetze.addAction(self.action_Report_Umsaetze_DurchschUmsatzWochentag)
         self.menu_Umsaetze.addAction(self.action_Report_Umsaetze_VerkaufteArtikel)
+        self.menu_Artikel.addAction(self.action_Report_Artikel_Rezepturen)
         self.menu_Reports.addAction(self.menu_Lagerstand.menuAction())
         self.menu_Reports.addAction(self.menu_Verbrauch.menuAction())
         self.menu_Reports.addAction(self.menu_Umsaetze.menuAction())
         self.menu_Reports.addAction(self.menu_Einkauf.menuAction())
         self.menu_Reports.addAction(self.menu_Personal_2.menuAction())
+        self.menu_Reports.addAction(self.menu_Artikel.menuAction())
         self.menu_Lieferungen.addAction(self.action_Lieferungen_Lieferungen)
         self.menu_Lieferungen.addAction(self.action_Lieferungen_Lieferanten)
         self.menu_Lieferungen.addAction(self.action_Lieferungen_InitialerLagerstand)
@@ -203,6 +209,7 @@ class Ui_MainWindow(object):
         self.menu_Personal_2.setTitle(_translate("MainWindow", "&Personal", None))
         self.menu_Verbrauch.setTitle(_translate("MainWindow", "&Verbrauch", None))
         self.menu_Umsaetze.setTitle(_translate("MainWindow", "&Umsätze", None))
+        self.menu_Artikel.setTitle(_translate("MainWindow", "&Artikel", None))
         self.menu_Lieferungen.setTitle(_translate("MainWindow", "&Lieferungen", None))
         self.menuStammdaten.setTitle(_translate("MainWindow", "&Stammdaten", None))
         self.menu_Dokumente.setTitle(_translate("MainWindow", "Do&kumente", None))
@@ -248,4 +255,5 @@ class Ui_MainWindow(object):
         self.action_Report_Personal_Bonierzeiten.setText(_translate("MainWindow", "&Bonierzeiten", None))
         self.action_Report_Verbrauch_AktuellerVerbrauch.setText(_translate("MainWindow", "Aktueller &Verbrauch", None))
         self.action_Report_Umsaetze_VerkaufteArtikel.setText(_translate("MainWindow", "&Verkaufte Artikel", None))
+        self.action_Report_Artikel_Rezepturen.setText(_translate("MainWindow", "&Rezepturen", None))
 
