@@ -61,7 +61,7 @@ class VeranstaltungenForm(FormBase):
 		rec = self.model.record()
 		rec.setValue(1, QtCore.QVariant(QtCore.QDate.currentDate()))
 		rec.setValue(2, '')
-		rec.setValue(3, QtCore.QVariant(QtCore.QTime.currentTime()))
+		rec.setValue(3, QtCore.QVariant(QtCore.QTime(0,0,0,0)))
 		
 		#self.model.insertRecord(-1, rec)
 		self.model.insertRowIntoTable(rec)
