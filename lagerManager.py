@@ -97,6 +97,9 @@ class MainWindow(QtGui.QMainWindow):
         self.connect(self.ui.action_Report_Artikel_Rezepturen,
                     QtCore.SIGNAL('triggered()'),
                     lambda: self.openWindow('reports.rezepturen.RezepturenReport'))
+        self.connect(self.ui.action_Report_Artikel_NichtVorhandene,
+                    QtCore.SIGNAL('triggered()'),
+                    lambda: self.openWindow('reports.nichtVorhandeneBonierteArtikel.NichtVorhandeneBonierteArtikelReport'))
 
         self.connect(self.ui.action_Lieferungen_Lieferungen,
                     QtCore.SIGNAL('triggered()'),

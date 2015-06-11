@@ -84,6 +84,7 @@
       <string>&amp;Artikel</string>
      </property>
      <addaction name="action_Report_Artikel_Rezepturen"/>
+     <addaction name="action_Report_Artikel_NichtVorhandene"/>
     </widget>
     <addaction name="menu_Lagerstand"/>
     <addaction name="menu_Verbrauch"/>
@@ -345,6 +346,11 @@
   <action name="action_Report_Artikel_Rezepturen">
    <property name="text">
     <string>&amp;Rezepturen</string>
+   </property>
+  </action>
+  <action name="action_Report_Artikel_NichtVorhandene">
+   <property name="text">
+    <string>Nicht &amp;vorhandene</string>
    </property>
   </action>
  </widget>

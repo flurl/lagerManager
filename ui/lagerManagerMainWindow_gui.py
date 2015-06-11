@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/lagerManagerMainWindow.ui'
 #
-# Created: Thu May 21 18:17:46 2015
+# Created: Wed Jun 10 16:07:43 2015
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -146,6 +146,8 @@ class Ui_MainWindow(object):
         self.action_Report_Umsaetze_VerkaufteArtikel.setObjectName(_fromUtf8("action_Report_Umsaetze_VerkaufteArtikel"))
         self.action_Report_Artikel_Rezepturen = QtGui.QAction(MainWindow)
         self.action_Report_Artikel_Rezepturen.setObjectName(_fromUtf8("action_Report_Artikel_Rezepturen"))
+        self.action_Report_Artikel_NichtVorhandene = QtGui.QAction(MainWindow)
+        self.action_Report_Artikel_NichtVorhandene.setObjectName(_fromUtf8("action_Report_Artikel_NichtVorhandene"))
         self.menuFile.addAction(self.actionQuit)
         self.menu_Einkauf.addAction(self.action_Report_Einkauf_GesamteLieferungen)
         self.menu_Einkauf.addAction(self.action_Report_Einkauf_Verprobung)
@@ -163,6 +165,7 @@ class Ui_MainWindow(object):
         self.menu_Umsaetze.addAction(self.action_Report_Umsaetze_DurchschUmsatzWochentag)
         self.menu_Umsaetze.addAction(self.action_Report_Umsaetze_VerkaufteArtikel)
         self.menu_Artikel.addAction(self.action_Report_Artikel_Rezepturen)
+        self.menu_Artikel.addAction(self.action_Report_Artikel_NichtVorhandene)
         self.menu_Reports.addAction(self.menu_Lagerstand.menuAction())
         self.menu_Reports.addAction(self.menu_Verbrauch.menuAction())
         self.menu_Reports.addAction(self.menu_Umsaetze.menuAction())
@@ -256,4 +259,5 @@ class Ui_MainWindow(object):
         self.action_Report_Verbrauch_AktuellerVerbrauch.setText(_translate("MainWindow", "Aktueller &Verbrauch", None))
         self.action_Report_Umsaetze_VerkaufteArtikel.setText(_translate("MainWindow", "&Verkaufte Artikel", None))
         self.action_Report_Artikel_Rezepturen.setText(_translate("MainWindow", "&Rezepturen", None))
+        self.action_Report_Artikel_NichtVorhandene.setText(_translate("MainWindow", "Nicht &vorhandene", None))
 
