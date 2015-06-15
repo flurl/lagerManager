@@ -208,7 +208,7 @@ class LieferungDetailForm(FormBase):
 			return False
 		
 		pStart, pEnd = self.getCurrentPeriodStartEnd()
-		date = self.ui.dateEdit_datum.date().toPyDate()
+		date = QtCore.QDateTime(self.ui.dateEdit_datum.date()).toPyDateTime()
 		if pStart > date or date > pEnd:
 			QtGui.QMessageBox.warning(self, u'Perioden Fehler', u'Das Lieferungsdatum liegt nicht innerhalb der gewählten Periode!')
 			return False
