@@ -97,7 +97,7 @@ class ReportBase(QtGui.QWidget):
         
         
     def getPurchasePrice(self, artikelBez, maxDate=None):
-        query = 'select getPurchasePrice("%s", %s, %s)' % (artikelBez, self._getCurrentPeriodId(), 'NULL' if maxDate is None else "%s" % maxDate.isoformat())
+        query = 'select getPurchasePrice("%s", %s, %s)' % (artikelBez, self._getCurrentPeriodId(), 'NULL' if maxDate is None else "\"%s\"" % maxDate.isoformat())
         results = self.db.exec_(query)
         results.next()
         return results.value(0).toFloat()[0]
