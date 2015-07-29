@@ -23,6 +23,7 @@ class LagerstandTextuellReport(InventurReport):
         super(LagerstandTextuellReport, self).setupSignals()
         
         self.connect(self.ui.checkBox_useTillDate, QtCore.SIGNAL('stateChanged(int)'), self.updateData)
+        self.connect(self.ui.checkBox_purchasePrice, QtCore.SIGNAL('stateChanged(int)'), self.updateData)
         
         
     def mkConsQuery(self):
@@ -96,7 +97,7 @@ class LagerstandTextuellReport(InventurReport):
         return super(LagerstandTextuellReport, self).mkDelQuery(date)
     
     def getPurchasePrice(self, artikelBez, maxDate=None):
-        if self.ui.checkBox_useTillDate.isChecked():
+        if self.ui.checkBox_useTillDate.isChecked() and not self.ui.checkBox_purchasePrice.isChecked():
             maxDate = self.ui.dateEdit_till.date().toPyDate()
         return super(LagerstandTextuellReport, self).getPurchasePrice(artikelBez, maxDate)
     

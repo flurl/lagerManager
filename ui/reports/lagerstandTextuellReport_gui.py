@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/reports/lagerstandTextuellReport.ui'
 #
-# Created: Thu May 15 19:09:32 2014
+# Created: Wed Jul 29 17:20:47 2015
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -40,6 +40,9 @@ class Ui_LagerstandTextuellReport(object):
         self.dateEdit_till.setCalendarPopup(True)
         self.dateEdit_till.setObjectName(_fromUtf8("dateEdit_till"))
         self.horizontalLayout.addWidget(self.dateEdit_till)
+        self.checkBox_purchasePrice = QtGui.QCheckBox(LagerstandTextuellReport)
+        self.checkBox_purchasePrice.setObjectName(_fromUtf8("checkBox_purchasePrice"))
+        self.horizontalLayout.addWidget(self.checkBox_purchasePrice)
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
         self.pushButton_export = QtGui.QPushButton(LagerstandTextuellReport)
@@ -60,6 +63,7 @@ class Ui_LagerstandTextuellReport(object):
     def retranslateUi(self, LagerstandTextuellReport):
         LagerstandTextuellReport.setWindowTitle(_translate("LagerstandTextuellReport", "Report", None))
         self.checkBox_useTillDate.setText(_translate("LagerstandTextuellReport", "Daten berücksichtigen &nur bis zum ", None))
+        self.checkBox_purchasePrice.setText(_translate("LagerstandTextuellReport", "Einkaufs&preis nicht einschränken", None))
         self.pushButton_export.setText(_translate("LagerstandTextuellReport", "&Exportieren", None))
 
 from reports.reportTextViewWidget import ReportTextViewWidget
