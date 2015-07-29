@@ -54,21 +54,25 @@ class InventurReport(TextReport):
             articles[article] = articles.get(article, 0.0) + amount
         
         
-        query = self.mkValueQuery()
+        """query = self.mkValueQuery()
         results = self.db.exec_(query)
         print query
         print results.lastError().databaseText()
         values = {}
         while results.next():
             values[unicode(results.value(0).toString())] = results.value(1).toFloat()[0]		
+        """
         
         i = 0
         data = []
         for k in sorted(articles.keys()):
-            data.append([k, round(articles[k], 2), round(values.get(k, 0.0), 2), round(values.get(k, 0.0)*articles[k], 2)])
+            #data.append([k, round(articles[k], 2), round(values.get(k, 0.0), 2), round(values.get(k, 0.0)*articles[k], 2)])
+            purchasePrice = self.getPurchasePrice(k)
+            data.append([k, round(articles[k], 2), round(purchasePrice, 2), round(purchasePrice*articles[k], 2)])
         
         self.setData(data)
         self.process()
+
         
         
     def mkInvQuery(self):
@@ -168,24 +172,24 @@ class InventurReport(TextReport):
         return query
     
     
-    def mkValueQuery(self, maxDate=None):
-        pStart, pEnd = self._getCurrentPeriodStartEnd()
-        pId = self._getCurrentPeriodId()
+    #def mkValueQuery(self, maxDate=None):
+        #pStart, pEnd = self._getCurrentPeriodStartEnd()
+        #pId = self._getCurrentPeriodId()
         
-        dateWhere = ""
-        if maxDate is not None:
-            dateWhere = " and lieferungen.datum <= '%s' " % (maxDate.isoformat(), )
+        #dateWhere = ""
+        #if maxDate is not None:
+            #dateWhere = " and lieferungen.datum <= '%s' " % (maxDate.isoformat(), )
         
-        query = """select artikel_bezeichnung, sum(anzahl*einkaufspreis)/sum(anzahl) 
-                from artikel_basis, lieferungen_details, lieferungen
-                where 1=1 
-                and lieferungen_details.lieferung_id = lieferungen.lieferung_id
-                and lieferungen_details.artikel_id = artikel_basis.artikel_id  
-                and lieferungen.datum between '{0}' and '{1}'
-                and artikel_basis.artikel_periode = {2}
-                {3}
-                group by artikel_bezeichnung"""
+        #query = """select artikel_bezeichnung, sum(anzahl*einkaufspreis)/sum(anzahl) 
+                #from artikel_basis, lieferungen_details, lieferungen
+                #where 1=1 
+                #and lieferungen_details.lieferung_id = lieferungen.lieferung_id
+                #and lieferungen_details.artikel_id = artikel_basis.artikel_id  
+                #and lieferungen.datum between '{0}' and '{1}'
+                #and artikel_basis.artikel_periode = {2}
+                #{3}
+                #group by artikel_bezeichnung"""
                 
-        query = query.format(pStart, pEnd, pId, dateWhere)
+        #query = query.format(pStart, pEnd, pId, dateWhere)
         
-        return query
+        #return query

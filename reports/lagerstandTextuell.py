@@ -95,8 +95,13 @@ class LagerstandTextuellReport(InventurReport):
             date = self.ui.dateEdit_till.date().toPyDate()
         return super(LagerstandTextuellReport, self).mkDelQuery(date)
     
-    def mkValueQuery(self):
-        date = None
+    def getPurchasePrice(self, artikelBez, maxDate=None):
         if self.ui.checkBox_useTillDate.isChecked():
-            date = self.ui.dateEdit_till.date().toPyDate()
-        return super(LagerstandTextuellReport, self).mkValueQuery(date)
+            maxDate = self.ui.dateEdit_till.date().toPyDate()
+        return super(LagerstandTextuellReport, self).getPurchasePrice(artikelBez, maxDate)
+    
+    #def mkValueQuery(self):
+        #date = None
+        #if self.ui.checkBox_useTillDate.isChecked():
+            #date = self.ui.dateEdit_till.date().toPyDate()
+        #return super(LagerstandTextuellReport, self).mkValueQuery(date)

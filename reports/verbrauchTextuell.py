@@ -60,19 +60,21 @@ class VerbrauchTextuellReport(TextReport):
             articles[article] = tmpArt
         
         
-        query = self.mkValueQuery()
+        """query = self.mkValueQuery()
         results = self.db.exec_(query)
         print query
         print results.lastError().databaseText()
         values = {}
         while results.next():
             values[unicode(results.value(0).toString())] = results.value(1).toFloat()[0]        
+        """
         
         i = 0
         data = []
         for k in sorted(articles.keys()):
+            purchasePrice = self.getPurchasePrice(k)
             for tableCode in articles[k]:
-                data.append([k, tableCode, round(articles[k][tableCode], 2), round(values.get(k, 0.0), 2), round(values.get(k, 0.0)*articles[k][tableCode], 2)])
+                data.append([k, tableCode, round(articles[k][tableCode], 2), round(purchasePrice, 2), round(purchasePrice*articles[k][tableCode], 2)])
         
         self.setData(data)
         self.process()
@@ -158,25 +160,25 @@ class VerbrauchTextuellReport(TextReport):
     #def mkDelQuery(self):
     #    return ""
     
-    def mkValueQuery(self):
-        pStart, pEnd = self._getCurrentPeriodStartEnd()
-        pId = self._getCurrentPeriodId()
+    #def mkValueQuery(self):
+        #pStart, pEnd = self._getCurrentPeriodStartEnd()
+        #pId = self._getCurrentPeriodId()
         
-        dateWhere = ""
-        if self.ui.checkBox_useTillDate.isChecked():
-            date = self.ui.dateEdit_till.date().toPyDate()
-            dateWhere = " and lieferungen.datum <= '%s' " % (maxDate.isoformat(), )
+        #dateWhere = ""
+        #if self.ui.checkBox_useTillDate.isChecked():
+            #date = self.ui.dateEdit_till.date().toPyDate()
+            #dateWhere = " and lieferungen.datum <= '%s' " % (maxDate.isoformat(), )
         
-        query = """select artikel_bezeichnung, sum(anzahl*einkaufspreis)/sum(anzahl) 
-                from artikel_basis, lieferungen_details, lieferungen
-                where 1=1 
-                and lieferungen_details.lieferung_id = lieferungen.lieferung_id
-                and lieferungen_details.artikel_id = artikel_basis.artikel_id  
-                and lieferungen.datum between '{0}' and '{1}'
-                and artikel_basis.artikel_periode = {2}
-                {3}
-                group by artikel_bezeichnung"""
+        #query = """select artikel_bezeichnung, sum(anzahl*einkaufspreis)/sum(anzahl) 
+                #from artikel_basis, lieferungen_details, lieferungen
+                #where 1=1 
+                #and lieferungen_details.lieferung_id = lieferungen.lieferung_id
+                #and lieferungen_details.artikel_id = artikel_basis.artikel_id  
+                #and lieferungen.datum between '{0}' and '{1}'
+                #and artikel_basis.artikel_periode = {2}
+                #{3}
+                #group by artikel_bezeichnung"""
                 
-        query = query.format(pStart, pEnd, pId, dateWhere)
+        #query = query.format(pStart, pEnd, pId, dateWhere)
         
-        return query
+        #return query
