@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'ui/reports/gesamteLieferungenReport.ui'
 #
-# Created: Thu Jul 30 11:34:15 2015
-#      by: PyQt4 UI code generator 4.11.3
+# Created: Thu Aug 20 16:40:55 2015
+#      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -26,13 +26,18 @@ except AttributeError:
 class Ui_GesamteLieferungenReport(object):
     def setupUi(self, GesamteLieferungenReport):
         GesamteLieferungenReport.setObjectName(_fromUtf8("GesamteLieferungenReport"))
-        GesamteLieferungenReport.resize(400, 300)
+        GesamteLieferungenReport.resize(723, 436)
         self.gridLayout = QtGui.QGridLayout(GesamteLieferungenReport)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
         self.verticalLayout = QtGui.QVBoxLayout()
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
+        self.comboBox_what = QtGui.QComboBox(GesamteLieferungenReport)
+        self.comboBox_what.setObjectName(_fromUtf8("comboBox_what"))
+        self.comboBox_what.addItem(_fromUtf8(""))
+        self.comboBox_what.addItem(_fromUtf8(""))
+        self.horizontalLayout.addWidget(self.comboBox_what)
         self.comboBox_reportType = QtGui.QComboBox(GesamteLieferungenReport)
         self.comboBox_reportType.setObjectName(_fromUtf8("comboBox_reportType"))
         self.comboBox_reportType.addItem(_fromUtf8(""))
@@ -57,6 +62,8 @@ class Ui_GesamteLieferungenReport(object):
 
     def retranslateUi(self, GesamteLieferungenReport):
         GesamteLieferungenReport.setWindowTitle(_translate("GesamteLieferungenReport", "Report", None))
+        self.comboBox_what.setItemText(0, _translate("GesamteLieferungenReport", "Lieferungen", None))
+        self.comboBox_what.setItemText(1, _translate("GesamteLieferungenReport", "Verbräuche", None))
         self.comboBox_reportType.setItemText(0, _translate("GesamteLieferungenReport", "Jährlich", None))
         self.comboBox_reportType.setItemText(1, _translate("GesamteLieferungenReport", "Monatlich", None))
         self.pushButton_export.setText(_translate("GesamteLieferungenReport", "&Exportieren", None))
