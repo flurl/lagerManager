@@ -11,6 +11,7 @@ from ui.reports.aufwandDetailsProTag_gui import Ui_AufwandDetailsProTagReport
 
 class AufwandDetailsProTagReport(TextReport):
 	uiClass = Ui_AufwandDetailsProTagReport
+	ident = 'aufwandDetailsProTag'
 	
 	def __init__(self, parent=None):
 		TextReport.__init__(self, parent)

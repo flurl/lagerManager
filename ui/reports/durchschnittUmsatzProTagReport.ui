@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>VerbrauchTextuellReport</class>
- <widget class="QWidget" name="VerbrauchTextuellReport">
+ <class>DurchschnittUmsatzProTag</class>
+ <widget class="QWidget" name="DurchschnittUmsatzProTag">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Verbrauch</string>
+   <string>Durchnschnittlicher Umsatz pro Wochentag</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="1" column="0">
@@ -19,47 +19,9 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QCheckBox" name="checkBox_useTillDate">
+        <widget class="QCheckBox" name="checkBox_listHours">
          <property name="text">
-          <string>Daten berücksichtigen &amp;nur bis zum </string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QDateEdit" name="dateEdit_till">
-         <property name="calendarPopup">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="radioButton_all">
-         <property name="text">
-          <string>&amp;Alles</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="radioButton_umsatz">
-         <property name="text">
-          <string>nur &amp;Umsatz</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="radioButton_aufwand">
-         <property name="text">
-          <string>nur Auf&amp;wand</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="checkBox_showTableCode">
-         <property name="text">
-          <string>&amp;Tischbereiche anzeigen</string>
+          <string>&amp;Stunden auflisten</string>
          </property>
         </widget>
        </item>

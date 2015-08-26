@@ -10,6 +10,7 @@ from ui.reports.lagerstandTextuellReport_gui import Ui_LagerstandTextuellReport
 
 class LagerstandTextuellReport(InventurReport):
     uiClass = Ui_LagerstandTextuellReport
+    ident = 'LagerstandTextuell'
     
     def __init__(self, parent=None):
         InventurReport.__init__(self, parent)

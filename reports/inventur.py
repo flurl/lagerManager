@@ -9,6 +9,7 @@ from textReport import TextReport
 
 
 class InventurReport(TextReport):
+    ident = 'Inventur'
     
     def __init__(self, parent=None):
         TextReport.__init__(self, parent)

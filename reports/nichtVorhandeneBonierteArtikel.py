@@ -9,6 +9,7 @@ from textReport import TextReport
 
 
 class NichtVorhandeneBonierteArtikelReport(TextReport):
+    ident = 'NichtVorhandeneBonierteArtikel'
     
     def __init__(self, parent=None):
         TextReport.__init__(self, parent)

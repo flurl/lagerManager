@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/reports/verbrauchTextuellReport.ui'
 #
-# Created: Sat Sep  6 11:56:10 2014
+# Created: Thu Jul 30 18:55:34 2015
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -34,11 +34,9 @@ class Ui_VerbrauchTextuellReport(object):
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
         self.checkBox_useTillDate = QtGui.QCheckBox(VerbrauchTextuellReport)
-        self.checkBox_useTillDate.setEnabled(False)
         self.checkBox_useTillDate.setObjectName(_fromUtf8("checkBox_useTillDate"))
         self.horizontalLayout.addWidget(self.checkBox_useTillDate)
         self.dateEdit_till = QtGui.QDateEdit(VerbrauchTextuellReport)
-        self.dateEdit_till.setEnabled(False)
         self.dateEdit_till.setCalendarPopup(True)
         self.dateEdit_till.setObjectName(_fromUtf8("dateEdit_till"))
         self.horizontalLayout.addWidget(self.dateEdit_till)

@@ -12,6 +12,7 @@ from ui.reports.verbrauchTextuellReport_gui import Ui_VerbrauchTextuellReport
 
 class VerbrauchTextuellReport(TextReport):
     uiClass = Ui_VerbrauchTextuellReport
+    ident = 'VerbrauchTextuell'
     
     def __init__(self, parent=None):
         TextReport.__init__(self, parent)

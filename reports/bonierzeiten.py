@@ -9,27 +9,28 @@ from textReport import TextReport
 
 
 class Bonierzeiten(TextReport):
-	
-	def __init__(self, parent=None):
-		TextReport.__init__(self, parent)
-				
-		self.setHeader('Bonierzeiten')
-		self.setFooter('here could be a nice footer')
-		
-		self.updateData()
-		self.process()
-		
-	def updateData(self):
-		query =  self.mkQuery()
-		self.setData(query)
-		
-		
-	
-		
-	def mkQuery(self):
-		"""return the query"""
-		query = """
-				select checkpoint_id, checkpoint_info, detail_kellner, min(detail_bonier_datum), max(detail_bonier_datum), round(TIMESTAMPDIFF(SECOND,min(detail_bonier_datum),max(detail_bonier_datum))/3600, 2), round(sum(detail_absmenge*detail_preis), 2)
+    ident = 'Bonierzeiten'
+    
+    def __init__(self, parent=None):
+        TextReport.__init__(self, parent)
+                
+        self.setHeader('Bonierzeiten')
+        self.setFooter('here could be a nice footer')
+        
+        self.updateData()
+        self.process()
+        
+    def updateData(self):
+        query =  self.mkQuery()
+        self.setData(query)
+        
+        
+    
+        
+    def mkQuery(self):
+        """return the query"""
+        query = """
+                select checkpoint_id, checkpoint_info, detail_kellner, min(detail_bonier_datum), max(detail_bonier_datum), round(TIMESTAMPDIFF(SECOND,min(detail_bonier_datum),max(detail_bonier_datum))/3600, 2), round(sum(detail_absmenge*detail_preis), 2)
 from journal_details, journal_daten, journal_checkpoints
 where 1=1
 and daten_checkpoint_tag = checkpoint_id
@@ -40,7 +41,7 @@ and daten_periode = %s
 and checkpoint_periode = %s
 group by checkpoint_id, checkpoint_info, detail_kellner
 order by 1 desc, 3
-		""" % (self._getCurrentPeriodId(),self._getCurrentPeriodId(), self._getCurrentPeriodId())
-		
-		return query
-	
+        """ % (self._getCurrentPeriodId(),self._getCurrentPeriodId(), self._getCurrentPeriodId())
+        
+        return query
+    

@@ -36,12 +36,12 @@ class TextReport(ReportBase):
     uiClass = Ui_DefaultTextReport
 
     def __init__(self, parent):
-        ReportBase.__init__(self, parent)
-
         self._header = u''
         self._footer = u''
         self._tableHeaders = []
         self._repeatTableHeadersAfterBlankLine = False
+        
+        ReportBase.__init__(self, parent)
 
         self.setData([])
 
