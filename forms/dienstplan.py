@@ -497,9 +497,10 @@ class DienstplanForm(FormBase):
         duty['die_dinid'] = empId
         
         hours = duty.getWorkingHours()
+        pause = duty.getPauseHours()
         NAZ = duty.getNAZ()
         
-        if hours > (MINHOURSFORPAUSE - 0.01):
+        if pause > 0.01:
             if not wr['pauseCheckBox'].isChecked():
                 wr['pauseCheckBox'].setChecked(True)
                 modified = True
