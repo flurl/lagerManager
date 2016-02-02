@@ -9,3 +9,7 @@ class ReportBase(LMBase):
     @property
     def cfgKey(self):
         return 'report_' + self.ident
+    
+    def updatePeriod(self, p):
+        super(ReportBase, self).updatePeriod(p)
+        self.updateData()
