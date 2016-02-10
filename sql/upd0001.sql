@@ -1,3 +1,4 @@
+#V1022
 
 create table dir_typen (
 	dit_id int unsigned auto_increment primary key not null,

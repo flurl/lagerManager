@@ -6,45 +6,6 @@ create table perioden(
 	periode_ende datetime not null
 ) ENGINE=INNODB;
 
-CREATE TABLE journal_details(
-	detail_id int NOT NULL,
-	detail_journal int NOT NULL,
-	detail_absmenge int NOT NULL,
-	detail_istUmsatz bit NOT NULL,
-	detail_preis decimal(18, 3) NOT NULL,
-	detail_artikel_text varchar(50) NOT NULL,
-	detail_mwst decimal(18, 2) NOT NULL,
-	detail_bonier_datum datetime NOT NULL,
-	detail_gruppe varchar(255) NOT NULL,
-	detail_istRabatt bit NOT NULL,
-	detail_rabatt int NULL,
-	detail_kellner varchar(50) NULL,
-	detail_autoEintrag bit NOT NULL,
-	detail_ep decimal(18, 3) NULL,
-	detail_ep_mwst decimal(18, 2) NULL,
-	detail_bestellkarte int NULL,
-	detail_client varchar(50) NULL,
-	detail_preisgruppe varchar(50) NULL,
-	detail_vorgangsart int NULL,
-	detail_gutschein_log int NULL,
-	detail_periode int null,
-	index journal_details_artikel_text_idx (detail_artikel_text),
-	index journal_details_journal_idx (detail_journal),
-	foreign key journal_details_periode_fk (detail_periode) references perioden(periode_id)
-) ENGINE=INNODB;
-
-CREATE TABLE journal_daten(
-	daten_rechnung_id int NOT NULL,
-	daten_checkpoint_tag int NOT NULL,
-	daten_checkpoint_monat int NULL,
-	daten_checkpoint_jahr int NULL,
-	daten_checkpoint_kellner int NULL,
-	daten_periode int null,
-	index journal_daten_rechnung_idx (daten_rechnung_id),
-	index journal_daten_tag_idx (daten_checkpoint_tag),
-	foreign key journal_daten_periode_fk (daten_periode) references perioden(periode_id)
-) ENGINE=INNODB;
-
 
 CREATE TABLE journal_checkpoints(
 	checkpoint_id int NOT NULL,
@@ -56,39 +17,113 @@ CREATE TABLE journal_checkpoints(
 	checkpoint_kassenbuch_verarbeitet bit NOT NULL,
 	checkpoint_periode int not null,
 	index journal_checkpoints_idx (checkpoint_id),
-	index journal_checkpoints_periode_idx (checkpoint_periode),
 	foreign key journal_checkpoints_periode_fk (checkpoint_periode) references perioden(periode_id)
 ) ENGINE=INNODB;
 
 
+CREATE TABLE tische_aktiv(
+    tisch_id int NOT NULL,
+    tisch_bereich int NOT NULL,
+    tisch_pri_nummer int NOT NULL,
+    tisch_sek_nummer int NOT NULL,
+    tisch_gast int NULL,
+    tisch_dt_erstellung datetime NOT NULL,
+    tisch_dt_aktivitaet datetime NOT NULL,
+    tisch_kellner int NOT NULL,
+    tisch_fertig bit NOT NULL,
+    tisch_zahlungsart int NULL,
+    tisch_rechnung int NULL,
+    tisch_dt_zusatz datetime NULL,
+    tisch_adresse int NULL,
+    tisch_kellner_abrechnung int NULL,
+    tisch_client nvarchar(50) NULL,
+    tisch_reservierung int NULL,
+    tisch_reservierung_check bit NOT NULL,
+    tisch_zusatz_text text NULL,
+    checkpoint_tag int NULL,
+    checkpoint_monat int NULL,
+    checkpoint_jahr int NULL,
+    tisch_periode int not null,
+    index tische_aktiv_idx (tisch_id),
+    foreign key tische_aktiv_periode_fk (tisch_periode) references perioden(periode_id)
+) ENGINE=INNODB;
+
+
+CREATE TABLE tische_bons(
+    tisch_bon_id int NOT NULL,
+    tisch_bon_dt_erstellung datetime NOT NULL,
+    tisch_bon_tisch int NOT NULL,
+    tisch_bon_kellner int NOT NULL,
+    tisch_bon_client varchar(50) NOT NULL,
+    tisch_bon_typ int NOT NULL,
+    tisch_bon_bestellkarte int NULL,
+    tisch_bon_vorgangsart int NULL,
+    tisch_bon_periode int not null,
+    index tische_bons_idx (tisch_bon_id),
+    foreign key tische_bons_periode_fk (tisch_bon_periode) references perioden(periode_id)
+) ENGINE=INNODB;
+
+
+CREATE TABLE tische_bondetails(
+    tisch_bondetail_id int NOT NULL,
+    tisch_bondetail_bon int NOT NULL,
+    tisch_bondetail_master_id int NULL,
+    tisch_bondetail_menge int NOT NULL,
+    tisch_bondetail_absmenge int NOT NULL,
+    tisch_bondetail_istUmsatz bit NOT NULL,
+    tisch_bondetail_artikel int NOT NULL,
+    tisch_bondetail_preis decimal(18, 3) NOT NULL,
+    tisch_bondetail_text varchar(50) NOT NULL,
+    tisch_bondetail_mwst int NOT NULL,
+    tisch_bondetail_gangfolge int NOT NULL,
+    tisch_bondetail_hatRabatt bit NOT NULL,
+    tisch_bondetail_istRabatt bit NOT NULL,
+    tisch_bondetail_autoEintrag bit NOT NULL,
+    tisch_bondetail_stornoFaehig bit NOT NULL,
+    tisch_bondetail_ep decimal(18, 2) NULL,
+    tisch_bondetail_ep_mwst int NULL,
+    tisch_bondetail_preisgruppe int NULL,
+    tisch_bondetail_gutschein_log int NULL,
+    journal_preisgruppe nvarchar(50) NULL,
+    journal_gruppe nvarchar(2000) NULL,
+    journal_mwst decimal(18, 3) NULL,
+    tisch_bondetail_periode int not null,
+    index tische_bondetails_idx (tisch_bondetail_id),
+    foreign key tische_bondetails_periode_fk (tisch_bondetail_periode) references perioden(periode_id)
+) ENGINE=INNODB;
+
+
 CREATE TABLE rechnungen_basis(
-	rechnung_id int NOT NULL,
-	rechnung_typ int NOT NULL,
-	rechnung_nr int NOT NULL,
-	rechnung_dt_erstellung datetime NOT NULL,
-	rechnung_kellnerKurzName varchar(50) NOT NULL,
-	rechnung_tischCode varchar(50) NOT NULL,
-	rechnung_tischBereich varchar(50) NOT NULL,
-	rechnung_adresse int NULL,
-	rechnung_istStorno bit NOT NULL,
-	rechnung_retour decimal(18, 2) NULL,
-	rechnung_dt_zusatz datetime NULL,
-	rechnung_periode int not null,
+    rechnung_id int NOT NULL,
+    rechnung_typ int NOT NULL,
+    rechnung_nr int NOT NULL,
+    rechnung_dt_erstellung datetime NOT NULL,
+    rechnung_kellnerKurzName varchar(50) NOT NULL,
+    rechnung_tischCode varchar(50) NOT NULL,
+    rechnung_tischBereich varchar(50) NOT NULL,
+    rechnung_adresse int NULL,
+    rechnung_istStorno bit NOT NULL,
+    rechnung_retour decimal(18, 2) NULL,
+    rechnung_dt_zusatz datetime NULL,
+    checkpoint_tag int NULL,
+    checkpoint_monat int NULL,
+    checkpoint_jahr int NULL,
+    rechnung_periode int not null,
 	index rechnungen_basis_idx (rechnung_id),
 	foreign key rechnungen_basis_periode_fk (rechnung_periode) references perioden(periode_id)
 ) ENGINE=INNODB;
 
 CREATE TABLE artikel_zutaten(
 	zutate_master_artikel int NOT NULL,
-	zutate_artikel int NOT NULL,
-	zutate_menge float NOT NULL,
-	zutate_istFixiert int NOT NULL,
-	zutate_istZutat int NOT NULL,
-	zutate_istRezept int NOT NULL,
-	zutate_immerAnzeigen int NOT NULL,
-	zutate_istZwangsAbfrage int NOT NULL,
-	zutate_preisVerwenden int NOT NULL,
-	zutate_periode int null,
+    zutate_artikel int NOT NULL,
+    zutate_menge float NOT NULL,
+    zutate_istFixiert bit NOT NULL,
+    zutate_istZutat bit NOT NULL,
+    zutate_istRezept bit NOT NULL,
+    zutate_immerAnzeigen bit NOT NULL,
+    zutate_istZwangsAbfrage bit NOT NULL,
+    zutate_preisVerwenden bit NOT NULL,
+	zutate_periode int not null,
 	index (zutate_master_artikel),
 	index (zutate_artikel),
 	foreign key artikel_zutaten_periode_fk (zutate_periode) references perioden(periode_id)
@@ -175,7 +210,7 @@ create table lagerstand(
 	foreign key lagerstand_artikel_fk (artikel_id) references artikel_basis(artikel_id),
 	foreign key lagerstand_periode_fk (periode_id) references perioden(periode_id)
 ) ENGINE=INNODB;
-detail_preis decimal(18, 3) NOT NULL,
+
 
 create table dokumenttypen (
 	dot_id integer unsigned auto_increment primary key not null,
@@ -202,7 +237,7 @@ create table lieferungen(
 
 create table lieferungen_details(
 	lieferung_detail_id integer auto_increment primary key not null,
-	lieferung_id int not null,
+	lieferung_id int unsigned not null,
 	artikel_id int not null,
 	anzahl float not null,
 	einkaufspreis float not null,
@@ -219,7 +254,7 @@ create table dokumente (
 	dok_ocr MEDIUMTEXT null,
 	dok_data longblob not null,
 	dok_datum datetime not null,
-	dok_lieferung_id integer null,
+	dok_lieferung_id integer unsigned null,
 	foreign key dokumente_dokumenttyp_fk (dok_dotid) references dokumenttypen(dot_id),
 	foreign key dokumente_lieferung_fk (dok_lieferung_id) references lieferungen(lieferung_id)
 ) ENGINE=INNODB;
@@ -339,75 +374,16 @@ create table config (
 
 
 
-
-
-alter table journal_details add index journal_details_artikel_text_idx (detail_artikel_text);
-alter table journal_details add index journal_details_journal_idx (detail_journal);
-alter table journal_daten add index journal_daten_rechnung_idx (daten_rechnung_id);
-alter table journal_daten add index journal_daten_tag_idx (daten_checkpoint_tag);
-alter table journal_checkpoints add index journal_checkpoints_id_idx (checkpoint_id);
-
-
---20120831
-alter table journal_details add column detail_periode int null;
-alter table journal_details add foreign key journal_details_periode_fk (detail_periode) references perioden(periode_id);
-update journal_details set detail_periode = 1;
-
-alter table journal_daten add column daten_periode int null;
-alter table journal_daten add foreign key journal_daten_periode_fk (daten_periode) references perioden(periode_id);
-update journal_daten set daten_periode = 1;
-
-alter table journal_checkpoints add column checkpoint_periode int null;
-alter table journal_checkpoints add foreign key journal_checkpoints_periode_fk (checkpoint_periode) references perioden(periode_id);
-update journal_checkpoints set checkpoint_periode = 1;
-
-
-
 --20120927
-alter table lieferungen add column lie_dokid int unsigned null;
-alter table lieferungen add foreign key lieferung_dokument_fk (lie_dokid) references dokumente(dok_id);
 insert into dokumenttypen (dot_bezeichnung) values ('Eingangsrechnung');
-
-
---20120928
-alter table dokumente add dok_datum datetime not null;
-alter table dokumente modify dok_data longblob not null;
-
---20121006
-alter table dokumente modify dok_ocr MEDIUMTEXT null;
-
---20121016
-alter table lieferungen_details drop foreign key lieferungen_details_ibfk_2;
-
---20121119
-alter table lieferungen add column lie_ist_verbrauch tinyint(1) not null default 0;
-alter table lieferanten add column lft_ist_verbraucher tinyint(1) not null default 0;
-
---20130222
-alter table lieferungen add column lie_kommentar MEDIUMTEXT null;
-
---20130513
-alter table dokumente add column dok_lieferung_id integer null;
-alter table dokumente add foreign key dokumente_lieferung_fk (dok_lieferung_id) references lieferungen(lieferung_id);
-update dokumente set dok_lieferung_id = (select lieferung_id from lieferungen where lie_dokid = dok_id);
-alter table lieferungen drop foreign key lieferungen_ibfk_2;
-alter table lieferungen drop column lie_dokid;
 
 --20131706
 alter table journal_checkpoints ENGINE=INNODB;
 
---20130708
-alter table lieferungen add lie_summe float not null;
-update lieferungen set lie_summe = (select sum(anzahl*einkaufspreis) from lieferungen_details where lieferungen_details.lieferung_id = lieferungen.lieferung_id);
-alter table lieferungen_details add lde_stsid int unsigned not null;
-update lieferungen_details set lde_stsid = 1;
-alter table lieferungen_details add foreign key lieferung_detail_steuersatz_fk (lde_stsid) references steuersaetze(sts_id);
-
-
 
 --20130719
 --this update has to be made on the wiffzack database
-update artikel_basis
+/*update artikel_basis
 set artikel_ep = 
 (select (artikel_preise_preis/3)/(1+mwst_satz/100) from artikel_preise, meta_preisgruppen, meta_mwstgruppen
 where artikel_preise_artikel_id = artikel_id 
@@ -418,23 +394,13 @@ artikel_ep_mwst =
 (select artikel_preise_mwst from artikel_preise, meta_preisgruppen 
 where artikel_preise_artikel_id = artikel_id 
 and  artikel_preise_preisgruppe_id = preisgruppe_id 
-and preisgruppe_name = 'Normalpreis')
-
-
---20130823
-alter table beschaeftigungsbereiche add column beb_trinkgeldpauschale bool not null default 0;
-
-
---20130828
-alter table dienstnehmer add din_nummer varchar(255) not null;
-update dienstnehmer set din_nummer = din_id;
-alter table dienstnehmer add unique key (din_nummer);
+and preisgruppe_name = 'Normalpreis')*/
 
 
 
 --20130901
-insert into config (cfg_key, cfg_valueI) values ('considerNAZ', 1);
+--insert into config (cfg_key, cfg_valueI) values ('considerNAZ', 1);
 
 --20150224
-insert into config (cfg_key, cfg_valueF) values ('trinkgeldpauschale', 0.2725);
-insert into config (cfg_key, cfg_valueF) values ('nachtarbeitszuschlag', 20.7);
+--insert into config (cfg_key, cfg_valueF) values ('trinkgeldpauschale', 0.2725);
+--insert into config (cfg_key, cfg_valueF) values ('nachtarbeitszuschlag', 20.7);

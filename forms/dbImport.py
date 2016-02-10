@@ -83,136 +83,65 @@ class ImportForm(FormBase):
 			query.exec_()
 			if query.lastError().isValid():
 				print 'Error in query:', query.lastError().text()
-				
-			query.prepare('select ifnull(max(checkpoint_id), 0) from journal_checkpoints where checkpoint_periode = ?')
-			query.addBindValue(periodId)
-			query.exec_()
-			if query.lastError().isValid():
-					print 'Error in query:', query.lastError().text()
-			query.next()
-			id_ = query.value(0).toInt()[0]
 			
-			"""if id_ == 0 and not checkpointId:
-				q = "select ifnull(max(checkpoint_id), 0) from journal_checkpoints where checkpoint_typ = 3"
-				res = self.runQuery(q, db=s)
-				id_ = res[0][0]"""
-			
-			if checkpointId is None:
-				q = "select * from journal_checkpoints where checkpoint_id > %s order by checkpoint_id" % (id_, )
-			else:
-				q = "select * from journal_checkpoints where checkpoint_id > %s and checkpoint_id <= %s order by checkpoint_id" % (id_, checkpointId)
+			q = "select * from journal_checkpoints order by checkpoint_id"
 			print q
 			res = self.runQuery(q, db=s)
 			
 			for row in res:
 				query.prepare("""insert into journal_checkpoints
-						(checkpoint_id, checkpoint_typ, checkpoint_datum, checkpoint_anmerkung, checkpoint_info, checkpoint_num, checkpoint_periode)
+						(checkpoint_id, checkpoint_typ, checkpoint_datum, checkpoint_anmerkung, checkpoint_info, checkpoint_num, checkpoint_kassenbuch_verarbeitet, checkpoint_periode)
 						values
-						(?, ?, ?, ?, ?, ?, ?)""") 
+						(?, ?, ?, ?, ?, ?, ?, ?)""") 
 				query.bindValue(0, row[0])
 				query.bindValue(1, row[1])
 				query.bindValue(2, row[2])
 				query.bindValue(3, row[3])
 				query.bindValue(4, row[4])
 				query.bindValue(5, row[5])
-				query.bindValue(6, periodId)
+				query.bindValue(6, row[6])
+				query.bindValue(7, periodId)
 				query.exec_()
 				if query.lastError().isValid():
 					print 'Error in query:', query.lastError().text()
 				
 
 			##################
-			#journal_daten
+			#tische_aktiv
 			##################
-			print 'importing journal daten'
+			print 'importing tische_aktiv'
 			
 			query = QtSql.QSqlQuery()
 		
 			print 'deleting'
 			query = QtSql.QSqlQuery()
-			query.prepare('delete from journal_daten where daten_periode = ?')
+			query.prepare('delete from tische_aktiv where tisch_periode = ?')
 			query.addBindValue(periodId)
 			query.exec_()
 			if query.lastError().isValid():
 				print 'Error in query:', query.lastError().text()
-				
-			query.prepare('select ifnull(max(daten_rechnung_id), 0) from journal_daten where daten_periode = ?')
-			query.addBindValue(periodId)
-			query.exec_()
-			if query.lastError().isValid():
-					print 'Error in query:', query.lastError().text()
-			query.next()
-			id_ = query.value(0).toInt()[0]
 			
 			s = self.connectToSource()
-			if checkpointId is None:
-				q = "select * from journal_daten where daten_rechnung_id > %s order by daten_rechnung_id" % (id_, )
-			else:
-				q = "select * from journal_daten where daten_rechnung_id > %s and daten_checkpoint_jahr = %s order by daten_rechnung_id" % (id_, checkpointId)
+			q = "select * from tische_aktiv order by tisch_id"
 			res = self.runQuery(q, db=s)
 			
 			for row in res:
-				query.prepare("""insert into journal_daten
-						(daten_rechnung_id, daten_checkpoint_tag, daten_checkpoint_monat, daten_checkpoint_jahr, daten_checkpoint_kellner, daten_periode)
+				query.prepare("""insert into tische_aktiv
+						(tisch_id, tisch_bereich, tisch_pri_nummer, tisch_sek_nummer, tisch_gast,
+						tisch_dt_erstellung, tisch_dt_aktivitaet, tisch_kellner, tisch_fertig,
+						tisch_zahlungsart, tisch_rechnung, tisch_dt_zusatz, tisch_adresse, tisch_kellner_abrechnung,
+						tisch_client, tisch_reservierung, tisch_reservierung_check, tisch_zusatz_text,
+						checkpoint_tag, checkpoint_monat, checkpoint_jahr, tisch_periode)
 						values
-						(?, ?, ?, ?, ?, ?)""")
+						(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""")
 				query.bindValue(0, row[0])
 				query.bindValue(1, row[1])
 				query.bindValue(2, row[2])
 				query.bindValue(3, row[3])
 				query.bindValue(4, row[4])
-				query.bindValue(5, periodId)
-				query.exec_()
-				if query.lastError().isValid():
-					print 'Error in query:', query.lastError().text()
-				
-				
-			##################
-			#journal_details
-			##################
-			print 'importing journal details'
-			
-			query = QtSql.QSqlQuery()
-		
-			print 'deleting'
-			query.prepare('delete from journal_details where detail_periode = ?')
-			query.addBindValue(periodId)
-			query.exec_()
-			if query.lastError().isValid():
-				print 'Error in query:', query.lastError().text()
-			
-			query.prepare('select ifnull(max(detail_id), 0) from journal_details where detail_periode = ?')
-			query.addBindValue(periodId)
-			query.exec_()
-			if query.lastError().isValid():
-					print 'Error in query:', query.lastError().text()
-			query.next()
-			id_ = query.value(0).toInt()[0]
-			
-			s = self.connectToSource()
-			if checkpointId is None:
-				q = "select * from journal_details where detail_id > %s order by detail_id" %(id_, )
-			else:
-				q = """select * from journal_details, journal_daten 
-						where 1=1
-						and detail_id > %s 
-						and daten_rechnung_id = detail_journal
-						and daten_checkpoint_jahr = %s
-						order by detail_id""" %(id_, checkpointId)
-			res = self.runQuery(q, db=s)
-			
-			for row in res:
-				query.prepare("""insert into journal_details (detail_id, detail_journal, detail_absmenge, detail_istUmsatz, detail_preis, detail_artikel_text, detail_mwst, detail_bonier_datum, detail_gruppe, detail_istRabatt, detail_rabatt, detail_kellner, detail_autoEintrag, detail_ep, detail_ep_mwst, detail_periode)
-						values
-						(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""")
-				query.bindValue(0, row[0])
-				query.bindValue(1, row[1])
-				query.bindValue(2, row[2])
-				query.bindValue(3, row[3])
-				query.bindValue(4, float(row[4]))
 				query.bindValue(5, row[5])
-				query.bindValue(6, float(row[6]))
-				query.bindValue(7, str(row[7]))
+				query.bindValue(6, row[6])
+				query.bindValue(7, row[7])
 				query.bindValue(8, row[8])
 				query.bindValue(9, row[9])
 				query.bindValue(10, row[10])
@@ -220,10 +149,113 @@ class ImportForm(FormBase):
 				query.bindValue(12, row[12])
 				query.bindValue(13, row[13])
 				query.bindValue(14, row[14])
-				query.bindValue(15, periodId)
+				query.bindValue(15, row[15])
+				query.bindValue(16, row[16])
+				query.bindValue(17, row[17])
+				query.bindValue(18, row[18])
+				query.bindValue(19, row[19])
+				query.bindValue(20, row[20])
+				query.bindValue(21, periodId)
 				query.exec_()
 				if query.lastError().isValid():
 					print 'Error in query:', query.lastError().text()
+				
+				
+			##################
+			#tische_bons
+			##################
+			print 'importing tische_bons'
+			
+			query = QtSql.QSqlQuery()
+		
+			print 'deleting'
+			query.prepare('delete from tische_bons where tisch_bon_periode = ?')
+			query.addBindValue(periodId)
+			query.exec_()
+			if query.lastError().isValid():
+				print 'Error in query:', query.lastError().text()
+			
+			s = self.connectToSource()
+			q = "select * from tische_bons order by tisch_bon_id"
+			res = self.runQuery(q, db=s)
+			
+			for row in res:
+				query.prepare("""insert into tische_bons 
+								(tisch_bon_id, tisch_bon_dt_erstellung, tisch_bon_tisch, tisch_bon_kellner,
+								tisch_bon_client, tisch_bon_typ, tisch_bon_bestellkarte, tisch_bon_vorgangsart,
+								tisch_bon_periode)
+								values
+								(?, ?, ?, ?, ?, ?, ?, ?, ?)""")
+				query.bindValue(0, row[0])
+				query.bindValue(1, row[1])
+				query.bindValue(2, row[2])
+				query.bindValue(3, row[3])
+				query.bindValue(4, row[4])
+				query.bindValue(5, row[5])
+				query.bindValue(6, row[6])
+				query.bindValue(7, row[7])
+				query.bindValue(8, periodId)
+				query.exec_()
+				if query.lastError().isValid():
+					print 'Error in query:', query.lastError().text()
+					
+					
+					
+			##################
+			#tische_bondetails
+			##################
+			print 'importing tische_bondetails'
+			
+			query = QtSql.QSqlQuery()
+		
+			print 'deleting'
+			query.prepare('delete from tische_bondetails where tisch_bondetail_periode = ?')
+			query.addBindValue(periodId)
+			query.exec_()
+			if query.lastError().isValid():
+				print 'Error in query:', query.lastError().text()
+			
+			s = self.connectToSource()
+			q = "select * from tische_bondetails order by tisch_bondetail_id"
+			res = self.runQuery(q, db=s)
+			
+			for row in res:
+				query.prepare("""insert into tische_bondetails 
+								(tisch_bondetail_id, tisch_bondetail_bon, tisch_bondetail_master_id, tisch_bondetail_menge,
+								tisch_bondetail_absmenge, tisch_bondetail_istUmsatz, tisch_bondetail_artikel, tisch_bondetail_preis,
+								tisch_bondetail_text, tisch_bondetail_mwst, tisch_bondetail_gangfolge, tisch_bondetail_hatRabatt,
+								tisch_bondetail_istRabatt, tisch_bondetail_autoEintrag, tisch_bondetail_stornoFaehig, tisch_bondetail_ep,
+								tisch_bondetail_ep_mwst, tisch_bondetail_preisgruppe, tisch_bondetail_gutschein_log, journal_preisgruppe,
+								journal_gruppe, journal_mwst, tisch_bondetail_periode)
+								values
+								(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""")
+				query.bindValue(0, row[0])
+				query.bindValue(1, row[1])
+				query.bindValue(2, row[2])
+				query.bindValue(3, row[3])
+				query.bindValue(4, row[4])
+				query.bindValue(5, row[5])
+				query.bindValue(6, row[6])
+				query.bindValue(7, row[7])
+				query.bindValue(8, row[8])
+				query.bindValue(9, row[9])
+				query.bindValue(10, row[10])
+				query.bindValue(11, row[11])
+				query.bindValue(12, row[12])
+				query.bindValue(13, row[13])
+				query.bindValue(14, row[14])
+				query.bindValue(15, row[15])
+				query.bindValue(16, row[16])
+				query.bindValue(17, row[17])
+				query.bindValue(18, row[18])
+				query.bindValue(19, row[19])
+				query.bindValue(20, row[20])
+				query.bindValue(21, row[21])
+				query.bindValue(22, periodId)
+				query.exec_()
+				if query.lastError().isValid():
+					print 'Error in query:', query.lastError().text()
+					
 					
 					
 			##################
@@ -240,30 +272,14 @@ class ImportForm(FormBase):
 			if query.lastError().isValid():
 				print 'Error in query:', query.lastError().text()
 			
-			query.prepare('select ifnull(max(rechnung_id), 0) from rechnungen_basis where rechnung_periode = ?')
-			query.addBindValue(periodId)
-			query.exec_()
-			if query.lastError().isValid():
-					print 'Error in query:', query.lastError().text()
-			query.next()
-			id_ = query.value(0).toInt()[0]
-			
 			s = self.connectToSource()
-			if checkpointId is None:
-				q = "select * from rechnungen_basis where rechnung_id > %s order by rechnung_id" %(id_, )
-			else:
-				q = """select * from rechnungen_basis, journal_daten 
-						where 1=1
-						and rechnung_id > %s 
-						and daten_rechnung_id = rechnung_id
-						and daten_checkpoint_jahr = %s
-						order by rechnung_id""" %(id_, checkpointId)
+			q = "select * from rechnungen_basis order by rechnung_id"
 			res = self.runQuery(q, db=s)
 			
 			for row in res:
-				query.prepare("""insert into rechnungen_basis (rechnung_id, rechnung_typ, rechnung_nr, rechnung_dt_erstellung, rechnung_kellnerKurzName, rechnung_tischCode, rechnung_tischBereich, rechnung_adresse, rechnung_istStorno, rechnung_retour, rechnung_dt_zusatz, rechnung_periode)
+				query.prepare("""insert into rechnungen_basis (rechnung_id, rechnung_typ, rechnung_nr, rechnung_dt_erstellung, rechnung_kellnerKurzName, rechnung_tischCode, rechnung_tischBereich, rechnung_adresse, rechnung_istStorno, rechnung_retour, rechnung_dt_zusatz, checkpoint_tag, checkpoint_monat, checkpoint_jahr, rechnung_periode)
 						values
-						(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""")
+						(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""")
 				query.addBindValue(row[0])
 				query.addBindValue(row[1])
 				query.addBindValue(row[2])
@@ -275,6 +291,9 @@ class ImportForm(FormBase):
 				query.addBindValue(row[8])
 				query.addBindValue(row[9])
 				query.addBindValue(row[10])
+				query.addBindValue(row[11])
+				query.addBindValue(row[12])
+				query.addBindValue(row[13])
 				query.addBindValue(periodId)
 				query.exec_()
 				if query.lastError().isValid():
@@ -296,17 +315,9 @@ class ImportForm(FormBase):
 			if query.lastError().isValid():
 				print 'Error in query:', query.lastError().text()
 			
-			query.prepare('select ifnull(max(artikel_id), 0) from artikel_basis where artikel_periode = ?')
-			query.addBindValue(periodId)
-			query.exec_()
-			if query.lastError().isValid():
-					print 'Error in query:', query.lastError().text()
-			query.next()
-			id_ = query.value(0).toInt()[0]
-			
 			s = self.connectToSource()
 			q = """select artikel_id, artikel_bezeichnung, artikel_gruppe, isnull(artikel_ep, 0.0), artikel_ep_mwst, artikel_preis_popup, artikel_ep_preis_popup, artikel_bemerkung, artikel_bezeichnung_2
-						from artikel_basis where artikel_id > %s""" % (id_, )
+						from artikel_basis"""
 			res = self.runQuery(q, db=s)
 			
 			for row in res:
