@@ -30,18 +30,22 @@ class Bonierzeiten(TextReport):
     def mkQuery(self):
         """return the query"""
         query = """
-                select checkpoint_id, checkpoint_info, detail_kellner, min(detail_bonier_datum), max(detail_bonier_datum), round(TIMESTAMPDIFF(SECOND,min(detail_bonier_datum),max(detail_bonier_datum))/3600, 2), round(sum(detail_absmenge*detail_preis), 2)
-from journal_details, journal_daten, journal_checkpoints
+                select checkpoint_id, checkpoint_info, kellner_kurzName, min(tisch_bon_dt_erstellung), max(tisch_bon_dt_erstellung), round(TIMESTAMPDIFF(SECOND,min(tisch_bon_dt_erstellung),max(tisch_bon_dt_erstellung))/3600, 2), round(sum(tisch_bondetail_absmenge*tisch_bondetail_preis), 2)
+from journal_checkpoints, tische_aktiv, tische_bons, tische_bondetails, kellner_basis
 where 1=1
-and daten_checkpoint_tag = checkpoint_id
-and detail_journal = daten_rechnung_id
-and detail_istUmsatz = 1
-and detail_periode = %s
-and daten_periode = %s
-and checkpoint_periode = %s
-group by checkpoint_id, checkpoint_info, detail_kellner
+and checkpoint_tag = checkpoint_id
+and tisch_bon_tisch = tisch_id
+and tisch_bon_kellner = kellner_id
+and tisch_bondetail_bon = tisch_bon_id
+and tisch_bondetail_istUmsatz = 1
+and tisch_bondetail_periode = %(period_id)s
+and tisch_bon_periode = %(period_id)s
+and tisch_periode = %(period_id)s
+and checkpoint_periode = %(period_id)s
+and kellner_periode = %(period_id)s
+group by checkpoint_id, checkpoint_info, kellner_kurzName
 order by 1 desc, 3
-        """ % (self._getCurrentPeriodId(),self._getCurrentPeriodId(), self._getCurrentPeriodId())
-        
+        """ % {'period_id': self._getCurrentPeriodId()}
+        #print query
         return query
     

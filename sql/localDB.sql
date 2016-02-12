@@ -200,6 +200,23 @@ CREATE TABLE meta_mwstgruppen (
 ) ENGINE=INNODB;
 
 
+CREATE TABLE kellner_basis(
+	kellner_id int NOT NULL,
+	kellner_kurzName varchar(50) NOT NULL,
+	kellner_uid int NOT NULL,
+	kellner_person int NOT NULL,
+	kellner_lager int NULL,
+	kellner_schnellTisch_bereich int NULL,
+	kellner_schnellTisch_pri_nummer int NULL,
+	kellner_schnellTisch_sek_nummer int NULL,
+	kellner_zeigeAuswahl bit NOT NULL,
+	kellner_kasse int NULL,
+	kellner_periode int not null,
+	index (kellner_id),
+	foreign key kellner_basis_periode_fk (kellner_periode) references perioden(periode_id)
+) ENGINE=INNODB;
+
+
 
 
 create table lagerstand(

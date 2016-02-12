@@ -139,8 +139,8 @@ class ImportForm(FormBase):
 				query.bindValue(2, row[2])
 				query.bindValue(3, row[3])
 				query.bindValue(4, row[4])
-				query.bindValue(5, row[5])
-				query.bindValue(6, row[6])
+				query.bindValue(5, str(row[5]))
+				query.bindValue(6, str(row[6]))
 				query.bindValue(7, row[7])
 				query.bindValue(8, row[8])
 				query.bindValue(9, row[9])
@@ -187,7 +187,7 @@ class ImportForm(FormBase):
 								values
 								(?, ?, ?, ?, ?, ?, ?, ?, ?)""")
 				query.bindValue(0, row[0])
-				query.bindValue(1, row[1])
+				query.bindValue(1, str(row[1]))
 				query.bindValue(2, row[2])
 				query.bindValue(3, row[3])
 				query.bindValue(4, row[4])
@@ -236,7 +236,7 @@ class ImportForm(FormBase):
 				query.bindValue(4, row[4])
 				query.bindValue(5, row[5])
 				query.bindValue(6, row[6])
-				query.bindValue(7, row[7])
+				query.bindValue(7, float(row[7]))
 				query.bindValue(8, row[8])
 				query.bindValue(9, row[9])
 				query.bindValue(10, row[10])
@@ -501,6 +501,47 @@ class ImportForm(FormBase):
 				query.addBindValue(row[0])
 				query.addBindValue(float(row[1]))
 				query.addBindValue(row[2])
+				query.addBindValue(periodId)
+				query.exec_()
+				if query.lastError().isValid():
+					print 'Error in query:', query.lastError().text()
+					
+					
+					
+			##################
+			#kellner_basis
+			##################
+			print 'importing kellner_basis'
+			
+			query = QtSql.QSqlQuery()
+			print 'deleting'
+			query.prepare('delete from kellner_basis where kellner_periode = ?')
+			query.addBindValue(periodId)
+			query.exec_()
+			if query.lastError().isValid():
+					print 'Error in query:', query.lastError().text()
+			
+			s = self.connectToSource()
+			q = """select * from kellner_basis
+						where 1=1"""
+			res = self.runQuery(q, db=s)
+			
+			for row in res:
+				query.prepare("""insert into kellner_basis (
+								kellner_id,	kellner_kurzName, kellner_uid, kellner_person, kellner_lager, kellner_schnellTisch_bereich,
+								kellner_schnellTisch_pri_nummer, kellner_schnellTisch_sek_nummer, kellner_zeigeAuswahl, kellner_kasse,
+								kellner_periode) 
+								values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""")
+				query.addBindValue(row[0])
+				query.addBindValue(row[1])
+				query.addBindValue(row[2])
+				query.addBindValue(row[3])
+				query.addBindValue(row[4])
+				query.addBindValue(row[5])
+				query.addBindValue(row[6])
+				query.addBindValue(row[7])
+				query.addBindValue(row[8])
+				query.addBindValue(row[9])
 				query.addBindValue(periodId)
 				query.exec_()
 				if query.lastError().isValid():
