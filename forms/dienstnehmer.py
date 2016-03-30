@@ -110,8 +110,8 @@ class DienstnehmerForm(FormBase):
 		minGehId = query.value(0).toInt()[0]
 		
 		rec = self.model.record()
-		rec.setValue(1, '')
-		rec.setValue(2, 0.0)
+		rec.setValue(self.model.fieldIndex('din_name'), '')
+		rec.setValue(self.model.fieldIndex('din_gehalt'), 0.0)
 		rec.setValue(self.model.fieldIndex('beb_bezeichnung'), QtCore.QVariant(minBebId))
 		rec.setValue(self.model.fieldIndex('din_stundensatz'), 0.0)
 		rec.setValue(self.model.fieldIndex('din_nummer'), -1)
