@@ -82,6 +82,9 @@ class MainWindow(QtGui.QMainWindow):
         self.connect(self.ui.action_Report_Umsaetze_VerkaufteArtikel,
                     QtCore.SIGNAL('triggered()'),
                     lambda: self.openWindow('reports.verkaufteArtikel.VerkaufteArtikelReport'))
+        self.connect(self.ui.action_Report_Umsaetze_RechnungenStatistik,
+                    QtCore.SIGNAL('triggered()'),
+                    lambda: self.openWindow('reports.rechnungenStatistik.RechnungenStatistikReport'))
         self.connect(self.ui.action_Report_Einkauf_GesamteLieferungen,
                     QtCore.SIGNAL('triggered()'),
                     lambda: self.openWindow('reports.gesamteLieferungen.GesamteLieferungenReport'))

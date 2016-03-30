@@ -26,7 +26,7 @@
      <x>0</x>
      <y>0</y>
      <width>1047</width>
-     <height>25</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -78,6 +78,7 @@
      <addaction name="action_Report_Umsaetze_AufwanddetailsProTag"/>
      <addaction name="action_Report_Umsaetze_DurchschUmsatzWochentag"/>
      <addaction name="action_Report_Umsaetze_VerkaufteArtikel"/>
+     <addaction name="action_Report_Umsaetze_RechnungenStatistik"/>
     </widget>
     <widget class="QMenu" name="menu_Artikel">
      <property name="title">
@@ -351,6 +352,11 @@
   <action name="action_Report_Artikel_NichtVorhandene">
    <property name="text">
     <string>Nicht &amp;vorhandene</string>
+   </property>
+  </action>
+  <action name="action_Report_Umsaetze_RechnungenStatistik">
+   <property name="text">
+    <string>Rechnungen &amp;Statistik</string>
    </property>
   </action>
  </widget>

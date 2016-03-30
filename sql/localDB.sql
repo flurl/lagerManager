@@ -113,6 +113,26 @@ CREATE TABLE rechnungen_basis(
 	foreign key rechnungen_basis_periode_fk (rechnung_periode) references perioden(periode_id)
 ) ENGINE=INNODB;
 
+
+CREATE TABLE rechnungen_details(
+	rechnung_detail_id int NOT NULL,
+	rechnung_detail_rechnung int NOT NULL,
+	rechnung_detail_master_detail int NULL,
+	rechnung_detail_menge int NOT NULL,
+	rechnung_detail_absmenge int NOT NULL,
+	rechnung_detail_text varchar(50) NOT NULL,
+	rechnung_detail_mwst int NOT NULL,
+	rechnung_detail_preis decimal(18, 3) NOT NULL,
+	rechnung_detail_artikel_gruppe text NULL,
+	rechnung_detail_text_2 text NULL,
+	rechnung_detail_bonierdatum datetime NULL,
+	rechnung_detail_periode int not null,
+	index rechnungen_details_idx (rechnung_detail_id),
+	foreign key rechnungen_details_periode_fk (rechnung_detail_periode) references perioden(periode_id)
+) ENGINE=INNODB;
+
+
+
 CREATE TABLE artikel_zutaten(
 	zutate_master_artikel int NOT NULL,
     zutate_artikel int NOT NULL,

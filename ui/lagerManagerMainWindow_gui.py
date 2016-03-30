@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/lagerManagerMainWindow.ui'
 #
-# Created: Wed Jun 10 16:07:43 2015
+# Created: Wed Mar 30 21:59:38 2016
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -36,7 +36,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.mdiArea)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1047, 25))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1047, 24))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         self.menuFile = QtGui.QMenu(self.menubar)
         self.menuFile.setObjectName(_fromUtf8("menuFile"))
@@ -148,6 +148,8 @@ class Ui_MainWindow(object):
         self.action_Report_Artikel_Rezepturen.setObjectName(_fromUtf8("action_Report_Artikel_Rezepturen"))
         self.action_Report_Artikel_NichtVorhandene = QtGui.QAction(MainWindow)
         self.action_Report_Artikel_NichtVorhandene.setObjectName(_fromUtf8("action_Report_Artikel_NichtVorhandene"))
+        self.action_Report_Umsaetze_RechnungenStatistik = QtGui.QAction(MainWindow)
+        self.action_Report_Umsaetze_RechnungenStatistik.setObjectName(_fromUtf8("action_Report_Umsaetze_RechnungenStatistik"))
         self.menuFile.addAction(self.actionQuit)
         self.menu_Einkauf.addAction(self.action_Report_Einkauf_GesamteLieferungen)
         self.menu_Einkauf.addAction(self.action_Report_Einkauf_Verprobung)
@@ -164,6 +166,7 @@ class Ui_MainWindow(object):
         self.menu_Umsaetze.addAction(self.action_Report_Umsaetze_AufwanddetailsProTag)
         self.menu_Umsaetze.addAction(self.action_Report_Umsaetze_DurchschUmsatzWochentag)
         self.menu_Umsaetze.addAction(self.action_Report_Umsaetze_VerkaufteArtikel)
+        self.menu_Umsaetze.addAction(self.action_Report_Umsaetze_RechnungenStatistik)
         self.menu_Artikel.addAction(self.action_Report_Artikel_Rezepturen)
         self.menu_Artikel.addAction(self.action_Report_Artikel_NichtVorhandene)
         self.menu_Reports.addAction(self.menu_Lagerstand.menuAction())
@@ -260,4 +263,5 @@ class Ui_MainWindow(object):
         self.action_Report_Umsaetze_VerkaufteArtikel.setText(_translate("MainWindow", "&Verkaufte Artikel", None))
         self.action_Report_Artikel_Rezepturen.setText(_translate("MainWindow", "&Rezepturen", None))
         self.action_Report_Artikel_NichtVorhandene.setText(_translate("MainWindow", "Nicht &vorhandene", None))
+        self.action_Report_Umsaetze_RechnungenStatistik.setText(_translate("MainWindow", "Rechnungen &Statistik", None))
 

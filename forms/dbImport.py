@@ -298,6 +298,45 @@ class ImportForm(FormBase):
 				query.exec_()
 				if query.lastError().isValid():
 					print 'Error in query:', query.lastError().text()
+					
+			
+			##################
+			#rechnungen_details
+			##################
+			print 'importing rechnungen_details'
+			
+			query = QtSql.QSqlQuery()
+		
+			print 'deleting'
+			query.prepare('delete from rechnungen_details where rechnung_detail_periode = ?')
+			query.addBindValue(periodId)
+			query.exec_()
+			if query.lastError().isValid():
+				print 'Error in query:', query.lastError().text()
+			
+			s = self.connectToSource()
+			q = "select * from rechnungen_details order by rechnung_detail_id"
+			res = self.runQuery(q, db=s)
+			
+			for row in res:
+				query.prepare("""insert into rechnungen_details (rechnung_detail_id, rechnung_detail_rechnung, rechnung_detail_master_detail, rechnung_detail_menge, rechnung_detail_absmenge, rechnung_detail_text, rechnung_detail_mwst, rechnung_detail_preis, rechnung_detail_artikel_gruppe, rechnung_detail_text_2, rechnung_detail_bonierdatum, rechnung_detail_periode)
+						values
+						(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""")
+				query.addBindValue(row[0])
+				query.addBindValue(row[1])
+				query.addBindValue(row[2])
+				query.addBindValue(row[3])
+				query.addBindValue(row[4])
+				query.addBindValue(row[5])
+				query.addBindValue(row[6])
+				query.addBindValue(float(row[7]))
+				query.addBindValue(row[8])
+				query.addBindValue(row[9])
+				query.addBindValue(row[10])
+				query.addBindValue(periodId)
+				query.exec_()
+				if query.lastError().isValid():
+					print 'Error in query:', query.lastError().text()
 
 			
 
