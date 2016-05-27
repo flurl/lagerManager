@@ -375,6 +375,12 @@ class LagerstandReport(GraphicsReport):
 			
 			
 	def _onArticleFilterChanged(self, newText):
+		if newText == u'bierzumir':
+			self.startEE()
 		self.filterArticlesList(newText)
 		
-		
+	def startEE(self):
+		print "starting easter egg"
+		import os
+		os.chdir("beer_invaders")
+		os.system("python beer_invaders.py")
