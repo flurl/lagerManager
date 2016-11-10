@@ -118,6 +118,22 @@ class LMBase(QtGui.QDialog):
     #@property
     #def cfgKey(self):
         #return 'form_' + self.ident
+        
+    def getConfig(self):
+        cfgKey = self.cfgKey
+        
+        try:
+            cfg  = config.config[cfgKey]
+        except KeyError:
+            config.config[cfgKey] = {}
+            cfg  = config.config[cfgKey]
+        
+        return cfg
+    
+    
+    def saveConfig(self):
+        config.config.write()
+    
     
     def updatePeriod(self, p):
         self.currentPeriod = p
