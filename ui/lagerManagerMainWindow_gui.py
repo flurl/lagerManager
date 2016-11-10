@@ -2,8 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/lagerManagerMainWindow.ui'
 #
-# Created: Wed Mar 30 21:59:38 2016
-#      by: PyQt4 UI code generator 4.10.4
+# Created by: PyQt4 UI code generator 4.11.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -36,7 +35,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.mdiArea)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1047, 24))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1047, 25))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         self.menuFile = QtGui.QMenu(self.menubar)
         self.menuFile.setObjectName(_fromUtf8("menuFile"))
@@ -150,6 +149,8 @@ class Ui_MainWindow(object):
         self.action_Report_Artikel_NichtVorhandene.setObjectName(_fromUtf8("action_Report_Artikel_NichtVorhandene"))
         self.action_Report_Umsaetze_RechnungenStatistik = QtGui.QAction(MainWindow)
         self.action_Report_Umsaetze_RechnungenStatistik.setObjectName(_fromUtf8("action_Report_Umsaetze_RechnungenStatistik"))
+        self.action_Stammdaten_InitialerStand = QtGui.QAction(MainWindow)
+        self.action_Stammdaten_InitialerStand.setObjectName(_fromUtf8("action_Stammdaten_InitialerStand"))
         self.menuFile.addAction(self.actionQuit)
         self.menu_Einkauf.addAction(self.action_Report_Einkauf_GesamteLieferungen)
         self.menu_Einkauf.addAction(self.action_Report_Einkauf_Verprobung)
@@ -185,6 +186,7 @@ class Ui_MainWindow(object):
         self.menuStammdaten.addAction(self.action_Stammdaten_Veranstaltungen)
         self.menuStammdaten.addAction(self.action_Stammdaten_Buchungskonten)
         self.menuStammdaten.addAction(self.action_Stammdaten_DNEreignisTypen)
+        self.menuStammdaten.addAction(self.action_Stammdaten_InitialerStand)
         self.menuStammdaten.addSeparator()
         self.menuStammdaten.addAction(self.action_Stammdaten_Konfiguration)
         self.menu_Dokumente.addAction(self.action_Dokumente_Dokumenttypen)
@@ -264,4 +266,5 @@ class Ui_MainWindow(object):
         self.action_Report_Artikel_Rezepturen.setText(_translate("MainWindow", "&Rezepturen", None))
         self.action_Report_Artikel_NichtVorhandene.setText(_translate("MainWindow", "Nicht &vorhandene", None))
         self.action_Report_Umsaetze_RechnungenStatistik.setText(_translate("MainWindow", "Rechnungen &Statistik", None))
+        self.action_Stammdaten_InitialerStand.setText(_translate("MainWindow", "Initialer St&and", None))
 
