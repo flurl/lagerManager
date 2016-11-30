@@ -164,6 +164,9 @@ class MainWindow(QtGui.QMainWindow):
         self.connect(self.ui.action_Stammdaten_DNEreignisTypen,
                     QtCore.SIGNAL('triggered()'),
                     lambda: self.openWindow('forms.dirTypen.DirTypenForm'))
+        self.connect(self.ui.action_Stammdaten_InitialerStand,
+                    QtCore.SIGNAL('triggered()'),
+                    lambda: self.openWindow('forms.initialerStand.InitialerStandForm'))
         self.connect(self.ui.action_Stammdaten_Konfiguration,
                     QtCore.SIGNAL('triggered()'),
                     lambda: self.openWindow('forms.globalConfig.ConfigForm'))

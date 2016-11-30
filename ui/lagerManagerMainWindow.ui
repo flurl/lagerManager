@@ -26,7 +26,7 @@
      <x>0</x>
      <y>0</y>
      <width>1047</width>
-     <height>24</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -113,6 +113,7 @@
     <addaction name="action_Stammdaten_Veranstaltungen"/>
     <addaction name="action_Stammdaten_Buchungskonten"/>
     <addaction name="action_Stammdaten_DNEreignisTypen"/>
+    <addaction name="action_Stammdaten_InitialerStand"/>
     <addaction name="separator"/>
     <addaction name="action_Stammdaten_Konfiguration"/>
    </widget>
@@ -357,6 +358,11 @@
   <action name="action_Report_Umsaetze_RechnungenStatistik">
    <property name="text">
     <string>Rechnungen &amp;Statistik</string>
+   </property>
+  </action>
+  <action name="action_Stammdaten_InitialerStand">
+   <property name="text">
+    <string>Initialer St&amp;and</string>
    </property>
   </action>
  </widget>
