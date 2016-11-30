@@ -16,6 +16,7 @@ class InventurReport(TextReport):
                 
         self.setHeader('Inventur')
         self.setFooter('here could be a nice footer')
+        self.setTableHeaders(['Artikel', 'Stand', 'EK', 'Wert', 'Stand-Init'])
         
         self.updateData()
         
@@ -64,12 +65,28 @@ class InventurReport(TextReport):
             values[unicode(results.value(0).toString())] = results.value(1).toFloat()[0]		
         """
         
+        query = """select artikel_bezeichnung, sum(ist_anzahl) 
+                   from initialer_stand, artikel_basis
+                   where 1=1
+                   and ist_periode_id = %s 
+                   and ist_artikel_id = artikel_id
+                   and artikel_periode = ist_periode_id
+                   group by ist_artikel_id""" % self.getCurrentPeriodId()
+        results = self.db.exec_(query)
+        print query
+        print results.lastError().databaseText()
+        initStand = {}
+        while results.next():
+            article = unicode(results.value(0).toString())
+            amount = results.value(1).toFloat()[0]
+            initStand[article] = amount
+        
         i = 0
         data = []
         for k in sorted(articles.keys()):
             #data.append([k, round(articles[k], 2), round(values.get(k, 0.0), 2), round(values.get(k, 0.0)*articles[k], 2)])
             purchasePrice = self.getPurchasePrice(k)
-            data.append([k, round(articles[k], 2), round(purchasePrice, 2), round(purchasePrice*articles[k], 2)])
+            data.append([k, round(articles[k], 2), round(purchasePrice, 2), round(purchasePrice*articles[k], 2), round(articles[k]-initStand.get(k, 0.0), 2)])
         
         self.setData(data)
         self.process()
