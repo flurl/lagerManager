@@ -17,7 +17,24 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QComboBox" name="comboBox_period"/>
+      <widget class="QPushButton" name="pushButton_newRecord">
+       <property name="text">
+        <string>&amp;Neu</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_deleteRecord">
+       <property name="text">
+        <string>&amp;Löschen</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBox_article"/>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBox_workplace"/>
      </item>
      <item>
       <spacer name="horizontalSpacer">
@@ -46,31 +63,20 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QComboBox" name="comboBox_period"/>
+     </item>
     </layout>
    </item>
    <item>
-    <widget class="FilterableTableView" name="tableView_lagerstand">
+    <widget class="QTableView" name="tableView_lagerstand">
      <property name="sortingEnabled">
       <bool>true</bool>
      </property>
     </widget>
    </item>
-   <item>
-    <widget class="QPushButton" name="pushButton_OK">
-     <property name="text">
-      <string>&amp;OK</string>
-     </property>
-    </widget>
-   </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>FilterableTableView</class>
-   <extends>QTableView</extends>
-   <header>lib.FilterableTableView</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>
