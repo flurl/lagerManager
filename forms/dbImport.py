@@ -122,7 +122,7 @@ class ImportForm(FormBase):
 				print 'Error in query:', query.lastError().text()
 			
 			s = self.connectToSource()
-			q = "select * from tische_aktiv order by tisch_id"
+			q = "select * from tische_aktiv where checkpoint_jahr is null order by tisch_id"
 			res = self.runQuery(q, db=s)
 			
 			for row in res:
@@ -176,7 +176,7 @@ class ImportForm(FormBase):
 				print 'Error in query:', query.lastError().text()
 			
 			s = self.connectToSource()
-			q = "select * from tische_bons order by tisch_bon_id"
+			q = "select * from tische_bons, tische_aktiv where tisch_bon_tisch = tisch_id and tische_aktiv.checkpoint_jahr is null order by tisch_bon_id"
 			res = self.runQuery(q, db=s)
 			
 			for row in res:
@@ -216,7 +216,7 @@ class ImportForm(FormBase):
 				print 'Error in query:', query.lastError().text()
 			
 			s = self.connectToSource()
-			q = "select * from tische_bondetails order by tisch_bondetail_id"
+			q = "select * from tische_bondetails, tische_bons, tische_aktiv where tisch_bondetail_bon = tisch_bon_id and tisch_bon_tisch = tisch_id and tische_aktiv.checkpoint_jahr is null order by tisch_bondetail_id"
 			res = self.runQuery(q, db=s)
 			
 			for row in res:
@@ -273,7 +273,7 @@ class ImportForm(FormBase):
 				print 'Error in query:', query.lastError().text()
 			
 			s = self.connectToSource()
-			q = "select * from rechnungen_basis order by rechnung_id"
+			q = "select * from rechnungen_basis where checkpoint_jahr is null order by rechnung_id"
 			res = self.runQuery(q, db=s)
 			
 			for row in res:
@@ -315,7 +315,7 @@ class ImportForm(FormBase):
 				print 'Error in query:', query.lastError().text()
 			
 			s = self.connectToSource()
-			q = "select * from rechnungen_details order by rechnung_detail_id"
+			q = "select * from rechnungen_details, rechnungen_basis where rechnung_detail_rechnung = rechnung_id and rechnungen_basis.checkpoint_jahr is null order by rechnung_detail_id"
 			res = self.runQuery(q, db=s)
 			
 			for row in res:
