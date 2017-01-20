@@ -104,24 +104,6 @@ class VerkaufteArtikelReport(TableReport):
 		cpId = self.ui.comboBox_checkpoint.itemData(self.ui.comboBox_checkpoint.currentIndex()).toInt()[0]
 		
 		query = """
-				select checkpoint_info, 
-				detail_kellner, sum(detail_absmenge), detail_artikel_text, detail_preis, getPurchasePrice(detail_artikel_text, detail_periode, NULL), sum(detail_absmenge*getPurchasePrice(detail_artikel_text, detail_periode, NULL)), detail_gruppe %(table_code)s %(date)s
-from journal_details, journal_daten, journal_checkpoints, rechnungen_basis
-where 1=1
-and (daten_checkpoint_tag = checkpoint_id or daten_checkpoint_monat = checkpoint_id or daten_checkpoint_jahr = checkpoint_id)
-and detail_journal = daten_rechnung_id
-and daten_rechnung_id = rechnung_id
-and detail_periode = %(period_id)s
-and daten_periode = %(period_id)s
-and checkpoint_periode = %(period_id)s
-and checkpoint_id = %(checkpoint_id)s
-and rechnung_periode = %(period_id)s
-%(umsatz_where)s
-group by checkpoint_info, detail_artikel_text, detail_preis, detail_kellner, detail_gruppe, getPurchasePrice(detail_artikel_text, detail_periode, NULL) %(table_code)s %(date)s
-order by str_to_date(checkpoint_info, '%%d.%%m.%%Y'), detail_kellner %(date)s %(table_code)s , detail_artikel_text, detail_preis
-		""" % {'period_id': self._getCurrentPeriodId(), 'checkpoint_id': cpId, 'umsatz_where': umsatzWhere, 'table_code': ', rechnung_tischCode' if self.ui.checkBox_showTableCode.isChecked() else '', 'date': ', detail_bonier_datum' if self.ui.checkBox_showDate.isChecked() else ''}
-		
-		query = """
 select checkpoint_info, 
 kellner_kurzName,
 sum(tisch_bondetail_absmenge),
