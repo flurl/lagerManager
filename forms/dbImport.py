@@ -283,7 +283,7 @@ class ImportForm(FormBase):
 				query.addBindValue(row[0])
 				query.addBindValue(row[1])
 				query.addBindValue(row[2])
-				query.addBindValue(row[3])
+				query.addBindValue(row[3].strftime('%Y-%m-%d %H:%M:%S'))
 				query.addBindValue(row[4])
 				query.addBindValue(row[5])
 				query.addBindValue(row[6])
