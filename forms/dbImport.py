@@ -257,6 +257,50 @@ class ImportForm(FormBase):
 					print 'Error in query:', query.lastError().text()
 					
 					
+			##################
+			#tische_bereiche
+			##################
+			print 'importing tische_bereiche'
+			
+			query = QtSql.QSqlQuery()
+		
+			print 'deleting'
+			query.prepare('delete from tische_bereiche where tischbereich_periode = ?')
+			query.addBindValue(periodId)
+			query.exec_()
+			if query.lastError().isValid():
+				print 'Error in query:', query.lastError().text()
+			
+			s = self.connectToSource()
+			q = "select * from tische_bereiche"
+			res = self.runQuery(q, db=s)
+			
+			for row in res:
+				query.prepare("""insert into tische_bereiche (tischbereich_id, tischbereich_kurzName, tischbereich_name, tischbereich_istGastBereich, tischbereich_minNummer, tischbereich_maxNummer, tischbereich_istAufwand, tischbereich_istSammelbereich, tischbereich_benoetigtAdresse, tischbereich_rechnungsAnzahl, tischbereich_extern, tischbereich_istOrdercardBereich, tischbereich_vorgangsart, tischbereich_temp, tischbereich_versteckeSammeltisch, tischbereich_sammeltischOptional, tischbereich_periode)
+						values
+						(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""")
+				query.addBindValue(row[0])
+				query.addBindValue(row[1])
+				query.addBindValue(row[2])
+				query.addBindValue(row[3])
+				query.addBindValue(row[4])
+				query.addBindValue(row[5])
+				query.addBindValue(row[6])
+				query.addBindValue(row[7])
+				query.addBindValue(row[8])
+				query.addBindValue(row[9])
+				query.addBindValue(row[10])
+				query.addBindValue(row[11])
+				query.addBindValue(row[12])
+				query.addBindValue(row[13])
+				query.addBindValue(row[14])
+				query.addBindValue(row[15])
+				query.addBindValue(periodId)
+				query.exec_()
+				if query.lastError().isValid():
+					print 'Error in query:', query.lastError().text()
+					
+					
 					
 			##################
 			#rechnungen_basis
