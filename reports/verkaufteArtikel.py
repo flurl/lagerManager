@@ -97,9 +97,9 @@ class VerkaufteArtikelReport(TableReport):
 		
 		umsatzWhere = ""
 		if self.ui.radioButton_umsatz.isChecked():
-			umsatzWhere = " and detail_istUmsatz = 1 "
+			umsatzWhere = " and tisch_bondetail_istUmsatz = 1 "
 		elif self.ui.radioButton_aufwand.isChecked():
-			umsatzWhere = " and detail_istUmsatz = 0 "
+			umsatzWhere = " and tisch_bondetail_istUmsatz = 0 "
 			
 		cpId = self.ui.comboBox_checkpoint.itemData(self.ui.comboBox_checkpoint.currentIndex()).toInt()[0]
 		
@@ -120,6 +120,37 @@ and rechnung_periode = %(period_id)s
 group by checkpoint_info, detail_artikel_text, detail_preis, detail_kellner, detail_gruppe, getPurchasePrice(detail_artikel_text, detail_periode, NULL) %(table_code)s %(date)s
 order by str_to_date(checkpoint_info, '%%d.%%m.%%Y'), detail_kellner %(date)s %(table_code)s , detail_artikel_text, detail_preis
 		""" % {'period_id': self._getCurrentPeriodId(), 'checkpoint_id': cpId, 'umsatz_where': umsatzWhere, 'table_code': ', rechnung_tischCode' if self.ui.checkBox_showTableCode.isChecked() else '', 'date': ', detail_bonier_datum' if self.ui.checkBox_showDate.isChecked() else ''}
+		
+		query = """
+select checkpoint_info, 
+kellner_kurzName,
+sum(tisch_bondetail_absmenge),
+tisch_bondetail_text,
+tisch_bondetail_preis,
+getPurchasePrice(tisch_bondetail_text, tisch_bondetail_periode, NULL), 
+sum(tisch_bondetail_absmenge*getPurchasePrice(tisch_bondetail_text, tisch_bondetail_periode, NULL)),
+journal_gruppe
+%(table_code)s %(date)s
+from rechnungen_basis, journal_checkpoints as a, tische_aktiv, tische_bons, tische_bondetails, kellner_basis, tische_bereiche
+where 1=1
+and tischbereich_id = tisch_bereich
+and tischbereich_periode = %(period_id)s
+and kellner_id = tisch_bon_kellner
+and kellner_periode = %(period_id)s
+and checkpoint_id = %(checkpoint_id)s
+and checkpoint_periode = %(period_id)s
+and rechnungen_basis.checkpoint_tag = checkpoint_id
+and rechnung_periode = %(period_id)s
+and tisch_rechnung = rechnung_id
+and tisch_periode = %(period_id)s
+and tisch_bon_tisch = tisch_id
+and tisch_bon_periode = %(period_id)s
+and tisch_bondetail_bon = tisch_bon_id
+and tisch_bondetail_periode = %(period_id)s
+and checkpoint_typ = 1
+%(umsatz_where)s
+group by checkpoint_info, kellner_kurzName, tisch_bondetail_text, tisch_bondetail_preis, getPurchasePrice(tisch_bondetail_text, tisch_bondetail_periode, NULL), journal_gruppe %(table_code)s %(date)s
+""" % {'period_id': self._getCurrentPeriodId(), 'checkpoint_id': cpId, 'umsatz_where': umsatzWhere, 'table_code': ',concat(tischbereich_kurzName , \'-\', tisch_pri_nummer ) ' if self.ui.checkBox_showTableCode.isChecked() else '', 'date': ', tisch_bon_dt_erstellung' if self.ui.checkBox_showDate.isChecked() else ''}
 		
 		return query
 	
