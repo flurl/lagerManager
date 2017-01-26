@@ -162,6 +162,62 @@ class InventurReport(TextReport):
                 group by checkpoint_id, checkpoint_info, a.artikel_bezeichnung
                 order by 1
                 """ % {'period_id': self._getCurrentPeriodId()}
+                
+        query = """
+                select checkpoint_id, checkpoint_info, art2.artikel_bezeichnung, sum(tisch_bondetail_absmenge*zutate_menge/lager_einheit_multiplizierer), count(*)
+				from artikel_basis as art1, artikel_basis as art2
+				left outer join artikel_basis as ept on art2.artikel_id = ept.artikel_id,
+				artikel_zutaten, tische_aktiv, tische_bons, tische_bondetails, journal_checkpoints, lager_artikel, lager_einheiten
+				where 1=1
+				and lager_artikel_artikel = art2.artikel_id
+				and tisch_bondetail_artikel = art1.artikel_id
+				and zutate_master_artikel = art1.artikel_id
+				and zutate_istRezept = 1
+				and zutate_artikel = art2.artikel_id
+				and tisch_bondetail_bon = tisch_bon_id
+				and tisch_bon_tisch = tisch_id
+				and checkpoint_jahr = checkpoint_id
+				and lager_artikel_einheit = lager_einheit_id
+				and checkpoint_typ = 3
+				and tisch_periode = %(period_id)s
+				and tisch_bon_periode = %(period_id)s
+				and tisch_bondetail_periode = %(period_id)s
+				and checkpoint_periode = %(period_id)s
+				and zutate_periode = %(period_id)s
+				and art1.artikel_periode = %(period_id)s
+				and art2.artikel_periode = %(period_id)s
+				and (ept.artikel_periode = %(period_id)s or ept.artikel_periode is null)
+				and (lager_artikel_periode = %(period_id)s or lager_artikel_periode is null)
+				and lager_einheit_periode = %(period_id)s
+                group by checkpoint_id, checkpoint_info, art2.artikel_bezeichnung
+                """ % {'period_id': self._getCurrentPeriodId()}
+        query += " union all "
+        
+        query += """
+                select checkpoint_id, checkpoint_info, a.artikel_bezeichnung, sum(tisch_bondetail_absmenge), count(*)
+				from artikel_basis as a
+				left outer join artikel_zutaten
+				on zutate_master_artikel = artikel_id
+				join tische_bondetails
+				on tisch_bondetail_artikel = a.artikel_id
+				left outer join artikel_basis as ept on tisch_bondetail_artikel = ept.artikel_id,
+				journal_checkpoints, tische_aktiv, tische_bons
+				where 1=1
+				and zutate_istRezept is null
+				and tisch_id = tisch_bon_tisch
+				and tisch_bondetail_bon = tisch_bon_id
+				and checkpoint_jahr = checkpoint_id
+				and checkpoint_typ = 3
+				and tisch_periode = %(period_id)s
+				and tisch_bon_periode = %(period_id)s
+				and tisch_bondetail_periode = %(period_id)s
+				and checkpoint_periode = %(period_id)s
+				and (zutate_periode = %(period_id)s or zutate_periode is null)
+				and a.artikel_periode = %(period_id)s
+				and (ept.artikel_periode = %(period_id)s or ept.artikel_periode is null)
+                group by checkpoint_id, checkpoint_info, a.artikel_bezeichnung
+                order by 1
+                """ % {'period_id': self._getCurrentPeriodId()}
         #print query
         return query
         
