@@ -1,10 +1,19 @@
 # -*- coding: utf-8 -*-
 import sys
+import datetime
 
 from PyQt4 import QtCore, QtGui, QtSql
 import pymssql
 import _mssql
+import MySQLdb as mysql
 
+"""mysql.connect(host='10.0.0.101',
+             user='lager_manager',
+             passwd='post1309',
+             db='lagerManager_test',
+             charset='utf8',
+             use_unicode=True)
+"""
 
 from forms.formBase import FormBase
 from ui.forms.importForm_gui import Ui_ImportForm
@@ -51,6 +60,51 @@ class ImportForm(FormBase):
 		else:
 			cur.execute(query, values)
 		return cur.fetchall()
+		
+	def prepareValuesForSQLString(self, vals):
+		#print vals
+		tmp = []
+		for v in vals:
+			#print u"v: %s" % (v, ), type(v)
+			if isinstance(v, basestring):
+				tmp.append(unicode(mysql.escape_string(v.encode('utf-8')), 'utf-8'))
+			elif v is None:
+				tmp.append(u'NULL')
+			elif isinstance(v, datetime.datetime):
+				tmp.append(v.strftime('%Y-%m-%d %H:%M:%S'))
+			elif isinstance(v, bool):
+				tmp.append(int(v))
+			else:
+				tmp.append(v)
+		#print tmp
+		return tuple(tmp)
+		
+		
+	def insertMultipleValues(self, insertStr, valuesStr, vals, additionalVals=None):
+		query = QtSql.QSqlQuery()
+		i = 0
+		values = []
+		for row in vals:
+			values.append(valuesStr % self.prepareValuesForSQLString(row+additionalVals))
+			i += 1
+			
+			if i == 1000:
+				print "got 1000"
+				sql = insertStr + ",".join(values)
+				query.prepare(sql)
+				query.exec_()
+				if query.lastError().isValid():
+					print 'Error in query:', query.lastError().text()
+				i = 0
+				values = []
+			
+		if (len(values) > 0):
+			sql = insertStr + ",".join(values)
+			query.prepare(sql)
+			query.exec_()
+			if query.lastError().isValid():
+				print 'Error in query:', query.lastError().text()
+		
 		
 	def startImport(self):
 		print "syncing"
@@ -125,42 +179,17 @@ class ImportForm(FormBase):
 			q = "select * from tische_aktiv where checkpoint_jahr %s order by tisch_id" % ("="+str(self.getCheckpointIdForPeriod(periodId)) if self.getCheckpointIdForPeriod(periodId) is not None else "is null")
 			res = self.runQuery(q, db=s)
 			
-			for row in res:
-				query.prepare("""insert into tische_aktiv
+			insertStr = """insert into tische_aktiv
 						(tisch_id, tisch_bereich, tisch_pri_nummer, tisch_sek_nummer, tisch_gast,
 						tisch_dt_erstellung, tisch_dt_aktivitaet, tisch_kellner, tisch_fertig,
 						tisch_zahlungsart, tisch_rechnung, tisch_dt_zusatz, tisch_adresse, tisch_kellner_abrechnung,
 						tisch_client, tisch_reservierung, tisch_reservierung_check, tisch_zusatz_text,
 						checkpoint_tag, checkpoint_monat, checkpoint_jahr, tisch_periode)
-						values
-						(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""")
-				query.bindValue(0, row[0])
-				query.bindValue(1, row[1])
-				query.bindValue(2, row[2])
-				query.bindValue(3, row[3])
-				query.bindValue(4, row[4])
-				query.bindValue(5, str(row[5]))
-				query.bindValue(6, str(row[6]))
-				query.bindValue(7, row[7])
-				query.bindValue(8, row[8])
-				query.bindValue(9, row[9])
-				query.bindValue(10, row[10])
-				query.bindValue(11, row[11])
-				query.bindValue(12, row[12])
-				query.bindValue(13, row[13])
-				query.bindValue(14, row[14])
-				query.bindValue(15, row[15])
-				query.bindValue(16, row[16])
-				query.bindValue(17, row[17])
-				query.bindValue(18, row[18])
-				query.bindValue(19, row[19])
-				query.bindValue(20, row[20])
-				query.bindValue(21, periodId)
-				query.exec_()
-				if query.lastError().isValid():
-					print 'Error in query:', query.lastError().text()
-				
-				
+						values """
+			valuesStr = "(%s, %s, %s, %s, %s, '%s', '%s', %s, %s, %s, %s, '%s', %s, %s, '%s', %s, %s, '%s', %s, %s, %s, %s)"
+			self.insertMultipleValues(insertStr, valuesStr, res, (periodId, ))
+			
+			
 			##################
 			#tische_bons
 			##################
@@ -176,31 +205,18 @@ class ImportForm(FormBase):
 				print 'Error in query:', query.lastError().text()
 			
 			s = self.connectToSource()
-			q = "select * from tische_bons, tische_aktiv where tisch_bon_tisch = tisch_id and tische_aktiv.checkpoint_jahr %s order by tisch_bon_id" % ("="+str(self.getCheckpointIdForPeriod(periodId)) if self.getCheckpointIdForPeriod(periodId) is not None else "is null")
+			q = "select tisch_bon_id, tisch_bon_dt_erstellung, tisch_bon_tisch, tisch_bon_kellner, tisch_bon_client, tisch_bon_typ, tisch_bon_bestellkarte, tisch_bon_vorgangsart from tische_bons, tische_aktiv where tisch_bon_tisch = tisch_id and tische_aktiv.checkpoint_jahr %s order by tisch_bon_id" % ("="+str(self.getCheckpointIdForPeriod(periodId)) if self.getCheckpointIdForPeriod(periodId) is not None else "is null")
 			res = self.runQuery(q, db=s)
 			
-			for row in res:
-				query.prepare("""insert into tische_bons 
+			insertStr = """insert into tische_bons 
 								(tisch_bon_id, tisch_bon_dt_erstellung, tisch_bon_tisch, tisch_bon_kellner,
 								tisch_bon_client, tisch_bon_typ, tisch_bon_bestellkarte, tisch_bon_vorgangsart,
 								tisch_bon_periode)
-								values
-								(?, ?, ?, ?, ?, ?, ?, ?, ?)""")
-				query.bindValue(0, row[0])
-				query.bindValue(1, str(row[1]))
-				query.bindValue(2, row[2])
-				query.bindValue(3, row[3])
-				query.bindValue(4, row[4])
-				query.bindValue(5, row[5])
-				query.bindValue(6, row[6])
-				query.bindValue(7, row[7])
-				query.bindValue(8, periodId)
-				query.exec_()
-				if query.lastError().isValid():
-					print 'Error in query:', query.lastError().text()
-					
-					
-					
+								values """
+			valuesStr = "(%s, '%s', %s, %s, '%s', %s, %s, %s, %s)"
+			self.insertMultipleValues(insertStr, valuesStr, res, (periodId, ))
+
+
 			##################
 			#tische_bondetails
 			##################
@@ -216,47 +232,26 @@ class ImportForm(FormBase):
 				print 'Error in query:', query.lastError().text()
 			
 			s = self.connectToSource()
-			q = "select * from tische_bondetails, tische_bons, tische_aktiv where tisch_bondetail_bon = tisch_bon_id and tisch_bon_tisch = tisch_id and tische_aktiv.checkpoint_jahr %s order by tisch_bondetail_id" % ("="+str(self.getCheckpointIdForPeriod(periodId)) if self.getCheckpointIdForPeriod(periodId) is not None else "is null")
+			q = "select tisch_bondetail_id, tisch_bondetail_bon, tisch_bondetail_master_id, tisch_bondetail_menge, \
+								tisch_bondetail_absmenge, tisch_bondetail_istUmsatz, tisch_bondetail_artikel, tisch_bondetail_preis, \
+								tisch_bondetail_text, tisch_bondetail_mwst, tisch_bondetail_gangfolge, tisch_bondetail_hatRabatt, \
+								tisch_bondetail_istRabatt, tisch_bondetail_autoEintrag, tisch_bondetail_stornoFaehig, tisch_bondetail_ep, \
+								tisch_bondetail_ep_mwst, tisch_bondetail_preisgruppe, tisch_bondetail_gutschein_log, journal_preisgruppe, \
+								journal_gruppe, journal_mwst from tische_bondetails, tische_bons, tische_aktiv where tisch_bondetail_bon = tisch_bon_id and tisch_bon_tisch = tisch_id and tische_aktiv.checkpoint_jahr %s order by tisch_bondetail_id" % ("="+str(self.getCheckpointIdForPeriod(periodId)) if self.getCheckpointIdForPeriod(periodId) is not None else "is null")
 			res = self.runQuery(q, db=s)
 			
-			for row in res:
-				query.prepare("""insert into tische_bondetails 
+			insertStr = u"""insert into tische_bondetails 
 								(tisch_bondetail_id, tisch_bondetail_bon, tisch_bondetail_master_id, tisch_bondetail_menge,
 								tisch_bondetail_absmenge, tisch_bondetail_istUmsatz, tisch_bondetail_artikel, tisch_bondetail_preis,
 								tisch_bondetail_text, tisch_bondetail_mwst, tisch_bondetail_gangfolge, tisch_bondetail_hatRabatt,
 								tisch_bondetail_istRabatt, tisch_bondetail_autoEintrag, tisch_bondetail_stornoFaehig, tisch_bondetail_ep,
 								tisch_bondetail_ep_mwst, tisch_bondetail_preisgruppe, tisch_bondetail_gutschein_log, journal_preisgruppe,
 								journal_gruppe, journal_mwst, tisch_bondetail_periode)
-								values
-								(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""")
-				query.bindValue(0, row[0])
-				query.bindValue(1, row[1])
-				query.bindValue(2, row[2])
-				query.bindValue(3, row[3])
-				query.bindValue(4, row[4])
-				query.bindValue(5, row[5])
-				query.bindValue(6, row[6])
-				query.bindValue(7, float(row[7]))
-				query.bindValue(8, row[8])
-				query.bindValue(9, row[9])
-				query.bindValue(10, row[10])
-				query.bindValue(11, row[11])
-				query.bindValue(12, row[12])
-				query.bindValue(13, row[13])
-				query.bindValue(14, row[14])
-				query.bindValue(15, row[15])
-				query.bindValue(16, row[16])
-				query.bindValue(17, row[17])
-				query.bindValue(18, row[18])
-				query.bindValue(19, row[19])
-				query.bindValue(20, row[20])
-				query.bindValue(21, row[21])
-				query.bindValue(22, periodId)
-				query.exec_()
-				if query.lastError().isValid():
-					print 'Error in query:', query.lastError().text()
-					
-					
+								values """
+			valuesStr = u"(%s, %s, %s, %s, %s, %s, %s, %s, '%s', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '%s', '%s', %s, %s)"
+			self.insertMultipleValues(insertStr, valuesStr, res, (periodId, ))
+			
+			
 			##################
 			#tische_bereiche
 			##################
@@ -275,33 +270,12 @@ class ImportForm(FormBase):
 			q = "select * from tische_bereiche"
 			res = self.runQuery(q, db=s)
 			
-			for row in res:
-				query.prepare("""insert into tische_bereiche (tischbereich_id, tischbereich_kurzName, tischbereich_name, tischbereich_istGastBereich, tischbereich_minNummer, tischbereich_maxNummer, tischbereich_istAufwand, tischbereich_istSammelbereich, tischbereich_benoetigtAdresse, tischbereich_rechnungsAnzahl, tischbereich_extern, tischbereich_istOrdercardBereich, tischbereich_vorgangsart, tischbereich_temp, tischbereich_versteckeSammeltisch, tischbereich_sammeltischOptional, tischbereich_periode)
-						values
-						(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""")
-				query.addBindValue(row[0])
-				query.addBindValue(row[1])
-				query.addBindValue(row[2])
-				query.addBindValue(row[3])
-				query.addBindValue(row[4])
-				query.addBindValue(row[5])
-				query.addBindValue(row[6])
-				query.addBindValue(row[7])
-				query.addBindValue(row[8])
-				query.addBindValue(row[9])
-				query.addBindValue(row[10])
-				query.addBindValue(row[11])
-				query.addBindValue(row[12])
-				query.addBindValue(row[13])
-				query.addBindValue(row[14])
-				query.addBindValue(row[15])
-				query.addBindValue(periodId)
-				query.exec_()
-				if query.lastError().isValid():
-					print 'Error in query:', query.lastError().text()
-					
-					
-					
+			insertStr = u"""insert into tische_bereiche (tischbereich_id, tischbereich_kurzName, tischbereich_name, tischbereich_istGastBereich, tischbereich_minNummer, tischbereich_maxNummer, tischbereich_istAufwand, tischbereich_istSammelbereich, tischbereich_benoetigtAdresse, tischbereich_rechnungsAnzahl, tischbereich_extern, tischbereich_istOrdercardBereich, tischbereich_vorgangsart, tischbereich_temp, tischbereich_versteckeSammeltisch, tischbereich_sammeltischOptional, tischbereich_periode)
+						values """
+			valuesStr = u"(%s, '%s', '%s', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+			self.insertMultipleValues(insertStr, valuesStr, res, (periodId, ))
+			
+			
 			##################
 			#rechnungen_basis
 			##################
@@ -320,29 +294,11 @@ class ImportForm(FormBase):
 			q = "select * from rechnungen_basis where checkpoint_jahr %s order by rechnung_id" % ("="+str(self.getCheckpointIdForPeriod(periodId)) if self.getCheckpointIdForPeriod(periodId) is not None else "is null")
 			res = self.runQuery(q, db=s)
 			
-			for row in res:
-				query.prepare("""insert into rechnungen_basis (rechnung_id, rechnung_typ, rechnung_nr, rechnung_dt_erstellung, rechnung_kellnerKurzName, rechnung_tischCode, rechnung_tischBereich, rechnung_adresse, rechnung_istStorno, rechnung_retour, rechnung_dt_zusatz, checkpoint_tag, checkpoint_monat, checkpoint_jahr, rechnung_periode)
-						values
-						(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""")
-				query.addBindValue(row[0])
-				query.addBindValue(row[1])
-				query.addBindValue(row[2])
-				query.addBindValue(row[3].strftime('%Y-%m-%d %H:%M:%S'))
-				query.addBindValue(row[4])
-				query.addBindValue(row[5])
-				query.addBindValue(row[6])
-				query.addBindValue(row[7])
-				query.addBindValue(row[8])
-				query.addBindValue(row[9])
-				query.addBindValue(row[10])
-				query.addBindValue(row[11])
-				query.addBindValue(row[12])
-				query.addBindValue(row[13])
-				query.addBindValue(periodId)
-				query.exec_()
-				if query.lastError().isValid():
-					print 'Error in query:', query.lastError().text()
-					
+			insertStr = """insert into rechnungen_basis (rechnung_id, rechnung_typ, rechnung_nr, rechnung_dt_erstellung, rechnung_kellnerKurzName, rechnung_tischCode, rechnung_tischBereich, rechnung_adresse, rechnung_istStorno, rechnung_retour, rechnung_dt_zusatz, checkpoint_tag, checkpoint_monat, checkpoint_jahr, rechnung_periode)
+						values """
+			valuesStr = "(%s, %s, %s, '%s', '%s', '%s', '%s', %s, %s, %s, '%s', %s, %s, %s, %s)"
+			self.insertMultipleValues(insertStr, valuesStr, res, (periodId, ))
+			
 			
 			##################
 			#rechnungen_details
@@ -359,31 +315,15 @@ class ImportForm(FormBase):
 				print 'Error in query:', query.lastError().text()
 			
 			s = self.connectToSource()
-			q = "select * from rechnungen_details, rechnungen_basis where rechnung_detail_rechnung = rechnung_id and rechnungen_basis.checkpoint_jahr %s order by rechnung_detail_id" % ("="+str(self.getCheckpointIdForPeriod(periodId)) if self.getCheckpointIdForPeriod(periodId) is not None else "is null")
+			q = "select rechnung_detail_id, rechnung_detail_rechnung, rechnung_detail_master_detail, rechnung_detail_menge, rechnung_detail_absmenge, rechnung_detail_text, rechnung_detail_mwst, rechnung_detail_preis, rechnung_detail_artikel_gruppe, rechnung_detail_text_2, rechnung_detail_bonierdatum from rechnungen_details, rechnungen_basis where rechnung_detail_rechnung = rechnung_id and rechnungen_basis.checkpoint_jahr %s order by rechnung_detail_id" % ("="+str(self.getCheckpointIdForPeriod(periodId)) if self.getCheckpointIdForPeriod(periodId) is not None else "is null")
 			res = self.runQuery(q, db=s)
 			
-			for row in res:
-				query.prepare("""insert into rechnungen_details (rechnung_detail_id, rechnung_detail_rechnung, rechnung_detail_master_detail, rechnung_detail_menge, rechnung_detail_absmenge, rechnung_detail_text, rechnung_detail_mwst, rechnung_detail_preis, rechnung_detail_artikel_gruppe, rechnung_detail_text_2, rechnung_detail_bonierdatum, rechnung_detail_periode)
-						values
-						(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""")
-				query.addBindValue(row[0])
-				query.addBindValue(row[1])
-				query.addBindValue(row[2])
-				query.addBindValue(row[3])
-				query.addBindValue(row[4])
-				query.addBindValue(row[5])
-				query.addBindValue(row[6])
-				query.addBindValue(float(row[7]))
-				query.addBindValue(row[8])
-				query.addBindValue(row[9])
-				query.addBindValue(row[10])
-				query.addBindValue(periodId)
-				query.exec_()
-				if query.lastError().isValid():
-					print 'Error in query:', query.lastError().text()
-
+			insertStr = """insert into rechnungen_details (rechnung_detail_id, rechnung_detail_rechnung, rechnung_detail_master_detail, rechnung_detail_menge, rechnung_detail_absmenge, rechnung_detail_text, rechnung_detail_mwst, rechnung_detail_preis, rechnung_detail_artikel_gruppe, rechnung_detail_text_2, rechnung_detail_bonierdatum, rechnung_detail_periode)
+						values """
+			valuesStr = "(%s, %s, %s, %s, %s, '%s', %s, %s, '%s', '%s', '%s', %s)"
+			self.insertMultipleValues(insertStr, valuesStr, res, (periodId, ))
 			
-
+			
 			##################
 			#artikel basis
 			##################
