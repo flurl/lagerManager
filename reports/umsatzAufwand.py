@@ -17,7 +17,7 @@ class UmsatzAufwandReport(GraphicsReport):
         GraphicsReport.__init__(self, parent)
         
         dateFunc = lambda day: self.days[int(day)]
-        percentFunc = lambda percent: unicode(round(float(percent)*100, 2))+'%'
+        percentFunc = lambda percent: unicode(round(float(percent), 2))+'%'
         formatter = [None, dateFunc, percentFunc]
         
         self.setDataFormatter(formatter)
@@ -55,15 +55,17 @@ class UmsatzAufwandReport(GraphicsReport):
         
     def mkUmsatzQuery(self):
         query = """
-select str_to_date(checkpoint_info, '%d.%m.%Y'), sum(case when detail_istUmsatz = 0 then detail_absmenge*detail_preis else 0 end)/sum(case when detail_istUmsatz = 1 then detail_absmenge*detail_preis else 0 end) as ratio,
-sum(case when detail_istUmsatz = 1 then detail_absmenge*detail_preis else 0 end) as revenue, sum(case when detail_istUmsatz = 0 then detail_absmenge*detail_preis else 0 end) as aufwand
-from journal_details, journal_daten, journal_checkpoints
+select str_to_date(checkpoint_info, '%d.%m.%Y'), sum(case when tisch_bondetail_istUmsatz = 0 then tisch_bondetail_absmenge*tisch_bondetail_preis else 0 end)/sum(case when tisch_bondetail_istUmsatz = 1 then tisch_bondetail_absmenge*tisch_bondetail_preis else 0 end)*100 as ratio,
+sum(case when tisch_bondetail_istUmsatz = 1 then tisch_bondetail_absmenge*tisch_bondetail_preis else 0 end) as revenue, sum(case when tisch_bondetail_istUmsatz = 0 then tisch_bondetail_absmenge*tisch_bondetail_preis else 0 end) as aufwand
+from tische_bondetails, tische_bons, tische_aktiv, journal_checkpoints
 where 1=1
-and detail_journal = daten_rechnung_id
-and daten_checkpoint_tag = checkpoint_id
+and tisch_bondetail_bon = tisch_bon_id
+and tisch_bon_tisch = tisch_id
+and checkpoint_id = checkpoint_tag
+and tisch_bondetail_periode = {period_id}
+and tisch_bon_periode = {period_id}
+and tisch_periode = {period_id}
 and checkpoint_periode = {period_id}
-and daten_periode = {period_id}
-and detail_periode = {period_id}
 group by checkpoint_info
 order by 1
             """
