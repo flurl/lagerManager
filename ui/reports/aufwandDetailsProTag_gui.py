@@ -2,8 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/reports/aufwandDetailsProTag.ui'
 #
-# Created: Sat Feb 23 22:58:44 2013
-#      by: PyQt4 UI code generator 4.9.3
+# Created by: PyQt4 UI code generator 4.11.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,7 +11,16 @@ from PyQt4 import QtCore, QtGui
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
-    _fromUtf8 = lambda s: s
+    def _fromUtf8(s):
+        return s
+
+try:
+    _encoding = QtGui.QApplication.UnicodeUTF8
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig, _encoding)
+except AttributeError:
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig)
 
 class Ui_AufwandDetailsProTagReport(object):
     def setupUi(self, AufwandDetailsProTagReport):
@@ -26,6 +34,9 @@ class Ui_AufwandDetailsProTagReport(object):
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
+        self.pushButton_export = QtGui.QPushButton(AufwandDetailsProTagReport)
+        self.pushButton_export.setObjectName(_fromUtf8("pushButton_export"))
+        self.horizontalLayout.addWidget(self.pushButton_export)
         self.comboBox_period = QtGui.QComboBox(AufwandDetailsProTagReport)
         self.comboBox_period.setObjectName(_fromUtf8("comboBox_period"))
         self.horizontalLayout.addWidget(self.comboBox_period)
@@ -88,9 +99,10 @@ class Ui_AufwandDetailsProTagReport(object):
         QtCore.QMetaObject.connectSlotsByName(AufwandDetailsProTagReport)
 
     def retranslateUi(self, AufwandDetailsProTagReport):
-        AufwandDetailsProTagReport.setWindowTitle(QtGui.QApplication.translate("AufwandDetailsProTagReport", "Report", None, QtGui.QApplication.UnicodeUTF8))
-        self.label.setText(QtGui.QApplication.translate("AufwandDetailsProTagReport", "von", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_2.setText(QtGui.QApplication.translate("AufwandDetailsProTagReport", "bis", None, QtGui.QApplication.UnicodeUTF8))
-        self.checkBox_zeroBonierungen.setText(QtGui.QApplication.translate("AufwandDetailsProTagReport", "0€ Bonierungen berücksichtigen", None, QtGui.QApplication.UnicodeUTF8))
+        AufwandDetailsProTagReport.setWindowTitle(_translate("AufwandDetailsProTagReport", "Report", None))
+        self.pushButton_export.setText(_translate("AufwandDetailsProTagReport", "&Exportieren", None))
+        self.label.setText(_translate("AufwandDetailsProTagReport", "von", None))
+        self.label_2.setText(_translate("AufwandDetailsProTagReport", "bis", None))
+        self.checkBox_zeroBonierungen.setText(_translate("AufwandDetailsProTagReport", "0€ Bonierungen berücksichtigen", None))
 
 from reports.reportTextViewWidget import ReportTextViewWidget

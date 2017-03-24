@@ -32,6 +32,13 @@
         </spacer>
        </item>
        <item>
+        <widget class="QPushButton" name="pushButton_export">
+         <property name="text">
+          <string>&amp;Exportieren</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QComboBox" name="comboBox_period"/>
        </item>
       </layout>
@@ -123,10 +130,7 @@
       </layout>
      </item>
      <item>
-      <widget class="ReportTextViewWidget" name="textView" native="true">
-       <zorder>horizontalLayoutWidget</zorder>
-       <zorder>layoutWidget</zorder>
-      </widget>
+      <widget class="ReportTextViewWidget" name="textView" native="true"/>
      </item>
     </layout>
    </item>

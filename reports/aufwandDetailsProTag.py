@@ -86,7 +86,7 @@ class AufwandDetailsProTagReport(TextReport):
 			table = row[5]
 			
 			articleId = self.getArticleIdByName(article)
-			avgPurchasePrice = self.getAveragePurchasePrice(articleId)
+			avgPurchasePrice = 0.0 #self.getAveragePurchasePrice(articleId)
 			purchasePrice = round(avgPurchasePrice*amount, 2)
 			#purchasePrice = avgPurchasePrice
 			
@@ -141,25 +141,29 @@ class AufwandDetailsProTagReport(TextReport):
 	def mkQuery(self):
 		"""returns the query"""
 		query = """
-				select checkpoint_info, detail_artikel_text, sum(detail_absmenge), sum(detail_absmenge*detail_preis), detail_mwst, rechnung_tischBereich
-from journal_details, journal_daten, journal_checkpoints, rechnungen_basis
+				select checkpoint_info, tisch_bondetail_text, sum(tisch_bondetail_absmenge), sum(tisch_bondetail_absmenge*tisch_bondetail_preis), tisch_bondetail_mwst, rechnung_tischBereich
+from tische_bondetails, tische_bons, tische_aktiv, rechnungen_basis, journal_checkpoints
 where 1=1
-and {0}
-and daten_rechnung_id = rechnung_id
-and detail_journal = daten_rechnung_id
-and daten_checkpoint_tag = checkpoint_id
-and detail_periode = {1}
-and rechnung_periode = {2}
-group by checkpoint_info, rechnung_tischBereich, detail_artikel_text, detail_istUmsatz, detail_mwst
-order by str_to_date(checkpoint_info, '%d.%m.%Y') desc, detail_artikel_text
+and {where}
+and tisch_bondetail_bon = tisch_bon_id
+and tisch_bon_tisch = tisch_id
+and tisch_rechnung = rechnung_id
+and rechnungen_basis.checkpoint_tag = checkpoint_id
+and tisch_bondetail_periode = {period_id}
+and tisch_bon_periode = {period_id}
+and tisch_periode = {period_id}
+and rechnung_periode = {period_id}
+and checkpoint_periode = {period_id}
+group by checkpoint_info, rechnung_tischBereich, tisch_bondetail_text, tisch_bondetail_istUmsatz, tisch_bondetail_mwst
+order by str_to_date(checkpoint_info, '%d.%m.%Y') desc, tisch_bondetail_text
 		""" 
 		
 		if not self.ui.checkBox_zeroBonierungen.isChecked():
-			whereClause = "detail_istUmsatz = 0"
+			whereClause = "tisch_bondetail_istUmsatz = 0"
 		else:
-			whereClause = "(detail_istUmsatz = 0 or detail_preis = 0.0)"
+			whereClause = "(tisch_bondetail_istUmsatz = 0 or tisch_bondetail_preis = 0.0)"
 		
-		query = query.format(whereClause, self._getCurrentPeriodId(), self._getCurrentPeriodId())
+		query = query.format(where = whereClause, period_id=self._getCurrentPeriodId())
 		print query
 		return query
 	
