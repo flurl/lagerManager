@@ -36,13 +36,14 @@ CREATE TABLE tische_aktiv(
     tisch_dt_zusatz datetime NULL,
     tisch_adresse int NULL,
     tisch_kellner_abrechnung int NULL,
-    tisch_client nvarchar(50) NULL,
+    tisch_client varchar(50) NULL,
     tisch_reservierung int NULL,
     tisch_reservierung_check bit NOT NULL,
     tisch_zusatz_text text NULL,
     checkpoint_tag int NULL,
     checkpoint_monat int NULL,
     checkpoint_jahr int NULL,
+    tisch_externer_beleg bit NOT NULL,
     tisch_periode int not null,
     index tische_aktiv_idx (tisch_id),
     foreign key tische_aktiv_periode_fk (tisch_periode) references perioden(periode_id)
@@ -84,9 +85,10 @@ CREATE TABLE tische_bondetails(
     tisch_bondetail_ep_mwst int NULL,
     tisch_bondetail_preisgruppe int NULL,
     tisch_bondetail_gutschein_log int NULL,
-    journal_preisgruppe nvarchar(50) NULL,
-    journal_gruppe nvarchar(2000) NULL,
+    journal_preisgruppe varchar(50) NULL,
+    journal_gruppe varchar(2000) NULL,
     journal_mwst decimal(18, 3) NULL,
+    tisch_bondetail_istExternerBeleg bit NOT NULL,
     tisch_bondetail_periode int not null,
     index tische_bondetails_idx (tisch_bondetail_id),
     foreign key tische_bondetails_periode_fk (tisch_bondetail_periode) references perioden(periode_id)
@@ -110,6 +112,7 @@ CREATE TABLE tische_bereiche(
     tischbereich_temp bit NOT NULL,
     tischbereich_versteckeSammeltisch bit NOT NULL,
     tischbereich_sammeltischOptional bit NOT NULL,
+    tischbereich_rksv bit NOT NULL,
     tischbereich_periode int not null,
     index tische_bereiche_idx (tischbereich_id),
     foreign key tische_bereiche_periode_fk (tischbereich_periode) references perioden(periode_id)
@@ -131,6 +134,23 @@ CREATE TABLE rechnungen_basis(
     checkpoint_tag int NULL,
     checkpoint_monat int NULL,
     checkpoint_jahr int NULL,
+    rechnung_kassenidentifikation varchar(2000) NULL,
+    rechnung_barumsatz_nr int NULL,
+    rechnung_gesamt_umsatz decimal(18, 3) NULL,
+    rechnung_zertifikat_id varchar(2000) NULL,
+    rechnung_referenz int NULL,
+    rechnung_signatur varchar(2000) NULL,
+    rechnung_druckpfad varchar(2000) NULL,
+    rechnung_mwst_normal decimal(18, 3) NULL,
+    rechnung_mwst_ermaessigt1 decimal(18, 3) NULL,
+    rechnung_mwst_ermaessigt2 decimal(18, 3) NULL,
+    rechnung_mwst_null decimal(18, 3) NULL,
+    rechnung_mwst_besonders decimal(18, 3) NULL,
+    rechnung_gesamt_umsatz_enc varchar(2000) NULL,
+    rechnung_rka varchar(2000) NULL,
+    rechnung_vorherige_signatur varchar(2000) NULL,
+    rechnung_beleg_kennzeichen varchar(2000) NULL,
+    rechnung_istTrainingsBeleg bit NOT NULL,
     rechnung_periode int not null,
 	index rechnungen_basis_idx (rechnung_id),
 	foreign key rechnungen_basis_periode_fk (rechnung_periode) references perioden(periode_id)
@@ -183,6 +203,7 @@ CREATE TABLE artikel_basis(
 	artikel_ep_preis_popup bit NOT NULL,
 	artikel_bemerkung text NULL,
 	artikel_bezeichnung_2 text NULL,
+	artikel_rksv bit NOT NULL,
 	artikel_periode int null,
 	index (artikel_id),
 	foreign key artikel_basis_periode_fk (artikel_periode) references perioden(periode_id)
@@ -238,6 +259,11 @@ CREATE TABLE meta_mwstgruppen (
 	mwst_id int NOT NULL,
 	mwst_satz decimal(18, 2) NOT NULL,
 	mwst_bezeichnung varchar(50) NOT NULL,
+	mwst_satz_normal bit NOT NULL,
+	mwst_satz_ermaessigt_1 bit NOT NULL,
+	mwst_satz_ermaessigt_2 bit NOT NULL,
+	mwst_satz_null bit NOT NULL,
+	mwst_satz_besonders bit NOT NULL,
 	mwst_periode integer not null,
 	foreign key mwst_periode_fk (mwst_periode) references perioden(periode_id)
 ) ENGINE=INNODB;
@@ -295,6 +321,14 @@ create table lieferungen(
 	foreign key lieferung_lieferant_fk (lieferant_id) references lieferanten(lieferant_id)
 ) ENGINE=INNODB;
 
+
+create table steuersaetze (
+	sts_id int unsigned auto_increment primary key not null,
+	sts_bezeichnung varchar(255) not null,
+	sts_prozent float not null
+) ENGINE=INNODB;
+
+
 create table lieferungen_details(
 	lieferung_detail_id integer auto_increment primary key not null,
 	lieferung_id int unsigned not null,
@@ -320,11 +354,6 @@ create table dokumente (
 ) ENGINE=INNODB;
 
 
-create table steuersaetze (
-	sts_id int unsigned auto_increment primary key not null,
-	sts_bezeichnung varchar(255) not null,
-	sts_prozent float not null
-) ENGINE=INNODB;
 
 create table liefereinheiten (
 	lei_id int unsigned auto_increment primary key not null,
