@@ -29,7 +29,7 @@ class Updater(object):
 	
 	def getAvailableUpdates(self):
 		updFiles = glob.glob('sql/upd*.sql')
-		updFiles.sort(reverse=True)
+		updFiles.sort()
 		return updFiles
 	
 	
