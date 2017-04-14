@@ -52,9 +52,8 @@ class Updater(object):
 			
 			fileVersion = int(groups[1])
 			
-			
 			if fileVersion <= currVersion:
-				break
+				continue
 			
 			self.runScript(lines)
 		
