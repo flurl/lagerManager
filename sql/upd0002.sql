@@ -1,7 +1,7 @@
 #V1022
 
 
-create table gehaelter (
+CREATE TABLE IF NOT EXISTS gehaelter (
 	geh_id int unsigned auto_increment primary key not null,
 	geh_kbez varchar(10) not null,
 	geh_bez varchar(255),
@@ -9,7 +9,7 @@ create table gehaelter (
 ) ENGINE=INNODB;
 
 
-create table loehne (
+CREATE TABLE IF NOT EXISTS loehne (
 	loh_id int unsigned not null auto_increment primary key,
 	loh_summe float not null,
 	loh_gehid int unsigned not null,

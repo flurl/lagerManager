@@ -1,6 +1,6 @@
 #V1146
 
-CREATE TABLE tische_bereiche(
+CREATE TABLE IF NOT EXISTS tische_bereiche(
     tischbereich_id int NOT NULL,
     tischbereich_kurzName varchar(8) NOT NULL,
     tischbereich_name varchar(50) NOT NULL,

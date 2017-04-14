@@ -1,13 +1,13 @@
 #V1022
 
-create table dir_typen (
+CREATE TABLE IF NOT EXISTS dir_typen (
 	dit_id int unsigned auto_increment primary key not null,
 	dit_bez varchar(255) not null,
 	dit_kbez varchar(5) not null,
 	unique key (dit_kbez)
 )ENGINE=INNODB;
 
-create table dienstnehmer_ereignisse (
+CREATE TABLE IF NOT EXISTS dienstnehmer_ereignisse (
 	dir_id int unsigned auto_increment primary key not null,
 	dir_dinid int unsigned not null,
 	dir_datum datetime not null,

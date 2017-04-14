@@ -3,7 +3,7 @@
 #V0110
 
 
-create table initialer_stand (
+CREATE TABLE IF NOT EXISTS initialer_stand (
 	ist_id integer auto_increment primary key not null,
 	ist_artikel_id int not null,
 	ist_anzahl float not null,
