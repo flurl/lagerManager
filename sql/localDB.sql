@@ -204,6 +204,7 @@ CREATE TABLE artikel_basis(
 	artikel_bemerkung text NULL,
 	artikel_bezeichnung_2 text NULL,
 	artikel_rksv bit NOT NULL,
+	artikel_externer_beleg bit NOT NULL,
 	artikel_periode int null,
 	index (artikel_id),
 	foreign key artikel_basis_periode_fk (artikel_periode) references perioden(periode_id)

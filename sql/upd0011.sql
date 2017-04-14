@@ -26,4 +26,5 @@ call AddColumnUnlessExists(Database(), 'rechnungen_basis', 'rechnung_beleg_kennz
 call AddColumnUnlessExists(Database(), 'rechnungen_basis', 'rechnung_istTrainingsBeleg', 'bit NOT NULL');
 
 call AddColumnUnlessExists(Database(), 'artikel_basis', 'artikel_rksv', 'bit NOT NULL');
+call AddColumnUnlessExists(Database(), 'artikel_basis', 'artikel_externer_beleg', 'bit NOT NULL');
 
