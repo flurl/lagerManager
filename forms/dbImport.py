@@ -184,9 +184,9 @@ class ImportForm(FormBase):
 						tisch_dt_erstellung, tisch_dt_aktivitaet, tisch_kellner, tisch_fertig,
 						tisch_zahlungsart, tisch_rechnung, tisch_dt_zusatz, tisch_adresse, tisch_kellner_abrechnung,
 						tisch_client, tisch_reservierung, tisch_reservierung_check, tisch_zusatz_text,
-						checkpoint_tag, checkpoint_monat, checkpoint_jahr, tisch_periode)
+						checkpoint_tag, checkpoint_monat, checkpoint_jahr, tisch_externer_beleg, tisch_periode)
 						values """
-			valuesStr = "(%s, %s, %s, %s, %s, '%s', '%s', %s, %s, %s, %s, '%s', %s, %s, '%s', %s, %s, '%s', %s, %s, %s, %s)"
+			valuesStr = "(%s, %s, %s, %s, %s, '%s', '%s', %s, %s, %s, %s, '%s', %s, %s, '%s', %s, %s, '%s', %s, %s, %s, %s, %s)"
 			self.insertMultipleValues(insertStr, valuesStr, res, (periodId, ))
 			
 			
@@ -237,7 +237,7 @@ class ImportForm(FormBase):
 								tisch_bondetail_text, tisch_bondetail_mwst, tisch_bondetail_gangfolge, tisch_bondetail_hatRabatt, \
 								tisch_bondetail_istRabatt, tisch_bondetail_autoEintrag, tisch_bondetail_stornoFaehig, tisch_bondetail_ep, \
 								tisch_bondetail_ep_mwst, tisch_bondetail_preisgruppe, tisch_bondetail_gutschein_log, journal_preisgruppe, \
-								journal_gruppe, journal_mwst from tische_bondetails, tische_bons, tische_aktiv where tisch_bondetail_bon = tisch_bon_id and tisch_bon_tisch = tisch_id and tische_aktiv.checkpoint_jahr %s order by tisch_bondetail_id" % ("="+str(self.getCheckpointIdForPeriod(periodId)) if self.getCheckpointIdForPeriod(periodId) is not None else "is null")
+								journal_gruppe, journal_mwst, tisch_bondetail_istExternerBeleg from tische_bondetails, tische_bons, tische_aktiv where tisch_bondetail_bon = tisch_bon_id and tisch_bon_tisch = tisch_id and tische_aktiv.checkpoint_jahr %s order by tisch_bondetail_id" % ("="+str(self.getCheckpointIdForPeriod(periodId)) if self.getCheckpointIdForPeriod(periodId) is not None else "is null")
 			res = self.runQuery(q, db=s)
 			
 			insertStr = u"""insert into tische_bondetails 
@@ -246,9 +246,9 @@ class ImportForm(FormBase):
 								tisch_bondetail_text, tisch_bondetail_mwst, tisch_bondetail_gangfolge, tisch_bondetail_hatRabatt,
 								tisch_bondetail_istRabatt, tisch_bondetail_autoEintrag, tisch_bondetail_stornoFaehig, tisch_bondetail_ep,
 								tisch_bondetail_ep_mwst, tisch_bondetail_preisgruppe, tisch_bondetail_gutschein_log, journal_preisgruppe,
-								journal_gruppe, journal_mwst, tisch_bondetail_periode)
+								journal_gruppe, journal_mwst, tisch_bondetail_istExternerBeleg, tisch_bondetail_periode)
 								values """
-			valuesStr = u"(%s, %s, %s, %s, %s, %s, %s, %s, '%s', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '%s', '%s', %s, %s)"
+			valuesStr = u"(%s, %s, %s, %s, %s, %s, %s, %s, '%s', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '%s', '%s', %s, %s, %s)"
 			self.insertMultipleValues(insertStr, valuesStr, res, (periodId, ))
 			
 			
@@ -270,9 +270,9 @@ class ImportForm(FormBase):
 			q = "select * from tische_bereiche"
 			res = self.runQuery(q, db=s)
 			
-			insertStr = u"""insert into tische_bereiche (tischbereich_id, tischbereich_kurzName, tischbereich_name, tischbereich_istGastBereich, tischbereich_minNummer, tischbereich_maxNummer, tischbereich_istAufwand, tischbereich_istSammelbereich, tischbereich_benoetigtAdresse, tischbereich_rechnungsAnzahl, tischbereich_extern, tischbereich_istOrdercardBereich, tischbereich_vorgangsart, tischbereich_temp, tischbereich_versteckeSammeltisch, tischbereich_sammeltischOptional, tischbereich_periode)
+			insertStr = u"""insert into tische_bereiche (tischbereich_id, tischbereich_kurzName, tischbereich_name, tischbereich_istGastBereich, tischbereich_minNummer, tischbereich_maxNummer, tischbereich_istAufwand, tischbereich_istSammelbereich, tischbereich_benoetigtAdresse, tischbereich_rechnungsAnzahl, tischbereich_extern, tischbereich_istOrdercardBereich, tischbereich_vorgangsart, tischbereich_temp, tischbereich_versteckeSammeltisch, tischbereich_sammeltischOptional, tischbereich_rksv, tischbereich_periode)
 						values """
-			valuesStr = u"(%s, '%s', '%s', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+			valuesStr = u"(%s, '%s', '%s', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 			self.insertMultipleValues(insertStr, valuesStr, res, (periodId, ))
 			
 			
@@ -294,9 +294,13 @@ class ImportForm(FormBase):
 			q = "select * from rechnungen_basis where checkpoint_jahr %s order by rechnung_id" % ("="+str(self.getCheckpointIdForPeriod(periodId)) if self.getCheckpointIdForPeriod(periodId) is not None else "is null")
 			res = self.runQuery(q, db=s)
 			
-			insertStr = """insert into rechnungen_basis (rechnung_id, rechnung_typ, rechnung_nr, rechnung_dt_erstellung, rechnung_kellnerKurzName, rechnung_tischCode, rechnung_tischBereich, rechnung_adresse, rechnung_istStorno, rechnung_retour, rechnung_dt_zusatz, checkpoint_tag, checkpoint_monat, checkpoint_jahr, rechnung_periode)
+			insertStr = """insert into rechnungen_basis (rechnung_id, rechnung_typ, rechnung_nr, rechnung_dt_erstellung, rechnung_kellnerKurzName, rechnung_tischCode, rechnung_tischBereich, 
+			rechnung_adresse, rechnung_istStorno, rechnung_retour, rechnung_dt_zusatz, checkpoint_tag, checkpoint_monat, checkpoint_jahr, 
+			rechnung_kassenidentifikation, rechnung_barumsatz_nr, rechnung_gesamt_umsatz, rechnung_zertifikat_id, rechnung_referenz, rechnung_signatur, rechnung_druckpfad, rechnung_mwst_normal, 
+			rechnung_mwst_ermaessigt1, rechnung_mwst_ermaessigt2, rechnung_mwst_null, rechnung_mwst_besonders, rechnung_gesamt_umsatz_enc, rechnung_rka, rechnung_vorherige_signatur, 
+			rechnung_beleg_kennzeichen, rechnung_istTrainingsBeleg, rechnung_periode)
 						values """
-			valuesStr = "(%s, %s, %s, '%s', '%s', '%s', '%s', %s, %s, %s, '%s', %s, %s, %s, %s)"
+			valuesStr = "(%s, %s, %s, '%s', '%s', '%s', '%s', %s, %s, %s, '%s', %s, %s, %s, '%s', %s, %s, '%s', %s, '%s', '%s', %s, %s, %s, %s, %s, '%s', '%s', '%s', '%s', %s, %s)"
 			self.insertMultipleValues(insertStr, valuesStr, res, (periodId, ))
 			
 			
@@ -339,12 +343,12 @@ class ImportForm(FormBase):
 				print 'Error in query:', query.lastError().text()
 			
 			s = self.connectToSource()
-			q = """select artikel_id, artikel_bezeichnung, artikel_gruppe, isnull(artikel_ep, 0.0), artikel_ep_mwst, artikel_preis_popup, artikel_ep_preis_popup, artikel_bemerkung, artikel_bezeichnung_2
+			q = """select artikel_id, artikel_bezeichnung, artikel_gruppe, isnull(artikel_ep, 0.0), artikel_ep_mwst, artikel_preis_popup, artikel_ep_preis_popup, artikel_bemerkung, artikel_bezeichnung_2, artikel_rksv, artikel_externer_beleg
 						from artikel_basis"""
 			res = self.runQuery(q, db=s)
 			
 			for row in res:
-				query.prepare("insert into artikel_basis (artikel_id, artikel_bezeichnung, artikel_gruppe, artikel_ep, artikel_ep_mwst, artikel_preis_popup, artikel_ep_preis_popup, artikel_bemerkung, artikel_bezeichnung_2, artikel_periode) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+				query.prepare("insert into artikel_basis (artikel_id, artikel_bezeichnung, artikel_gruppe, artikel_ep, artikel_ep_mwst, artikel_preis_popup, artikel_ep_preis_popup, artikel_bemerkung, artikel_bezeichnung_2, artikel_rksv, artikel_externer_beleg, artikel_periode) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 				query.addBindValue(row[0])
 				query.addBindValue(row[1])
 				query.addBindValue(row[2])
@@ -354,6 +358,8 @@ class ImportForm(FormBase):
 				query.addBindValue(row[6])
 				query.addBindValue(row[7])
 				query.addBindValue(row[8])
+				query.addBindValue(row[9])
+				query.addBindValue(row[10])
 				query.addBindValue(periodId)
 				query.exec_()
 				if query.lastError().isValid():
