@@ -45,6 +45,19 @@
       <widget class="QComboBox" name="comboBox_fieldOfEmployment"/>
      </item>
      <item>
+      <widget class="QListWidget" name="listWidget_columns">
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>60</height>
+        </size>
+       </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::MultiSelection</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
