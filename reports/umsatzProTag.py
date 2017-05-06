@@ -4,15 +4,15 @@ import copy
 
 from PyQt4 import QtCore, QtGui, QtSql
 
-from textReport import TextReport
+from tableReport import TableReport
 
 
 
-class UmsatzProTagReport(TextReport):
+class UmsatzProTagReport(TableReport):
     ident = 'UmsatzProTag'
     
     def __init__(self, parent=None):
-        TextReport.__init__(self, parent)
+        TableReport.__init__(self, parent)
                 
         self.setHeader('Umsatz pro Tag')
         self.setFooter('here could be a nice footer')
@@ -29,7 +29,7 @@ class UmsatzProTagReport(TextReport):
     def mkQuery(self):
         """return the query"""
         query = """
-                select checkpoint_info, rechnung_kellnerkurzName,
+                select checkpoint_info, dayname(str_to_date(checkpoint_info, '%d.%m.%Y')), rechnung_kellnerkurzName,
 round(sum(rechnung_detail_absmenge*rechnung_detail_preis), 2)
 from rechnungen_details, rechnungen_basis, journal_checkpoints as a
 where 1=1
