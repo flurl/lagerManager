@@ -29,7 +29,7 @@ class UmsatzProTagReport(TableReport):
     def mkQuery(self):
         """return the query"""
         query = """
-                select checkpoint_info, dayname(str_to_date(checkpoint_info, '%d.%m.%Y')), rechnung_kellnerkurzName,
+                select str_to_date(checkpoint_info, '%d.%m.%Y'), dayname(str_to_date(checkpoint_info, '%d.%m.%Y')), rechnung_kellnerkurzName,
 round(sum(rechnung_detail_absmenge*rechnung_detail_preis), 2)
 from rechnungen_details, rechnungen_basis, journal_checkpoints as a
 where 1=1
@@ -41,7 +41,7 @@ and rechnung_detail_periode = {0}
 and rechnung_periode = {0}
 and checkpoint_periode = {0}
 group by checkpoint_info, rechnung_kellnerkurzName
-order by str_to_date(checkpoint_info, '%d.%m.%Y'), rechnung_kellnerkurzName
+order by str_to_date(checkpoint_info, '%d.%m.%Y'), dayname(str_to_date(checkpoint_info, '%d.%m.%Y')), rechnung_kellnerkurzName
         """
         
         query = query.format(self._getCurrentPeriodId())
