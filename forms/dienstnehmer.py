@@ -33,6 +33,7 @@ class DienstnehmerForm(FormBase):
 		self.model.setHeaderData(self.model.fieldIndex('geh_kbez'), QtCore.Qt.Horizontal, u'Gehalt')
 		self.model.setHeaderData(self.model.fieldIndex('din_farbe'), QtCore.Qt.Horizontal, u'Farbe')
 		self.model.setHeaderData(self.model.fieldIndex('din_nummer'), QtCore.Qt.Horizontal, u'Nummer')
+		self.model.setHeaderData(self.model.fieldIndex('din_svnr'), QtCore.Qt.Horizontal, u'SVNr.')
 		
 
 		
@@ -116,6 +117,7 @@ class DienstnehmerForm(FormBase):
 		rec.setValue(self.model.fieldIndex('din_stundensatz'), 0.0)
 		rec.setValue(self.model.fieldIndex('din_nummer'), -1)
 		rec.setValue(self.model.fieldIndex('geh_kbez'), minGehId)
+		rec.setValue(self.model.fieldIndex('din_svnr'), '')
 		#self.model.insertRecord(-1, rec)
 		self.model.insertRowIntoTable(rec)
 		self.model.select()

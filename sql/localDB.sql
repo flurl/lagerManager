@@ -384,10 +384,13 @@ create table dienstnehmer (
 	din_name varchar(255) not null,
 	din_nummer varchar(255) not null,
 	din_gehalt decimal(18, 3) NOT NULL,
+	din_gehid int unsigned not null,
 	din_bebid int unsigned not null,
 	din_stundensatz decimal(18, 3) NOT NULL,
 	din_farbe varchar(255) NULL,
+	din_svnr varchar(255) NULL,
 	foreign key dienstnehmer_beschaeftigunsgbereich_fk (din_bebid) references beschaeftigungsbereiche(beb_id),
+	foreign key dienstnehmer_gehalt_fk (din_gehid) references gehaelter (geh_id),
 	unique key (din_nummer)
 ) ENGINE=INNODB;
 
