@@ -113,6 +113,9 @@ class MainWindow(QtGui.QMainWindow):
         self.connect(self.ui.action_Lieferungen_InitialerLagerstand,
                     QtCore.SIGNAL('triggered()'),
                     lambda: self.openWindow('forms.lagerstand.LagerstandForm'))
+        self.connect(self.ui.action_Lieferungen_EinkaufspreisModifikatoren,
+                    QtCore.SIGNAL('triggered()'),
+                    lambda: self.openWindow('forms.ekModifikatoren.EkModifikatorenForm'))
 
         self.connect(self.ui.action_Dokumente_Dokumenttypen,
                     QtCore.SIGNAL('triggered()'),

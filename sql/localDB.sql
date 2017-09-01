@@ -307,6 +307,17 @@ create table lieferungen_details(
 ) ENGINE=INNODB;
 
 
+create table ek_modifikatoren (
+    emo_id int unsigned auto_increment primary key not null,
+    emo_artikel_id int not null,
+    emo_operator enum('+', '-', '*', '/') not null,
+    emo_modifikator float not null,
+    emo_periode_id int not null,
+    foreign key ek_modifikatoren_artikel_fk (emo_artikel_id) references artikel_basis(artikel_id),
+    foreign key ek_modifikatoren_periode_fk (emo_periode_id) references perioden(periode_id)
+) ENGINE=INNODB;
+
+
 create table dokumente (
 	dok_id integer unsigned auto_increment primary key not null,
 	dok_dotid int unsigned not null,
