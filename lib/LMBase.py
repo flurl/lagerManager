@@ -204,7 +204,11 @@ class LMBase(QtGui.QDialog):
     def currentSourceIndex(self, tableView):
         """maps the current selection to the index of the proxy's current source"""
         idx = tableView.selectionModel().currentIndex()#.row()
-        idx = tableView.model().mapToSource(idx)
+        # if no proxy model is used, call to mapToSource will fail
+        try:
+            idx = tableView.model().mapToSource(idx)
+        except AttributeError:
+            pass
         return idx
     
     def closeEvent(self, event):
