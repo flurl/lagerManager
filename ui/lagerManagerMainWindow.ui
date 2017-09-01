@@ -101,6 +101,7 @@
     <addaction name="action_Lieferungen_Lieferungen"/>
     <addaction name="action_Lieferungen_Lieferanten"/>
     <addaction name="action_Lieferungen_InitialerLagerstand"/>
+    <addaction name="action_Lieferungen_EinkaufspreisModifikatoren"/>
    </widget>
    <widget class="QMenu" name="menuStammdaten">
     <property name="title">
@@ -363,6 +364,11 @@
   <action name="action_Stammdaten_InitialerStand">
    <property name="text">
     <string>Initialer St&amp;and</string>
+   </property>
+  </action>
+  <action name="action_Lieferungen_EinkaufspreisModifikatoren">
+   <property name="text">
+    <string>&amp;Einkaufspreis Modifikatoren</string>
    </property>
   </action>
  </widget>

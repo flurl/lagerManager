@@ -151,6 +151,8 @@ class Ui_MainWindow(object):
         self.action_Report_Umsaetze_RechnungenStatistik.setObjectName(_fromUtf8("action_Report_Umsaetze_RechnungenStatistik"))
         self.action_Stammdaten_InitialerStand = QtGui.QAction(MainWindow)
         self.action_Stammdaten_InitialerStand.setObjectName(_fromUtf8("action_Stammdaten_InitialerStand"))
+        self.action_Lieferungen_EinkaufspreisModifikatoren = QtGui.QAction(MainWindow)
+        self.action_Lieferungen_EinkaufspreisModifikatoren.setObjectName(_fromUtf8("action_Lieferungen_EinkaufspreisModifikatoren"))
         self.menuFile.addAction(self.actionQuit)
         self.menu_Einkauf.addAction(self.action_Report_Einkauf_GesamteLieferungen)
         self.menu_Einkauf.addAction(self.action_Report_Einkauf_Verprobung)
@@ -179,6 +181,7 @@ class Ui_MainWindow(object):
         self.menu_Lieferungen.addAction(self.action_Lieferungen_Lieferungen)
         self.menu_Lieferungen.addAction(self.action_Lieferungen_Lieferanten)
         self.menu_Lieferungen.addAction(self.action_Lieferungen_InitialerLagerstand)
+        self.menu_Lieferungen.addAction(self.action_Lieferungen_EinkaufspreisModifikatoren)
         self.menuStammdaten.addAction(self.action_Stammdaten_Perioden)
         self.menuStammdaten.addAction(self.action_Stammdaten_Import)
         self.menuStammdaten.addAction(self.action_Stammdaten_Steuersaetze)
@@ -267,4 +270,5 @@ class Ui_MainWindow(object):
         self.action_Report_Artikel_NichtVorhandene.setText(_translate("MainWindow", "Nicht &vorhandene", None))
         self.action_Report_Umsaetze_RechnungenStatistik.setText(_translate("MainWindow", "Rechnungen &Statistik", None))
         self.action_Stammdaten_InitialerStand.setText(_translate("MainWindow", "Initialer St&and", None))
+        self.action_Lieferungen_EinkaufspreisModifikatoren.setText(_translate("MainWindow", "&Einkaufspreis Modifikatoren", None))
 
