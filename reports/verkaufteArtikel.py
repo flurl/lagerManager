@@ -113,7 +113,9 @@ getPurchasePrice(tisch_bondetail_text, tisch_bondetail_periode, NULL),
 sum(tisch_bondetail_absmenge*getPurchasePrice(tisch_bondetail_text, tisch_bondetail_periode, NULL)),
 journal_gruppe
 %(table_code)s %(date)s
-from rechnungen_basis, journal_checkpoints as a, tische_aktiv, tische_bons, tische_bondetails, kellner_basis, tische_bereiche
+from tische_aktiv left outer join rechnungen_basis
+  on tisch_rechnung = rechnung_id,
+journal_checkpoints as a, tische_bons, tische_bondetails, kellner_basis, tische_bereiche
 where 1=1
 and tischbereich_id = tisch_bereich
 and tischbereich_periode = %(period_id)s
@@ -121,9 +123,8 @@ and kellner_id = tisch_bon_kellner
 and kellner_periode = %(period_id)s
 and checkpoint_id = %(checkpoint_id)s
 and checkpoint_periode = %(period_id)s
-and rechnungen_basis.checkpoint_tag = checkpoint_id
-and rechnung_periode = %(period_id)s
-and tisch_rechnung = rechnung_id
+and tische_aktiv.checkpoint_tag = checkpoint_id
+and (rechnung_periode = %(period_id)s or rechnung_periode is null)
 and tisch_periode = %(period_id)s
 and tisch_bon_tisch = tisch_id
 and tisch_bon_periode = %(period_id)s
