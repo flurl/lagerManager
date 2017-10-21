@@ -1,7 +1,7 @@
 #V1170
 
 
-create table ek_modifikatoren (
+create table if not exists ek_modifikatoren (
     emo_id int unsigned auto_increment primary key not null,
     emo_artikel_id int not null,
     emo_operator enum('+', '-', '*', '/') not null,
@@ -29,16 +29,16 @@ BEGIN
     
     select (
         sum(anzahl*einkaufspreis)
-        /sum(
+        /avg(
             ifnull((if (emo_operator = '/', emo_modifikator, 1.0)),1.0)
         )
-        *sum(
+        *avg(
             ifnull((if (emo_operator = '*', emo_modifikator, 1.0)),1.0)
         )
-        +sum(
+        +avg(
             ifnull((if (emo_operator = '+', emo_modifikator, 0.0)),0.0)
         )
-        -sum(
+        -avg(
             ifnull((if (emo_operator = '-', emo_modifikator, 0.0)),0.0)
         )
     )
