@@ -122,6 +122,15 @@ class LieferungDetailForm(FormBase):
 				self.connect(actions[-1], QtCore.SIGNAL('triggered()'), lambda a=amount: self.calcAmountPrice(a))
 				self.detailTableView.addAction(actions[-1])
 				
+				
+		sep = QtGui.QAction(self)
+		sep.setSeparator(True)
+		self.detailTableView.addAction(sep)
+		
+		discountAction = QtGui.QAction(u'Skonto…', self)
+		self.connect(discountAction, QtCore.SIGNAL('triggered()'), self.addDiscount)
+		self.detailTableView.addAction(discountAction)
+		
 		sep = QtGui.QAction(self)
 		sep.setSeparator(True)
 		self.detailTableView.addAction(sep)
@@ -137,7 +146,7 @@ class LieferungDetailForm(FormBase):
 		fillRemainingAction = QtGui.QAction(u'Artikel mit Restbetrag anlegen', self)
 		self.connect(fillRemainingAction, QtCore.SIGNAL('triggered()'), self.createRemainingAmountArticle)
 		self.detailTableView.addAction(fillRemainingAction)
-				
+		
 		self.detailTableView.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 		
 
@@ -540,6 +549,22 @@ class LieferungDetailForm(FormBase):
 		value = QtCore.QVariant(value.toFloat()[0]/amount.toFloat()[0])
 		self.detailModel.setData(valueIdx, value)
 		
+	def addDiscount(self):
+		value, ok = QtGui.QInputDialog.getDouble(self, "Skonto", "Prozent wählen", min=0.0, max=100.0, decimals=2)
+		if ok:
+			query = QtSql.QSqlQuery()
+			query.prepare("""update lieferungen_details
+							set einkaufspreis = einkaufspreis*(1-(?/100))
+							where 1=1
+							and lieferungen_details.lieferung_id = ?""")
+			query.addBindValue(value)
+			query.addBindValue(self.getCurrentLieferungId())
+			query.exec_()
+			if query.lastError().isValid():
+				print 'Error setting discount:', query.lastError().text()
+				return
+		self.detailModel.select()
+		self.calcTotal()
 		
 	def createRemainingAmountArticle(self):
 		grossTotal = self.calcTotal()['gross']
