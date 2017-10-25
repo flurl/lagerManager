@@ -126,3 +126,4 @@ class DokumentDetailForm(FormBase):
 	def onBeforeUpdate(self, id_, record):
 		print 'onBeforeUpdate'
 		record.setValue('dok_data', self.docImage)
+		record.setGenerated('dok_data', True)
