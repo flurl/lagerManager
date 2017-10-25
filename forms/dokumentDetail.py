@@ -53,18 +53,22 @@ class DokumentDetailForm(FormBase):
 		self.mapper = mapper
 		
 		#for saving the record image blob
-		self.connect(m, QtCore.SIGNAL('beforeUpdate (int,QSqlRecord&)'), self.onBeforeUpdate)
-		self.connect(m, QtCore.SIGNAL('beforeInsert (QSqlRecord&)'), self.onBeforeInsert)
+		m.beforeUpdate.connect(self.onBeforeUpdate)
+		m.beforeInsert.connect(self.onBeforeInsert)
 		
 		self.ui.label_documentImage.setPixmap(self.scalePixmap(self.getCurrentDocImage()))
 			
 	def accept(self):
 		self.mapper.submit()
 		self.model.submitAll()
+		self.model.beforeUpdate.disconnect(self.onBeforeUpdate)
+		self.model.beforeInsert.disconnect(self.onBeforeInsert)
 		super(DokumentDetailForm, self).accept()
 		
 	def reject(self):
 		self.model.revertAll()
+		self.model.beforeUpdate.disconnect(self.onBeforeUpdate)
+		self.model.beforeInsert.disconnect(self.onBeforeInsert)
 		super(DokumentDetailForm, self).reject()
 		
 		
