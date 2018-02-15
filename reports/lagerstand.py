@@ -73,8 +73,11 @@ class LagerstandReport(GraphicsReport):
 			
 			date = time.strptime(ckpInfo, '%d.%m.%Y')
 			yday = date.tm_yday
+			# if the checkpoint year doesn't match the period year
+			# (e.g. in case of silvester)
+			# add the consumption to day 0
 			if str(date.tm_year) != self.getCurrPeriode():
-				continue
+				yday = 0 
 
 			days[yday][article] = days[yday].get(article, 0.0) + amount*-1.0
 			
