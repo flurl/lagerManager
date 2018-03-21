@@ -82,6 +82,22 @@ class LagerstandReport(GraphicsReport):
 			days[yday][article] = days[yday].get(article, 0.0) + amount*-1.0
 			
 			
+		query = self.mkCountedQuery()
+		results = self.db.exec_(query)
+		
+		while results.next():
+			date = results.value(0).toDateTime().toPyDateTime()
+			article = unicode(results.value(1).toString())
+			if ignorePrefix and u'-' in article:
+				article = article.partition(u'-')[2]
+			article += '-gezaehlt'
+				
+			amount = results.value(2).toFloat()[0]
+			yday = date.timetuple().tm_yday
+			
+			days[yday][article] = amount
+			
+			
 		query = self.mkDelQuery()
 		results = self.db.exec_(query)
 		#print query
@@ -316,6 +332,19 @@ class LagerstandReport(GraphicsReport):
 				and lieferungen.datum between periode_start and periode_ende
 				group by datum, artikel_bezeichnung
 		""" % {'period_id': self._getCurrentPeriodId()}
+		
+		return query
+		
+		
+	def mkCountedQuery(self):
+		"return the query for what has been counted"
+		query = """
+				select gst_datum, artikel_bezeichnung, gst_anzahl
+				from gezaehlter_stand, artikel_basis
+				where 1=1
+				and artikel_id = gst_artikel_id
+				and gst_datum between '%s' and '%s'
+		""" % self._getCurrentPeriodStartEnd()
 		
 		return query
 		

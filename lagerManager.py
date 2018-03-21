@@ -173,6 +173,10 @@ class MainWindow(QtGui.QMainWindow):
         self.connect(self.ui.action_Stammdaten_Konfiguration,
                     QtCore.SIGNAL('triggered()'),
                     lambda: self.openWindow('forms.globalConfig.ConfigForm'))
+                    
+        self.connect(self.ui.action_Statistik_GezaehlterStand,
+                    QtCore.SIGNAL('triggered()'),
+                    lambda: self.openWindow('forms.gezaehlterStand.GezaehlterStandForm'))
 
     def openConnectDlg(self):
         import connectDlg

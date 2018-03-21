@@ -137,12 +137,19 @@
     <addaction name="action_Personal_Gehaelter"/>
     <addaction name="action_Personal_Loehne"/>
    </widget>
+   <widget class="QMenu" name="menuS_tatistik">
+    <property name="title">
+     <string>S&amp;tatistik</string>
+    </property>
+    <addaction name="action_Statistik_GezaehlterStand"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menu_Reports"/>
    <addaction name="menu_Lieferungen"/>
    <addaction name="menu_Dokumente"/>
    <addaction name="menu_Personal"/>
    <addaction name="menuStammdaten"/>
+   <addaction name="menuS_tatistik"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionQuit">
@@ -369,6 +376,11 @@
   <action name="action_Lieferungen_EinkaufspreisModifikatoren">
    <property name="text">
     <string>&amp;Einkaufspreis Modifikatoren</string>
+   </property>
+  </action>
+  <action name="action_Statistik_GezaehlterStand">
+   <property name="text">
+    <string>&amp;Gezählter Stand</string>
    </property>
   </action>
  </widget>
