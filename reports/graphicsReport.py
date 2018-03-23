@@ -27,6 +27,9 @@ class GraphicsReport(ReportBase):
 	def setDataFormatter(self, f=None):
 		self.ui.graphicsView.setDataFormatter(f)
 		
+	def getColor(self, key):
+		return self.ui.graphicsView.getColor(key)
+		
 	def getCurrPeriode(self):
 		return self.ui.comboBox_period.currentText()
 		

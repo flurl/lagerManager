@@ -203,6 +203,10 @@ class LagerstandReport(GraphicsReport):
 		layout.addWidget(cb)
 		self.connect(cb, QtCore.SIGNAL('stateChanged(int)'), self.onCheckAllNegativeChanged)
 		
+		cb = QtGui.QCheckBox(u'gezählt verknüpfen')
+		layout.addWidget(cb)
+		self.linkCountedCheckBox = cb
+		
 		for a in sorted(list(articles)):
 			containerWidget = QtGui.QWidget()
 			vl = QtGui.QVBoxLayout()
@@ -232,6 +236,8 @@ class LagerstandReport(GraphicsReport):
 		
 		widget.setLayout(layout)
 		self.ui.scrollArea_articleSelection.setWidget(widget)
+		
+		self.connectArticleCheckBoxes()
 		
 		#adjust line edits width
 		#for key, mod in self.articleMods.iteritems():
@@ -381,11 +387,26 @@ class LagerstandReport(GraphicsReport):
 				parent.show()
 			else:
 				parent.hide()
+				
+				
+	def connectArticleCheckBoxes(self):
+		for cb in self.articleCheckboxes:
+			text = unicode(cb.text()).upper()
+			if text.endswith("-GEZAEHLT"):
+				continue
+			countedCheckBox = None
+			for c in self.articleCheckboxes:
+				if unicode(c.text()).upper() == text+u"-GEZAEHLT":
+					countedCheckBox = c
+					break
+			if countedCheckBox is not None:
+				self.connect(cb, QtCore.SIGNAL('stateChanged (int)'), lambda i, countedCB=countedCheckBox: self.linkCountedCheckBox.isChecked() and countedCB.setChecked(i))
 
 		
 	def _onRefreshBtnClicked(self):
 		self.setDatapoints(copy.deepcopy(self.dp))
 		self.plot()
+		self.updateColors()
 		
 		
 	def _onCheckAllChanged(self, state):
@@ -405,6 +426,22 @@ class LagerstandReport(GraphicsReport):
 						
 					cb.setStyleSheet(ss)
 			
+	
+	def updateColors(self):
+		for cb in self.articleCheckboxes:
+			text = unicode(cb.text())
+			#p = cb.palette()
+			try:
+				color = self.getColor(text)
+				tmp = {text: color}
+				print "color:", tmp
+				#p.setColor(QtGui.QPalette.Active, QtGui.QPalette.Base, color)
+				cb.setStyleSheet("QCheckBox::indicator:checked {background-color: %s;}" % color.name())
+			except KeyError:
+				pass
+			#cb.setPalette(p)
+			
+	
 			
 	def _onArticleFilterChanged(self, newText):
 		if newText == u'bierzumir':

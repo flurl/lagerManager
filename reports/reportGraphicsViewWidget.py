@@ -141,6 +141,7 @@ class ReportGraphicsViewWidget(QtGui.QWidget):
 		self.markingData = []
 		self.maxXCoord = 0
 		self.dpFilter = []
+		self.colors = {}
 		
 		self.connect(self.ui.slider_minDP, QtCore.SIGNAL('valueChanged (int)'), self._onMinDpSliderChanged)
 		self.connect(self.ui.slider_maxDP, QtCore.SIGNAL('valueChanged (int)'), self._onMaxDpSliderChanged)
@@ -188,7 +189,6 @@ class ReportGraphicsViewWidget(QtGui.QWidget):
 			yScalingFactor = 1
 
 		oldCoords = {}
-		colors = {}
 		min_ = self.ui.slider_minDP.value()
 		max_ = self.ui.slider_maxDP.value()
 		currScaling = self.getCurrentScaling()
@@ -197,9 +197,9 @@ class ReportGraphicsViewWidget(QtGui.QWidget):
 		for x in range(len(dp)):
 			if x >= min_ and x <= max_:
 				for y in dp[x]:
-					if y not in colors.keys():
-						colors[y] = QtGui.QColor(random.randint(0,255),	random.randint(0,255),random.randint(0,255))
-					color = colors[y]
+					if y not in self.colors.keys():
+						self.colors[y] = QtGui.QColor(random.randint(0,255),	random.randint(0,255),random.randint(0,255))
+					color = self.colors[y]
 					pen = QtGui.QPen(color)
 					coords = (LEGENDWIDTH+x*200, (maxY - dp[x][y])*yScalingFactor)
 					if self.maxXCoord < coords[0]:
@@ -364,3 +364,6 @@ class ReportGraphicsViewWidget(QtGui.QWidget):
 	def onFilterActivatedChanged(self, state):
 		if len(self.dpFilter) > 0 and state == QtCore.Qt.Unchecked:
 			self.showAllSeries()
+			
+	def getColor(self, key):
+		return self.colors[key]
