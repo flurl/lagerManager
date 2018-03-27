@@ -2,8 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/reports/gesamteLieferungenReport.ui'
 #
-# Created: Thu Aug 20 16:40:55 2015
-#      by: PyQt4 UI code generator 4.10.4
+# Created by: PyQt4 UI code generator 4.11.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -43,6 +42,9 @@ class Ui_GesamteLieferungenReport(object):
         self.comboBox_reportType.addItem(_fromUtf8(""))
         self.comboBox_reportType.addItem(_fromUtf8(""))
         self.horizontalLayout.addWidget(self.comboBox_reportType)
+        self.checkBox_groupByProvider = QtGui.QCheckBox(GesamteLieferungenReport)
+        self.checkBox_groupByProvider.setObjectName(_fromUtf8("checkBox_groupByProvider"))
+        self.horizontalLayout.addWidget(self.checkBox_groupByProvider)
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
         self.pushButton_export = QtGui.QPushButton(GesamteLieferungenReport)
@@ -66,6 +68,7 @@ class Ui_GesamteLieferungenReport(object):
         self.comboBox_what.setItemText(1, _translate("GesamteLieferungenReport", "Verbräuche", None))
         self.comboBox_reportType.setItemText(0, _translate("GesamteLieferungenReport", "Jährlich", None))
         self.comboBox_reportType.setItemText(1, _translate("GesamteLieferungenReport", "Monatlich", None))
+        self.checkBox_groupByProvider.setText(_translate("GesamteLieferungenReport", "&gruppieren nach Lief./Verb. ", None))
         self.pushButton_export.setText(_translate("GesamteLieferungenReport", "&Exportieren", None))
 
 from reports.reportTextViewWidget import ReportTextViewWidget
