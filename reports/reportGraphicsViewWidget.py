@@ -216,7 +216,7 @@ class ReportGraphicsViewWidget(QtGui.QWidget):
 					rect.setData([y, x, dp[x][y]])
 					try:
 						rect.setExtraData(self.extraData[x][y])
-					except IndexError:
+					except (IndexError, KeyError):
 						pass
 				
 					scene.addItem(rect)
