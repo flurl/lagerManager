@@ -90,12 +90,12 @@ class LagerstandReport(GraphicsReport):
 			article = unicode(results.value(1).toString())
 			if ignorePrefix and u'-' in article:
 				article = article.partition(u'-')[2]
-			article += '-gezaehlt'
+
 				
 			amount = results.value(2).toFloat()[0]
 			yday = date.timetuple().tm_yday
 			
-			days[yday][article] = amount
+			days[yday][article+u'-gezaehlt'] = amount
 			
 			
 		query = self.mkDelQuery()
@@ -150,11 +150,21 @@ class LagerstandReport(GraphicsReport):
 				elif (not article in self.articlesMaximum) or (dp[i][article] > self.articlesMaximum[article]):
 					self.articlesMaximum[article] = dp[i][article]
 					
+		# create the difference
+		for i in range(len(days)):
+			for article in allArticles:
+				try:
+					dp[i][article+u'-diff'] = dp[i][article] - dp[i][article+u'-gezaehlt']
+				except KeyError:
+					pass
 				
 		
 		#print dp
 		self.dp = copy.deepcopy(dp)
 		
+		for i in range(len(days)):
+			articles = dp[i]
+			allArticles.update(articles.keys())
 		self.populateArticleSelection(allArticles)
 		self.setDatapoints(dp)
 		self.setMarkingData(markingData)
