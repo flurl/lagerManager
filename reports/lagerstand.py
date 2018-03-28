@@ -154,7 +154,7 @@ class LagerstandReport(GraphicsReport):
 		for i in range(len(days)):
 			for article in allArticles:
 				try:
-					dp[i][article+u'-diff'] = dp[i][article] - dp[i][article+u'-gezaehlt']
+					dp[i][article+u'-diff'] = dp[i][article+u'-gezaehlt'] - dp[i][article]
 				except KeyError:
 					pass
 				
