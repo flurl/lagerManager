@@ -98,7 +98,7 @@ class GezaehlterStandForm(FormBase):
 	def _onInitDateBtnClicked(self):
 		query = QtSql.QSqlQuery()
 		query.prepare("""insert into gezaehlter_stand (gst_artikel_id, gst_anzahl, gst_datum)
-					select lager_artikel_artikel, 0, ? from lager_artikel where lager_artikel_periode = ?""")
+					select lager_artikel_artikel, (select sum(ist_anzahl) from initialer_stand where ist_artikel_id = lager_artikel_artikel and ist_periode_id = lager_artikel_periode), ? from lager_artikel where lager_artikel_periode = ?""")
 		query.addBindValue(self.ui.dateEdit_initDate.date())
 		query.addBindValue(self.getCurrentPeriodId())
 		query.exec_()
