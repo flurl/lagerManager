@@ -40,8 +40,10 @@ class LagerstandReport(GraphicsReport):
 		self.negativeArticles = Set()
 		ignorePrefix = self.ui.checkBox_ignorePrefix.isChecked()
 		days = []
+		countsDays = []
 		markingData = []
 		for i in range(370):
+			countsDays.append({})
 			days.append({})
 		
 		query =  self.mkInvQuery()
@@ -82,21 +84,6 @@ class LagerstandReport(GraphicsReport):
 			days[yday][article] = days[yday].get(article, 0.0) + amount*-1.0
 			
 			
-		query = self.mkCountedQuery()
-		results = self.db.exec_(query)
-		
-		while results.next():
-			date = results.value(0).toDateTime().toPyDateTime()
-			article = unicode(results.value(1).toString())
-			if ignorePrefix and u'-' in article:
-				article = article.partition(u'-')[2]
-
-				
-			amount = results.value(2).toFloat()[0]
-			yday = date.timetuple().tm_yday
-			
-			days[yday][article+u'-gezaehlt'] = amount
-			
 			
 		query = self.mkDelQuery()
 		results = self.db.exec_(query)
@@ -114,6 +101,23 @@ class LagerstandReport(GraphicsReport):
 			yday = date.timetuple().tm_yday
 			
 			days[yday][article] = days[yday].get(article, 0.0) + amount
+			
+		
+		# add counts
+		query = self.mkCountedQuery()
+		results = self.db.exec_(query)
+		
+		while results.next():
+			date = results.value(0).toDateTime().toPyDateTime()
+			article = unicode(results.value(1).toString())
+			if ignorePrefix and u'-' in article:
+				article = article.partition(u'-')[2]
+			
+			amount = results.value(2).toFloat()[0]
+			yday = date.timetuple().tm_yday
+			
+			countsDays[yday][article] = amount
+			
 		
 		dp = {}
 		allArticles = set()
@@ -127,6 +131,7 @@ class LagerstandReport(GraphicsReport):
 		for i in range(len(days)):
 			dp[i] = {}
 			articles = days[i]
+			countedArticles = countsDays[i]
 			day = (datetime.datetime(int(self.getCurrPeriode()), 1, 1) + datetime.timedelta(int(i) - 1))
 			markingData.append(day.strftime('%d.%m.%Y'))
 			
@@ -138,25 +143,27 @@ class LagerstandReport(GraphicsReport):
 			
 			for article in allArticles:
 				extraData[i][article] = deliveries
+				countedArticleKey = article+u'-gezaehlt'
+				articleDiffKey = article+u'-diff'
 				if i == 0:
 					dp[i][article] = articles.get(article, 0.0)
+					dp[i][countedArticleKey] = countedArticles.get(article, 0.0)
+					dp[i][articleDiffKey] = 0.0
 				else:
 					#print 'adding', i, articles.get(article, 0.0)
 					dp[i][article] = dp[i-1].get(article, 0.0) + articles.get(article, 0.0)
+					try:
+						dp[i][countedArticleKey] = countedArticles[article]
+						dp[i][articleDiffKey] = dp[i][countedArticleKey] - dp[i][article]
+					except KeyError:
+						dp[i][countedArticleKey] = dp[i-1][countedArticleKey]
+						dp[i][articleDiffKey] = dp[i-1][articleDiffKey]
 				if dp[i][article] < 0.0:
 					self.negativeArticles.add(article)
 				if (not article in self.articlesMinimum) or (dp[i][article] < self.articlesMinimum[article]):
 					self.articlesMinimum[article] = dp[i][article]
 				elif (not article in self.articlesMaximum) or (dp[i][article] > self.articlesMaximum[article]):
 					self.articlesMaximum[article] = dp[i][article]
-					
-		# create the difference
-		for i in range(len(days)):
-			for article in allArticles:
-				try:
-					dp[i][article+u'-diff'] = dp[i][article+u'-gezaehlt'] - dp[i][article]
-				except KeyError:
-					pass
 				
 		
 		#print dp
