@@ -412,12 +412,18 @@ class LagerstandReport(GraphicsReport):
 			if text.endswith("-GEZAEHLT"):
 				continue
 			countedCheckBox = None
+			diffCheckBox = None
 			for c in self.articleCheckboxes:
 				if unicode(c.text()).upper() == text+u"-GEZAEHLT":
 					countedCheckBox = c
+				if unicode(c.text()).upper() == text+u"-DIFF":
+					diffCheckBox = c
+				if diffCheckBox is not None and countedCheckBox is not None:
 					break
 			if countedCheckBox is not None:
 				self.connect(cb, QtCore.SIGNAL('stateChanged (int)'), lambda i, countedCB=countedCheckBox: self.linkCountedCheckBox.isChecked() and countedCB.setChecked(i))
+			if diffCheckBox is not None:
+				self.connect(cb, QtCore.SIGNAL('stateChanged (int)'), lambda i, diffCB=diffCheckBox: self.linkCountedCheckBox.isChecked() and diffCB.setChecked(i))
 
 		
 	def _onRefreshBtnClicked(self):
