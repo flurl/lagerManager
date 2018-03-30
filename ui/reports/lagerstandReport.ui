@@ -44,7 +44,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <layout class="QVBoxLayout" name="verticalLayout_legend">
        <item>
         <widget class="QLineEdit" name="lineEdit_filterArticles">
          <property name="sizePolicy">
@@ -52,13 +52,6 @@
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="checkBox_ignorePrefix">
-         <property name="text">
-          <string>Prefix ignorieren</string>
          </property>
         </widget>
        </item>
@@ -79,7 +72,7 @@
             <x>0</x>
             <y>0</y>
             <width>424</width>
-            <height>429</height>
+            <height>457</height>
            </rect>
           </property>
          </widget>

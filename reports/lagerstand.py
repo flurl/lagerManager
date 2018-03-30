@@ -32,13 +32,13 @@ class LagerstandReport(GraphicsReport):
 	def setupUi(self):
 		super(LagerstandReport, self).setupUi()
 		
+		self.createControlCheckBoxes()
+		
 		self.connect(self.ui.pushButton_refresh, QtCore.SIGNAL('clicked()'), self._onRefreshBtnClicked)
 		self.connect(self.ui.lineEdit_filterArticles, QtCore.SIGNAL('textChanged (const QString&)'), self._onArticleFilterChanged)
-		self.connect(self.ui.checkBox_ignorePrefix, QtCore.SIGNAL('stateChanged (int)'), self.updateData)
 		
 	def updateData(self):
 		self.negativeArticles = Set()
-		ignorePrefix = self.ui.checkBox_ignorePrefix.isChecked()
 		days = []
 		countsDays = []
 		markingData = []
@@ -53,8 +53,6 @@ class LagerstandReport(GraphicsReport):
 		days[0] = {}
 		while results.next():
 			name = unicode(results.value(0).toString())
-			if ignorePrefix and u'-' in name:
-				name = name.partition(u'-')[2]
 			amount = results.value(1).toFloat()[0]
 			days[0][name] = days[0].get(name, 0.0) + amount
 			
@@ -67,9 +65,6 @@ class LagerstandReport(GraphicsReport):
 			ckpId = results.value(0).toInt()[0]
 			ckpInfo = results.value(1).toString()
 			article = unicode(results.value(2).toString())
-			if ignorePrefix and u'-' in article:
-				article = article.partition(u'-')[2]
-			
 			amount = results.value(3).toFloat()[0]
 			count = results.value(4).toInt()[0]
 			
@@ -92,9 +87,6 @@ class LagerstandReport(GraphicsReport):
 		while results.next():
 			date = results.value(0).toDateTime().toPyDateTime()
 			article = unicode(results.value(1).toString())
-			if ignorePrefix and u'-' in article:
-				article = article.partition(u'-')[2]
-				
 			amount = results.value(2).toFloat()[0]
 			
 			
@@ -110,9 +102,6 @@ class LagerstandReport(GraphicsReport):
 		while results.next():
 			date = results.value(0).toDateTime().toPyDateTime()
 			article = unicode(results.value(1).toString())
-			if ignorePrefix and u'-' in article:
-				article = article.partition(u'-')[2]
-			
 			amount = results.value(2).toFloat()[0]
 			yday = date.timetuple().tm_yday
 			
@@ -205,29 +194,33 @@ class LagerstandReport(GraphicsReport):
 		super(LagerstandReport, self).setDatapoints(dp)
 		
 		
+	def createControlCheckBoxes(self):
+		layout = self.ui.verticalLayout_legend
+		scrollArea = self.ui.scrollArea_articleSelection
+	
+		cb = QtGui.QCheckBox('Alle')
+		layout.insertWidget(layout.indexOf(scrollArea), cb)
+		self.connect(cb, QtCore.SIGNAL('stateChanged(int)'), self._onCheckAllChanged)
+		
+		cb = QtGui.QCheckBox('Mit negativen Werten hevorheben')
+		layout.insertWidget(layout.indexOf(scrollArea), cb)
+		self.connect(cb, QtCore.SIGNAL('stateChanged(int)'), self.onCheckAllNegativeChanged)
+		
+		cb = QtGui.QCheckBox(u'Statistik Artikel verknüpfen')
+		layout.insertWidget(layout.indexOf(scrollArea), cb)
+		self.linkStatsCheckBox = cb
+		
+		cb = QtGui.QCheckBox(u'Statistik Artikel anzeigen')
+		layout.insertWidget(layout.indexOf(scrollArea), cb)
+		self.showStatsArticlesCheckBox = cb
+		self.connect(self.showStatsArticlesCheckBox, QtCore.SIGNAL('stateChanged(int)'), self.onShowStatsArticlesCheckBoxChanged)
+		
 		
 	def populateArticleSelection(self, articles):
 		self.articleCheckboxes = []
 		self.articleMods = {}
 		widget = QtGui.QWidget()
 		layout = QtGui.QVBoxLayout()
-		
-		cb = QtGui.QCheckBox('Alle')
-		layout.addWidget(cb)
-		self.connect(cb, QtCore.SIGNAL('stateChanged(int)'), self._onCheckAllChanged)
-		
-		cb = QtGui.QCheckBox('Mit negativen Werten hevorheben')
-		layout.addWidget(cb)
-		self.connect(cb, QtCore.SIGNAL('stateChanged(int)'), self.onCheckAllNegativeChanged)
-		
-		cb = QtGui.QCheckBox(u'Statistik Artikel verknüpfen')
-		layout.addWidget(cb)
-		self.linkStatsCheckBox = cb
-		
-		cb = QtGui.QCheckBox(u'Statistik Artikel anzeigen')
-		layout.addWidget(cb)
-		self.showStatsArticlesCheckBox = cb
-		self.connect(self.showStatsArticlesCheckBox, QtCore.SIGNAL('stateChanged(int)'), self.onShowStatsArticlesCheckBoxChanged)
 		
 		for a in sorted(list(articles)):
 			containerWidget = QtGui.QWidget()
@@ -252,7 +245,7 @@ class LagerstandReport(GraphicsReport):
 			if self.isStatsCheckBox(cb):
 				containerWidget.setVisible(False)
 			
-			func = lambda i, le=lineEdit: le.show()
+			func = lambda i, le=lineEdit: le.show() if i else le.hide()
 			self.connect(cb, QtCore.SIGNAL('stateChanged (int)'), func)
 			
 			self.articleCheckboxes.append(cb)
@@ -453,7 +446,7 @@ class LagerstandReport(GraphicsReport):
 						ss = "QCheckBox {color: red; background-color: #fff;}"
 					#cb.setCheckState(state)
 					else:
-						ss = self.ui.checkBox_ignorePrefix.styleSheet()
+						ss = ""
 						
 					cb.setStyleSheet(ss)
 					
