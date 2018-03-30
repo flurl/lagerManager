@@ -220,9 +220,14 @@ class LagerstandReport(GraphicsReport):
 		layout.addWidget(cb)
 		self.connect(cb, QtCore.SIGNAL('stateChanged(int)'), self.onCheckAllNegativeChanged)
 		
-		cb = QtGui.QCheckBox(u'gezählt verknüpfen')
+		cb = QtGui.QCheckBox(u'Statistik Artikel verknüpfen')
 		layout.addWidget(cb)
-		self.linkCountedCheckBox = cb
+		self.linkStatsCheckBox = cb
+		
+		cb = QtGui.QCheckBox(u'Statistik Artikel anzeigen')
+		layout.addWidget(cb)
+		self.showStatsArticlesCheckBox = cb
+		self.connect(self.showStatsArticlesCheckBox, QtCore.SIGNAL('stateChanged(int)'), self.onShowStatsArticlesCheckBoxChanged)
 		
 		for a in sorted(list(articles)):
 			containerWidget = QtGui.QWidget()
@@ -243,6 +248,9 @@ class LagerstandReport(GraphicsReport):
 			
 			containerWidget.setLayout(vl)
 			layout.addWidget(containerWidget)
+			
+			if self.isStatsCheckBox(cb):
+				containerWidget.setVisible(False)
 			
 			func = lambda i, le=lineEdit: le.show()
 			self.connect(cb, QtCore.SIGNAL('stateChanged (int)'), func)
@@ -409,7 +417,7 @@ class LagerstandReport(GraphicsReport):
 	def connectArticleCheckBoxes(self):
 		for cb in self.articleCheckboxes:
 			text = unicode(cb.text()).upper()
-			if text.endswith("-GEZAEHLT"):
+			if self.isStatsCheckBox(cb):
 				continue
 			countedCheckBox = None
 			diffCheckBox = None
@@ -421,9 +429,9 @@ class LagerstandReport(GraphicsReport):
 				if diffCheckBox is not None and countedCheckBox is not None:
 					break
 			if countedCheckBox is not None:
-				self.connect(cb, QtCore.SIGNAL('stateChanged (int)'), lambda i, countedCB=countedCheckBox: self.linkCountedCheckBox.isChecked() and countedCB.setChecked(i))
+				self.connect(cb, QtCore.SIGNAL('stateChanged (int)'), lambda i, countedCB=countedCheckBox: self.linkStatsCheckBox.isChecked() and countedCB.setChecked(i))
 			if diffCheckBox is not None:
-				self.connect(cb, QtCore.SIGNAL('stateChanged (int)'), lambda i, diffCB=diffCheckBox: self.linkCountedCheckBox.isChecked() and diffCB.setChecked(i))
+				self.connect(cb, QtCore.SIGNAL('stateChanged (int)'), lambda i, diffCB=diffCheckBox: self.linkStatsCheckBox.isChecked() and diffCB.setChecked(i))
 
 		
 	def _onRefreshBtnClicked(self):
@@ -448,7 +456,16 @@ class LagerstandReport(GraphicsReport):
 						ss = self.ui.checkBox_ignorePrefix.styleSheet()
 						
 					cb.setStyleSheet(ss)
+					
+	def onShowStatsArticlesCheckBoxChanged(self, state):
+		for cb in self.articleCheckboxes:
+			if self.isStatsCheckBox(cb):
+				cb.parent().setVisible(state)
 			
+			
+	def isStatsCheckBox(self, cb):
+		text = unicode(cb.text()).upper()
+		return text.endswith(u'-GEZAEHLT') or text.endswith(u'-DIFF')
 	
 	def updateColors(self):
 		for cb in self.articleCheckboxes:
