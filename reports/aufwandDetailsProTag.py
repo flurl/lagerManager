@@ -47,7 +47,8 @@ class AufwandDetailsProTagReport(TextReport):
 			sum_ = round(results.value(3).toFloat()[0], 2)
 			tax = round(results.value(4).toFloat()[0], 2)
 			table = unicode(results.value(5).toString())
-			data.append([checkpoint, article, amount, sum_, tax, table])
+			purchasePrice = round(results.value(6).toFloat()[0], 2)
+			data.append([checkpoint, article, amount, sum_, tax, table, purchasePrice])
 		
 		
 		
@@ -84,11 +85,10 @@ class AufwandDetailsProTagReport(TextReport):
 			sum_ = row[3]
 			tax = row[4]
 			table = row[5]
+			avgPurchasePrice = row[6]
 			
 			articleId = self.getArticleIdByName(article)
-			avgPurchasePrice = 0.0 #self.getAveragePurchasePrice(articleId)
 			purchasePrice = round(avgPurchasePrice*amount, 2)
-			#purchasePrice = avgPurchasePrice
 			
 			checkpointTotal += sum_
 			checkpointTotalCount += amount
@@ -141,20 +141,20 @@ class AufwandDetailsProTagReport(TextReport):
 	def mkQuery(self):
 		"""returns the query"""
 		query = """
-				select checkpoint_info, tisch_bondetail_text, sum(tisch_bondetail_absmenge), sum(tisch_bondetail_absmenge*tisch_bondetail_preis), tisch_bondetail_mwst, rechnung_tischBereich
-from tische_bondetails, tische_bons, tische_aktiv, rechnungen_basis, journal_checkpoints
+				select checkpoint_info, tisch_bondetail_text, sum(tisch_bondetail_absmenge), sum(tisch_bondetail_absmenge*tisch_bondetail_preis), tisch_bondetail_mwst, concat(tischbereich_kurzName , \'-\', tisch_pri_nummer ), getPurchasePrice(tisch_bondetail_text, tisch_bondetail_periode, NULL)
+from tische_bondetails, tische_bons, tische_aktiv, journal_checkpoints, tische_bereiche
 where 1=1
 and {where}
+and tischbereich_id = tisch_bereich
 and tisch_bondetail_bon = tisch_bon_id
 and tisch_bon_tisch = tisch_id
-and tisch_rechnung = rechnung_id
-and rechnungen_basis.checkpoint_tag = checkpoint_id
+and tische_aktiv.checkpoint_tag = checkpoint_id
+and tischbereich_periode = {period_id}
 and tisch_bondetail_periode = {period_id}
 and tisch_bon_periode = {period_id}
 and tisch_periode = {period_id}
-and rechnung_periode = {period_id}
 and checkpoint_periode = {period_id}
-group by checkpoint_info, rechnung_tischBereich, tisch_bondetail_text, tisch_bondetail_istUmsatz, tisch_bondetail_mwst
+group by checkpoint_info, concat(tischbereich_kurzName , \'-\', tisch_pri_nummer ), tisch_bondetail_text, tisch_bondetail_istUmsatz, tisch_bondetail_mwst, getPurchasePrice(tisch_bondetail_text, tisch_bondetail_periode, NULL)
 order by str_to_date(checkpoint_info, '%d.%m.%Y') desc, tisch_bondetail_text
 		""" 
 		
@@ -166,122 +166,6 @@ order by str_to_date(checkpoint_info, '%d.%m.%Y') desc, tisch_bondetail_text
 		query = query.format(where = whereClause, period_id=self._getCurrentPeriodId())
 		print query
 		return query
-	
-	
-	def getAveragePurchasePrice(self, articleId):
-		perId = self._getCurrentPeriodId()
-		
-		periodArticles = {}
-		try:
-			periodArticles = self.__avgPriceCache[perId]
-		except KeyError:
-			self.__avgPriceCache[perId] = {}
-		
-		if articleId in periodArticles:
-			return periodArticles[articleId]
-		
-		pStart, pEnd = self._getCurrentPeriodStartEnd()
-		
-		query = QtSql.QSqlQuery()
-		query.prepare("""
-						select count(*) 
-						from lager_artikel 
-						where 1=1
-						and lager_artikel_artikel = ?
-						and lager_artikel_periode = ?
-						""")
-		query.addBindValue(articleId)
-		query.addBindValue(perId)
-		query.exec_()
-		if query.lastError().isValid():
-			print 'Error selecting lager_artikel for article %s:' % articleId, query.lastError().text()
-			return 0.0
-		query.next()
-		
-		if query.value(0).toInt()[0] > 0:
-			query = QtSql.QSqlQuery()
-			query.prepare("""select round(sum(anzahl*einkaufspreis)/sum(anzahl), 2)
-						from artikel_basis, lieferungen_details, lieferungen, lager_artikel, lager_einheiten
-						where 1=1 
-						and artikel_basis.artikel_id = lieferungen_details.artikel_id 
-						and lieferungen_details.lieferung_id = lieferungen.lieferung_id
-						and lager_artikel.lager_artikel_artikel = artikel_basis.artikel_id
-						and lager_einheit_id = lager_artikel_einheit
-						and lieferungen.datum between ? and ?
-						and lager_artikel_periode = ?
-						and lager_einheit_periode = ?
-						and artikel_basis.artikel_periode = ?
-						and find_in_set(artikel_basis.artikel_id, getCocktailArticleIds(?, ?)) > 0
-						""")
-						
-			query.addBindValue(pStart.strftime('%Y-%m-%d %H:%M:%S'))
-			query.addBindValue(pEnd.strftime('%Y-%m-%d %H:%M:%S'))
-			query.addBindValue(perId)
-			query.addBindValue(perId)
-			query.addBindValue(perId)
-			query.addBindValue(articleId)
-			query.addBindValue(perId)
-			
-		else:
-			query = QtSql.QSqlQuery()
-			query.prepare("""
-							select round(sum(anzahl*(einkaufspreis*(zutate_menge/lager_einheit_multiplizierer)))/sum(anzahl), 2)
-							from artikel_basis as ab1, artikel_basis as ab2, lieferungen_details, lieferungen, lager_artikel, lager_einheiten, artikel_zutaten
-							where 1=1 
-							and lager_artikel_artikel = zutate_artikel
-							and zutate_artikel = ab2.artikel_id
-							and zutate_master_artikel = ab1.artikel_id
-							and find_in_set(lieferungen_details.artikel_id, getCocktailArticleIds(ab2.artikel_id, ?)) > 0
-							and lieferungen_details.lieferung_id = lieferungen.lieferung_id
-							and lager_einheit_id = lager_artikel_einheit
-							and lie_ist_verbrauch = 0
-							and lieferungen.datum between ? and ?
-							and lager_artikel_periode = ?
-							and lager_einheit_periode = ?
-							and ab1.artikel_periode = ?
-							and ab2.artikel_periode = ?
-							and zutate_periode = ?
-							and ab1.artikel_id = ?
-						""")
-						
-			#and ab2.artikel_id = lieferungen_details.artikel_id 
-			query.addBindValue(perId)
-			query.addBindValue(pStart.strftime('%Y-%m-%d %H:%M:%S'))
-			query.addBindValue(pEnd.strftime('%Y-%m-%d %H:%M:%S'))
-			query.addBindValue(perId)
-			query.addBindValue(perId)
-			query.addBindValue(perId)
-			query.addBindValue(perId)
-			query.addBindValue(perId)
-			query.addBindValue(articleId)
-			#query.addBindValue(perId)
-		
-		query.exec_()
-		if query.lastError().isValid():
-			print 'Error selecting average purchase price for article %s:' % articleId, query.lastError().text()
-			return 0.0
-		
-		query.next()
-		avgPrice = query.value(0).toFloat()[0]
-		
-		#no average price found? 
-		#we use the purchase price from the wiffzach artikel_basis table
-		if avgPrice - 0.001 <= 0:
-			query = QtSql.QSqlQuery()
-			query.prepare("""select artikel_ep from artikel_basis where artikel_id = ? and artikel_periode = ?""")
-			query.addBindValue(articleId)
-			query.addBindValue(perId)
-			query.exec_()
-			if query.lastError().isValid():
-				print 'Error selecting purchase price from artikel_basis for article %s:' % articleId, query.lastError().text()
-				return 0.0
-			
-			query.next()
-			avgPrice = query.value(0).toFloat()[0]
-		
-		periodArticles[articleId] = avgPrice
-		
-		return avgPrice
 	
 	
 	def getArticleIdByName(self, article):
