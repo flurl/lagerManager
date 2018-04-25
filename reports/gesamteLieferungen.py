@@ -39,7 +39,7 @@ class GesamteLieferungenReport(TextReport):
         
     def updateHeaders(self):
         if self.ui.checkBox_groupByProvider.isChecked():
-            headers = ['Datum', 'Lieferand', 'Artikel', 'Anzahl', 'Einheit', 'Warenwert', 'Warenwert Durchschnitt']
+            headers = ['Datum', 'Lieferant', 'Artikel', 'Anzahl', 'Einheit', 'Warenwert', 'Warenwert Durchschnitt']
         else:
             headers = ['Datum', 'Artikel', 'Anzahl', 'Einheit', 'Warenwert', 'Warenwert Durchschnitt']
         self.setTableHeaders(headers)
