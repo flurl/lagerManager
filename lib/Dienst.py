@@ -3,6 +3,7 @@ from PyQt4 import QtCore
 
 from lib.LMDatabaseObject import LMDatabaseObject
 from lib.Beschaeftigungsbereich import Beschaeftigungsbereich
+from lib.Feiertag import Feiertag
 from lib.LMDatabaseRelation import LMDatabaseRelation
 
 from lib.GlobalConfig import globalConf
@@ -27,7 +28,10 @@ class Dienst(LMDatabaseObject):
         foe = Beschaeftigungsbereich(emp['din_bebid'])
 
         hours = self.getWorkingHours()
-        salary = hours*emp.getHourlyWage(self['die_beginn'])+self.getNAZ()+foe['beb_trinkgeldpauschale']*globalConf['trinkgeldpauschale']*hours
+        feiertagsStunden = self.getFeiertagszuschlagStunden()
+        hourlyWage = emp.getHourlyWage(self['die_beginn'])
+        print "feiertagszuschlag für %s stunden" % feiertagsStunden
+        salary = hours*hourlyWage+feiertagsStunden*hourlyWage+self.getNAZ()+foe['beb_trinkgeldpauschale']*globalConf['trinkgeldpauschale']*hours
 
         return salary
 
@@ -74,14 +78,40 @@ class Dienst(LMDatabaseObject):
         timeWithinNAZ = beginDateTime.secsTo(endDateTime) - timeOutOfNAZ
 
         print "checking NAZ: begin:",beginDateTime.toPyDateTime(), "end:", endDateTime.toPyDateTime(), "NAZBegin: ", NAZBegin.toPyDateTime(), "NAZEnd:", NAZEnd.toPyDateTime(), "shiftLen:", beginDateTime.secsTo(endDateTime)/3600.0, 'withinNAZ:', timeWithinNAZ/3600.0, 'outOfNAZ:', timeOutOfNAZ/3600.0 
-
+        
+        if timeWithinNAZ < 0 or timeOutOfNAZ < 0:
+            import sys
+            sys.exit()
+        
         if timeWithinNAZ > timeOutOfNAZ:
             print "Considering NAZ"
             return globalConf['nachtarbeitszuschlag']
 
         print "Not considering NAZ"
         return 0
-
+        
+        
+    def getFeiertagszuschlagStunden(self):
+        print "getFeiertagszuschlagStunden()"
+        hours = 0.0
+        beginDateTime = QtCore.QDateTime(self['die_beginn'])
+        endDateTime = QtCore.QDateTime(self['die_ende'])
+        beginDateTime.setTime(QtCore.QTime(0, 0))
+        endDateTime.setTime(QtCore.QTime(0, 0))
+        beginFeiertag = Feiertag().find([('fta_datum', beginDateTime)])
+        if beginFeiertag.next():
+            print "Feiertag gefunden am %s" % self['die_beginn']
+            #start and end on same day
+            if beginDateTime.secsTo(endDateTime) == 0:
+                return self.getWorkingHours()
+            hours += round(self['die_beginn'].secsTo(beginDateTime.addDays(1))/3600.0, 2)
+            
+        endFeiertag = Feiertag().find([('fta_datum', endDateTime)])
+        while endFeiertag.next():
+            print "Feiertag gefunden am %s" % self['die_ende']
+            hours += round(endDateTime.secsTo(self['die_ende'])/3600.0, 2)
+        
+        return hours
 
     def getPauseHours(self):
         #pausen werden jetzt als arbeitszeit mitbezahlt -> keine pausenberechnung mehr nötig

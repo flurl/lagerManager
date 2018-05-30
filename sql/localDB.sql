@@ -499,6 +499,11 @@ create table gezaehlter_stand (
 ) ENGINE=INNODB;
 
 
+create table feiertage (
+    fta_id int unsigned auto_increment primary key not null,
+    fta_datum date unique not null,
+    fta_bezeichnung varchar(255) not null
+) ENGINE=INNODB;
 
 
 

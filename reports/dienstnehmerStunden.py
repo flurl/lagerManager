@@ -18,9 +18,9 @@ class DienstnehmerStundenReport(TextReport):
 
     def __init__(self, parent=None):
         self.tableHeaders = {
-                            'single': ['Datum', 'Schicht', 'Name', 'DN-Nr.', 'Dienst Beginn', 'Dienst Ende', 'Anwesenheitsst.', 'Arbeitsstunden', 'Pause', 'Anzahl', 'Gehalt', 'NAZ', 'NAZ Anzahl', 'Trinkgeldp.', 'gesamt'],
-                            'monthly': ['Monat', 'Name', 'DN-Nr.', 'Anwesenheitsst.', 'Arbeitsstunden', 'Pause', 'Anzahl', 'Gehalt', 'NAZ', 'NAZ Anzahl', 'Trinkgeldp.', 'gesamt'],
-                            'yearly': ['Jahr', 'Name', 'DN-Nr.', 'Anwesenheitsst.', 'Arbeitsstunden', 'Pause', 'Anzahl', 'Gehalt', 'NAZ', 'NAZ Anzahl', 'Trinkgeldp.', 'gesamt']
+                            'single': ['Datum', 'Schicht', 'Name', 'DN-Nr.', 'Dienst Beginn', 'Dienst Ende', 'Anwesenheitsst.', 'Arbeitsstunden', 'Pause', 'Anzahl', 'Gehalt', 'NAZ', 'NAZ Anzahl', 'Feiertagsstunden', 'Trinkgeldp.', 'gesamt'],
+                            'monthly': ['Monat', 'Name', 'DN-Nr.', 'Anwesenheitsst.', 'Arbeitsstunden', 'Pause', 'Anzahl', 'Gehalt', 'NAZ', 'NAZ Anzahl', 'Feiertagsstunden', 'Trinkgeldp.', 'gesamt'],
+                            'yearly': ['Jahr', 'Name', 'DN-Nr.', 'Anwesenheitsst.', 'Arbeitsstunden', 'Pause', 'Anzahl', 'Gehalt', 'NAZ', 'NAZ Anzahl', 'Feiertagsstunden', 'Trinkgeldp.', 'gesamt']
                             }
         
         TextReport.__init__(self, parent)
@@ -52,6 +52,7 @@ class DienstnehmerStundenReport(TextReport):
             empNr = emp['din_nummer']
             dutyHours = d.getTotalHours()
             workingHours = d.getWorkingHours()
+            holidayHours = d.getFeiertagszuschlagStunden()
             dutyPause = d['die_pause']
             count = 1
             shiftSalary = d.getEarnings()
@@ -61,7 +62,7 @@ class DienstnehmerStundenReport(TextReport):
             shiftSum = shiftSalary
             shiftSalary = shiftSalary - shiftNAZ - tipAllowance
 
-            l = [shiftDate, shiftName, empName, empNr, dutyBegin, dutyEnd, dutyHours, workingHours, dutyPause, count, shiftSalary, shiftNAZ, NAZcount, tipAllowance, shiftSum]
+            l = [shiftDate, shiftName, empName, empNr, dutyBegin, dutyEnd, dutyHours, workingHours, dutyPause, count, shiftSalary, shiftNAZ, NAZcount, holidayHours, tipAllowance, shiftSum]
 
             data.append(l)
 
@@ -210,6 +211,7 @@ class DienstnehmerStundenReport(TextReport):
 						                'salary': 0.0,
 						                'NAZ': 0.0,
 						                'NAZcount': 0,
+						                'holidayHours': 0,
 						                'tipAllowance': 0.0,
 						                'sum': 0.0
 						                }
@@ -221,13 +223,14 @@ class DienstnehmerStundenReport(TextReport):
             emp['salary'] += row[10]
             emp['NAZ'] += row[11]
             emp['NAZcount'] += row[12]
-            emp['tipAllowance'] += row[13]
-            emp['sum'] += row[14]
+            emp['holidayHours'] += row[13]
+            emp['tipAllowance'] += row[14]
+            emp['sum'] += row[15]
 
         for group in emps:
             for emp in emps[group]:
                 e = emps[group][emp]
-                newData.append([u'-'.join([unicode(x) for x in group]), e['name'], e['number'], e['totalHours'], e['workingHours'], e['pause'], e['count'], e['salary'], e['NAZ'], e['NAZcount'], e['tipAllowance'], e['sum']])
+                newData.append([u'-'.join([unicode(x) for x in group]), e['name'], e['number'], e['totalHours'], e['workingHours'], e['pause'], e['count'], e['salary'], e['NAZ'], e['NAZcount'], e['holidayHours'], e['tipAllowance'], e['sum']])
 
         return newData
 

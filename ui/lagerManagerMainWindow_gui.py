@@ -157,6 +157,8 @@ class Ui_MainWindow(object):
         self.action_Lieferungen_EinkaufspreisModifikatoren.setObjectName(_fromUtf8("action_Lieferungen_EinkaufspreisModifikatoren"))
         self.action_Statistik_GezaehlterStand = QtGui.QAction(MainWindow)
         self.action_Statistik_GezaehlterStand.setObjectName(_fromUtf8("action_Statistik_GezaehlterStand"))
+        self.action_Stammdaten_Feiertage = QtGui.QAction(MainWindow)
+        self.action_Stammdaten_Feiertage.setObjectName(_fromUtf8("action_Stammdaten_Feiertage"))
         self.menuFile.addAction(self.actionQuit)
         self.menu_Einkauf.addAction(self.action_Report_Einkauf_GesamteLieferungen)
         self.menu_Einkauf.addAction(self.action_Report_Einkauf_Verprobung)
@@ -194,6 +196,7 @@ class Ui_MainWindow(object):
         self.menuStammdaten.addAction(self.action_Stammdaten_Buchungskonten)
         self.menuStammdaten.addAction(self.action_Stammdaten_DNEreignisTypen)
         self.menuStammdaten.addAction(self.action_Stammdaten_InitialerStand)
+        self.menuStammdaten.addAction(self.action_Stammdaten_Feiertage)
         self.menuStammdaten.addSeparator()
         self.menuStammdaten.addAction(self.action_Stammdaten_Konfiguration)
         self.menu_Dokumente.addAction(self.action_Dokumente_Dokumenttypen)
@@ -279,4 +282,5 @@ class Ui_MainWindow(object):
         self.action_Stammdaten_InitialerStand.setText(_translate("MainWindow", "Initialer St&and", None))
         self.action_Lieferungen_EinkaufspreisModifikatoren.setText(_translate("MainWindow", "&Einkaufspreis Modifikatoren", None))
         self.action_Statistik_GezaehlterStand.setText(_translate("MainWindow", "&Gezählter Stand", None))
+        self.action_Stammdaten_Feiertage.setText(_translate("MainWindow", "&Feiertage", None))
 

@@ -115,6 +115,7 @@
     <addaction name="action_Stammdaten_Buchungskonten"/>
     <addaction name="action_Stammdaten_DNEreignisTypen"/>
     <addaction name="action_Stammdaten_InitialerStand"/>
+    <addaction name="action_Stammdaten_Feiertage"/>
     <addaction name="separator"/>
     <addaction name="action_Stammdaten_Konfiguration"/>
    </widget>
@@ -381,6 +382,11 @@
   <action name="action_Statistik_GezaehlterStand">
    <property name="text">
     <string>&amp;Gezählter Stand</string>
+   </property>
+  </action>
+  <action name="action_Stammdaten_Feiertage">
+   <property name="text">
+    <string>&amp;Feiertage</string>
    </property>
   </action>
  </widget>
