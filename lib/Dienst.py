@@ -79,10 +79,6 @@ class Dienst(LMDatabaseObject):
 
         print "checking NAZ: begin:",beginDateTime.toPyDateTime(), "end:", endDateTime.toPyDateTime(), "NAZBegin: ", NAZBegin.toPyDateTime(), "NAZEnd:", NAZEnd.toPyDateTime(), "shiftLen:", beginDateTime.secsTo(endDateTime)/3600.0, 'withinNAZ:', timeWithinNAZ/3600.0, 'outOfNAZ:', timeOutOfNAZ/3600.0 
         
-        if timeWithinNAZ < 0 or timeOutOfNAZ < 0:
-            import sys
-            sys.exit()
-        
         if timeWithinNAZ > timeOutOfNAZ:
             print "Considering NAZ"
             return globalConf['nachtarbeitszuschlag']

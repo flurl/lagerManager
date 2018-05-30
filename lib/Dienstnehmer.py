@@ -57,7 +57,8 @@ class Dienstnehmer(LMDatabaseObject):
     
     
     def getHourlyWage(self, date=None):
-        hourly = self['gehalt']['stundensatz']
+        #hourly = self['gehalt']['stundensatz']
+        hourly = self['gehalt'].getHourlyWage(date)
         return hourly
     
     
