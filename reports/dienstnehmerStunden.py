@@ -58,7 +58,7 @@ class DienstnehmerStundenReport(TextReport):
             shiftSalary = d.getEarnings()
             shiftNAZ = d.getNAZ()
             NAZcount = 1 if shiftNAZ > 0.01 else 0
-            tipAllowance = emp['beschaeftigungsbereich']['beb_trinkgeldpauschale']*workingHours*globalConf['trinkgeldpauschale']
+            tipAllowance = emp['beschaeftigungsbereich']['beb_trinkgeldpauschale']*workingHours*globalConf.getValueF('trinkgeldpauschale', d['die_beginn'])
             shiftSum = shiftSalary
             shiftSalary = shiftSalary - shiftNAZ - tipAllowance
 

@@ -22,27 +22,27 @@ class GlobalConfig(object):
 
 
 
-	def getValueS(self, key):
+	def getValueS(self, key, date=None):
 		"""returns the config value for key as string
 		
 		@key	the key that should be looked up
 		"""
-		return self.getValueFromDb(key, 'S')
+		return self.getValueFromDb(key, 'S', date)
 
-	def getValueI(self, key):
+	def getValueI(self, key, date=None):
 		"""returns the config value for key as integer
 		
 		@key	the key that should be looked up
 		"""
-		return self.getValueFromDb(key, 'I')
+		return self.getValueFromDb(key, 'I', date)
 
 
-	def getValueF(self, key):
+	def getValueF(self, key, date=None):
 		"""returns the config value for key as float
 		
 		@key	the key that should be looked up
 		"""
-		return self.getValueFromDb(key, 'F')
+		return self.getValueFromDb(key, 'F', date)
 
 	
 	
@@ -73,21 +73,40 @@ class GlobalConfig(object):
 	
 	
 	
-	def getValueFromDb(self, key, type_):
+	def getValueFromDb(self, key, type_, date=None):
 		"""looks up a key in the config table and returns the value according to type_
 		
 		@key	the key to lookup
 		@type_	type of the return value
+		@date   the date for which the config key should be valid
 		"""
 		t = type_.upper()
 		
-		query = QtSql.QSqlQuery()
-		if t == 'I':
-			query.prepare('select cfg_valueI from config where cfg_key = ?')
-		elif t == 'F':
-			query.prepare('select cfg_valueF from config where cfg_key = ?')
+		if date is None:
+			dateWhere = ' and cfg_validTill >= now() order by cfg_validTill asc'
+		elif isinstance(date, basestring):
+			dateWhere = ' and cfg_validTill >= "%s" order by cfg_validTill asc' % date
 		else:
-			query.prepare('select cfg_valueS from config where cfg_key = ?')
+			# convert eg. a QDateTime instance to python datetime 
+			try:
+				date = date.toPyDateTime()
+			except AttributeError:
+				pass
+			dateWhere = ' and cfg_validTill >= "%s" order by cfg_validTill asc' % date.isoformat(' ')
+
+		query = QtSql.QSqlQuery()
+		if key == 'dbVersion':
+			# special case:
+			# the dbVersion is queried in the updater script
+			# this fails for the update, where the cfg_validTill column is added
+			# and there can only be 1 dbVersion value anyways
+			query.prepare("select cfg_valueI from config where cfg_key = ?")
+		elif t == 'I':
+			query.prepare('select cfg_valueI from config where cfg_key = ? %s limit 1' % dateWhere)
+		elif t == 'F':
+			query.prepare('select cfg_valueF from config where cfg_key = ? %s limit 1' % dateWhere)
+		else:
+			query.prepare('select cfg_valueS from config where cfg_key = ? %s limit 1' % dateWhere)
 			
 		query.addBindValue(key)
 		query.exec_()
@@ -143,11 +162,11 @@ class GlobalConfig(object):
 		query = QtSql.QSqlQuery()
 		if count != 0:
 			if t == 'I':
-				query.prepare('update config set cfg_valueI = ? where cfg_key = ?')
+				query.prepare('update config set cfg_valueI = ? where cfg_key = ? and cfg_validTill >= now()')
 			elif t == 'F':
-				query.prepare('update config set cfg_valueF = ? where cfg_key = ?')
+				query.prepare('update config set cfg_valueF = ? where cfg_key = ? and cfg_validTill >= now()')
 			else:
-				query.prepare('update config set cfg_valueS = ? where cfg_key = ?')
+				query.prepare('update config set cfg_valueS = ? where cfg_key = ? and cfg_validTill >= now()')
 		
 		else:
 			if t == 'I':

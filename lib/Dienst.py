@@ -31,7 +31,7 @@ class Dienst(LMDatabaseObject):
         feiertagsStunden = self.getFeiertagszuschlagStunden()
         hourlyWage = emp.getHourlyWage(self['die_beginn'])
         print "feiertagszuschlag für %s stunden" % feiertagsStunden
-        salary = hours*hourlyWage+feiertagsStunden*hourlyWage+self.getNAZ()+foe['beb_trinkgeldpauschale']*globalConf['trinkgeldpauschale']*hours
+        salary = hours*hourlyWage+feiertagsStunden*hourlyWage+self.getNAZ()+foe['beb_trinkgeldpauschale']*globalConf.getValueF('trinkgeldpauschale', self['die_beginn'])*hours
 
         return salary
 
@@ -81,7 +81,7 @@ class Dienst(LMDatabaseObject):
         
         if timeWithinNAZ > timeOutOfNAZ:
             print "Considering NAZ"
-            return globalConf['nachtarbeitszuschlag']
+            return globalConf.getValueF('nachtarbeitszuschlag', self['die_beginn'])
 
         print "Not considering NAZ"
         return 0
