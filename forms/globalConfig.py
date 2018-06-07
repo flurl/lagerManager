@@ -28,6 +28,7 @@ class ConfigForm(FormBase):
 		self.model.setHeaderData(2, QtCore.Qt.Horizontal, u'ValueI')
 		self.model.setHeaderData(3, QtCore.Qt.Horizontal, u'ValueF')
 		self.model.setHeaderData(4, QtCore.Qt.Horizontal, u'ValueS')
+		self.model.setHeaderData(5, QtCore.Qt.Horizontal, u'gültig bis')
 		
 
 		
@@ -51,10 +52,11 @@ class ConfigForm(FormBase):
 		rec.setValue(2, QtCore.QVariant())
 		rec.setValue(3, QtCore.QVariant())
 		rec.setValue(4, QtCore.QVariant())
+		rec.setValue(5, QtCore.QVariant())
 		
-		#self.model.insertRecord(-1, rec)
-		self.model.insertRowIntoTable(rec)
-		self.model.select()
+		self.model.insertRecord(-1, rec)
+		#self.model.insertRowIntoTable(rec)
+		#self.model.select()
 		
 		
 	def deleteRecord(self):

@@ -390,6 +390,51 @@ create table beschaeftigungsbereiche (
 ) ENGINE=INNODB;
 
 
+CREATE TABLE IF NOT EXISTS dir_typen (
+	dit_id int unsigned auto_increment primary key not null,
+	dit_bez varchar(255) not null,
+	dit_kbez varchar(5) not null,
+	unique key (dit_kbez)
+)ENGINE=INNODB;
+
+
+CREATE TABLE IF NOT EXISTS dienstnehmer_ereignisse (
+	dir_id int unsigned auto_increment primary key not null,
+	dir_dinid int unsigned not null,
+	dir_datum datetime not null,
+	dir_ditid int unsigned not null,
+	foreign key dienstnehmer_ereignisse_typen_fk (dir_ditid) references dir_typen(dit_id),
+	foreign key dienstnehmer_ereignisse_dienstnehmer_fk (dir_dinid) references dienstnehmer (din_id)
+) ENGINE=INNODB;
+
+
+insert into dir_typen (dit_bez, dit_kbez) values 
+('Eintritt', 'EIN'), 
+('Austritt', 'AUS'), 
+('Urlaubsbeginn', 'URBEG'), 
+('Urlaubsende', 'UREND'), 
+('Krankenstandsbeginn', 'KSBEG'), 
+('Krankenstandsende', 'KSEND');
+
+
+CREATE TABLE IF NOT EXISTS gehaelter (
+	geh_id int unsigned auto_increment primary key not null,
+	geh_kbez varchar(10) not null,
+	geh_bez varchar(255),
+	unique key (geh_kbez)
+) ENGINE=INNODB;
+
+
+CREATE TABLE IF NOT EXISTS loehne (
+	loh_id int unsigned not null auto_increment primary key,
+	loh_summe float not null,
+	loh_gehid int unsigned not null,
+	loh_validTill datetime not null default '2099-12-31 23:59:59',
+	foreign key loehne_gehalt_fk (loh_gehid) references gehaelter (geh_id),
+	unique key (loh_gehid, loh_validTill)
+) ENGINE=INNODB;
+
+
 create table dienstnehmer (
 	din_id int unsigned auto_increment primary key not null,
 	din_name varchar(255) not null,
@@ -473,7 +518,8 @@ create table config (
 	cfg_valueI int null,
 	cfg_valueF float null,
 	cfg_valueS text null,
-	unique key (cfg_key)
+	cfg_validTill datetime not null,
+	unique key (cfg_key, cfg_validTill)
 ) ENGINE=INNODB;
 
 
