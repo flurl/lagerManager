@@ -518,8 +518,8 @@ create table config (
 	cfg_valueI int null,
 	cfg_valueF float null,
 	cfg_valueS text null,
-	cfg_validTill datetime not null,
-	unique key (cfg_key, cfg_validTill)
+	cfg_validTill datetime not null default '2099-12-31 23:59:59',
+	unique key config_key_validTill_uq (cfg_key, cfg_validTill)
 ) ENGINE=INNODB;
 
 
