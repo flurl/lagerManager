@@ -56,7 +56,7 @@ class DirTypenForm(FormBase):
 	def newRecord(self):
 		rec = self.model.record()
 		rec.setValue(self.model.fieldIndex('dit_bez'), '')
-		rec.setValue(self.model.fieldIndex('dit_kubez'), '')
+		rec.setValue(self.model.fieldIndex('dit_kbez'), '')
 		self.model.insertRecord(-1, rec)
 		
 		
