@@ -394,7 +394,11 @@ CREATE TABLE IF NOT EXISTS dir_typen (
 	dit_id int unsigned auto_increment primary key not null,
 	dit_bez varchar(255) not null,
 	dit_kbez varchar(5) not null,
-	unique key (dit_kbez)
+	dit_beginn_ditid int unsigned,
+	dit_ende_ditid int unsigned,
+	unique key (dit_kbez),
+	foreign key dir_typen_beginn_typ_fk (dit_beginn_ditid) references dir_typen(dit_id),
+	foreign key dir_typen_beginn_typ_fk (dit_ende_ditid) references dir_typen(dit_id)
 )ENGINE=INNODB;
 
 

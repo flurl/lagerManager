@@ -7,6 +7,7 @@ import config
 
 from forms.formBase import FormBase
 from ui.forms.dirTypenForm_gui import Ui_DirTypenForm
+from lib.LineEditDelegate import LineEditDelegate
 
 class DirTypenForm(FormBase):
 	
@@ -22,16 +23,25 @@ class DirTypenForm(FormBase):
 		self.model.setEditStrategy(QtSql.QSqlTableModel.OnFieldChange)
 		self.model.select()
 		
+		#self.model.setRelation(self.model.fieldIndex('dit_beginn_ditid'), QtSql.QSqlRelation('dir_typen', 'dit_id', 'dit_kbez'))
+		#self.model.setRelation(self.model.fieldIndex('dit_ende_ditid'), QtSql.QSqlRelation('dir_typen', 'dit_id', 'dit_kbez'))
+		
 		# column headers
-		self.model.setHeaderData(0, QtCore.Qt.Horizontal, u'ID')
-		self.model.setHeaderData(1, QtCore.Qt.Horizontal, u'Bezeichnung')
-		self.model.setHeaderData(2, QtCore.Qt.Horizontal, u'Kurzbezeichnung')
+		self.model.setHeaderData(self.model.fieldIndex('dit_id'), QtCore.Qt.Horizontal, u'ID')
+		self.model.setHeaderData(self.model.fieldIndex('dit_bez'), QtCore.Qt.Horizontal, u'Bezeichnung')
+		self.model.setHeaderData(self.model.fieldIndex('dit_kbez'), QtCore.Qt.Horizontal, u'Kurzbezeichnung')
+		self.model.setHeaderData(self.model.fieldIndex('dit_beginn_ditid'), QtCore.Qt.Horizontal, u'Beginn Typ')
+		self.model.setHeaderData(self.model.fieldIndex('dit_ende_ditid'), QtCore.Qt.Horizontal, u'Ende Typ')
+		
 		
 
 		
 		# table view
 		# ------------------------------------------------
+		delegate = LineEditDelegate(True)
 		self.tableView = self.ui.tableView
+		self.tableView.setItemDelegateForColumn(self.model.fieldIndex('dit_beginn_ditid'), delegate)
+		self.tableView.setItemDelegateForColumn(self.model.fieldIndex('dit_ende_ditid'), delegate)
 		self.tableView.setModel(self.model)
 		self.tableView.setSelectionMode(QtGui.QTableView.SingleSelection)
 		self.tableView.setSelectionBehavior(QtGui.QTableView.SelectRows)
@@ -45,8 +55,8 @@ class DirTypenForm(FormBase):
 	
 	def newRecord(self):
 		rec = self.model.record()
-		rec.setValue(1, '')
-		rec.setValue(2, '')
+		rec.setValue(self.model.fieldIndex('dit_bez'), '')
+		rec.setValue(self.model.fieldIndex('dit_kubez'), '')
 		self.model.insertRecord(-1, rec)
 		
 		
