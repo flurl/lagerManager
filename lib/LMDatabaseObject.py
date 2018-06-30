@@ -247,7 +247,9 @@ class LMDatabaseObject(object):
 		for col in self._columns:
 			value = query.value(query.record().indexOf(col))
 			self.__storeValueFromDb(value, col)
-			
+		
+		self.find(self.primaryKey, pk)
+		
 		self.__readCache[self._DBTable]['queries']['get'][pk] = query
 			
 		
