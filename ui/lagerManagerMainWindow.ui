@@ -61,6 +61,7 @@
      </property>
      <addaction name="action_Report_Personal_DienstnehmerStunden"/>
      <addaction name="action_Report_Personal_Bonierzeiten"/>
+     <addaction name="action_Report_Personal_Statistik"/>
     </widget>
     <widget class="QMenu" name="menu_Verbrauch">
      <property name="title">
@@ -387,6 +388,11 @@
   <action name="action_Stammdaten_Feiertage">
    <property name="text">
     <string>&amp;Feiertage</string>
+   </property>
+  </action>
+  <action name="action_Report_Personal_Statistik">
+   <property name="text">
+    <string>&amp;Statistik</string>
    </property>
   </action>
  </widget>
