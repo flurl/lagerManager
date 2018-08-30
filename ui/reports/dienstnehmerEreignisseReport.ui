@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DienstnehmerStatistik</class>
- <widget class="QWidget" name="DienstnehmerStatistik">
+ <class>DienstnehmerEreignisse</class>
+ <widget class="QWidget" name="DienstnehmerEreignisse">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -20,33 +20,23 @@
       <widget class="QComboBox" name="comboBox_employees"/>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBox_calculationPeriod">
-       <item>
-        <property name="text">
-         <string>Weekly</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Monthly</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="comboBox_periodAmount"/>
-     </item>
-     <item>
-      <widget class="QCheckBox" name="checkBox_singlePeriods">
+      <widget class="QRadioButton" name="radioButton_markOpen">
        <property name="text">
-        <string>&amp;einzeln</string>
+        <string>&amp;Offene markieren</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QCheckBox" name="checkBox_showSalary">
+      <widget class="QRadioButton" name="radioButton_markOrphans">
        <property name="text">
-        <string>&amp;Lohn</string>
+        <string>&amp;Waisen markieren</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="radioButton_requiredMissing">
+       <property name="text">
+        <string>&amp;Fehlende Erforderliche</string>
        </property>
       </widget>
      </item>

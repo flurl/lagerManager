@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DienstnehmerStatistik</class>
- <widget class="QWidget" name="DienstnehmerStatistik">
+ <class>Urlaubsanspruch</class>
+ <widget class="QWidget" name="Urlaubsanspruch">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,44 +11,13 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dienstnehmer Stunden</string>
+   <string>Urlaubsanspruch</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QComboBox" name="comboBox_employees"/>
-     </item>
-     <item>
-      <widget class="QComboBox" name="comboBox_calculationPeriod">
-       <item>
-        <property name="text">
-         <string>Weekly</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Monthly</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="comboBox_periodAmount"/>
-     </item>
-     <item>
-      <widget class="QCheckBox" name="checkBox_singlePeriods">
-       <property name="text">
-        <string>&amp;einzeln</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QCheckBox" name="checkBox_showSalary">
-       <property name="text">
-        <string>&amp;Lohn</string>
-       </property>
-      </widget>
      </item>
      <item>
       <spacer name="horizontalSpacer">

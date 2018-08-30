@@ -114,6 +114,12 @@ class LMBase(QtGui.QDialog):
         index = model.index(row, col)
         pk = model.data(index).toInt()[0]
         return pk
+        
+    def getComboboxIdxForPK(self, combo, pkName, pkValue):
+        m = combo.model()
+        idx = m.match(m.index(0, m.fieldIndex(pkName)), QtCore.Qt.DisplayRole, pkValue)[0]
+        return idx
+        
     
     #@property
     #def cfgKey(self):

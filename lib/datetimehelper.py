@@ -24,6 +24,10 @@ def now():
     return datetime.datetime.now()
     
 
+def today():
+    return datetime.date.today()
+
+
 def addMonths(date, count):
     delta = relativedelta(months=count)
     return date+delta
@@ -32,3 +36,7 @@ def addMonths(date, count):
 def addWeeks(date, count):
     delta = relativedelta(weeks=count)
     return date+delta
+    
+    
+def daysBetween(d1, d2):
+    return abs((d2 - d1).days)

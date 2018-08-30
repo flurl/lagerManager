@@ -6,15 +6,17 @@ from lib import datetimehelper
 from lib.LMDatabaseObject import LMDatabaseObject
 from lib.LMDatabaseRelation import LMDatabaseRelation
 
-#import lib.Gehalt
+from lib.DienstnehmerEreignisTyp import DienstnehmerEreignisTyp
+
 
 class Dienstnehmer(LMDatabaseObject):
     
     _DBTable = 'dienstnehmer'
-    _dynamicColumns = {'din_stundensatz': 'getHourlyWage'}
+    _dynamicColumns = {'din_stundensatz': 'getHourlyWage', 'din_name': 'getName'}
     dienste = LMDatabaseRelation('lib.Dienst.Dienst', 'die_dinid')
     gehalt = LMDatabaseRelation('din_gehid', 'lib.Gehalt.Gehalt')
     beschaeftigungsbereich = LMDatabaseRelation('din_bebid', 'lib.Beschaeftigungsbereich.Beschaeftigungsbereich')
+    ereignisse = LMDatabaseRelation('lib.DienstnehmerEreignis.DienstnehmerEreignis', 'dir_dinid')
     
     def __init__(self, pk=None):
         super(Dienstnehmer, self).__init__(pk)
@@ -71,6 +73,9 @@ class Dienstnehmer(LMDatabaseObject):
         #hourly = self['gehalt']['stundensatz']
         hourly = self['gehalt'].getHourlyWage(date)
         return hourly
+        
+    def getName(self):
+        return self['din_nachname'] + u' ' + self['din_vorname']
     
     
     def isAvailableForDate(self, date=None):
@@ -143,12 +148,112 @@ class Dienstnehmer(LMDatabaseObject):
         if numberOfDatapoints == 0:
             return (0, 0, 0, 0)
         
-        countAvg = countTotal/numberOfDatapoints
-        hoursAvg = hoursTotal/numberOfDatapoints
-        nazAvg = nazTotal/numberOfDatapoints
+        #countAvg = countTotal/numberOfDatapoints
+        #hoursAvg = hoursTotal/numberOfDatapoints
+        #nazAvg = nazTotal/numberOfDatapoints
+        countAvg = countTotal/period
+        hoursAvg = hoursTotal/period
+        nazAvg = nazTotal/period
         
         print "countAvg:", countAvg, "hoursAvg:", hoursAvg
         return (numberOfDatapoints, countAvg, hoursAvg, nazAvg)
+        
+        
+    def getVacationDays(self):
+        eintritt = self.getLastEintritt()
+        daysSinceEintritt = datetimehelper.daysBetween(eintritt['dir_datum'].toPyDateTime(), datetimehelper.now())
+        weeksSinceEintritt = daysSinceEintritt // 7
+        period = min(104, weeksSinceEintritt)
+        avg = self.getAvg('weekly', period)
+        vacationDays = (period/52)*avg[1]*5
+        print "vacationDays:", vacationDays, "daysPerWeek", avg[1]
+        return vacationDays
+        
+        
+    def getOpenVacationDays(self):
+        totalDays = self.getVacationDays()
+        usedDays = self.getUsedVacationDays()
+        openDays = totalDays - usedDays
+        print "openDays:", openDays
+        return openDays
+        
+        
+    def getUsedVacationDays(self):
+        #query = "select dir_id from dienstnehmer_ereignisse, dir_typen where dir_dinid = %s and dir_ditid = dit_id and dit_kbez in ('URBEG', 'UREND') order by dir_datum desc" % (self['din_id'], )
+        #results = self.db.exec_(query)
+        #ereignisse = []
+        #while results.next():
+        #    ereignisse.append(lib.DienstnehmerEreignis.DienstnehmerEreignis(results.values(0).toInt()[0]))
+        #print ereignisse
+        beginnDitId = lib.DienstnehmerEreignisTyp.DienstnehmerEreignisTyp().find('dit_kbez', 'URBEG').next()['dit_id']
+        endeDitId = lib.DienstnehmerEreignisTyp.DienstnehmerEreignisTyp().find('dit_kbez', 'UREND').next()['dit_id']
+        
+        print beginnDitId, endeDitId
+        ereignisse = self['ereignisse']
+        ereignisse.filter('dir_ditid', beginnDitId)
+        ub = []
+        for e in ereignisse:
+            ub.append(e['dir_datum'].toPyDateTime())
+        ub.sort()
+        
+        ereignisse.filter('dir_ditid', endeDitId)
+        ue = []
+        for e in ereignisse:
+            ue.append(e['dir_datum'].toPyDateTime())
+        ue.sort()
+        
+        eintritt = self.getLastEintritt()
+        daysSinceEintritt = datetimehelper.daysBetween(eintritt['dir_datum'].toPyDateTime(), datetimehelper.now())
+        weeksSinceEintritt = daysSinceEintritt // 7
+        period = min(104, weeksSinceEintritt)
+        avg = self.getAvg('weekly', period)
+        
+        print ub
+        print ue
+        print avg
+        periodBeginn = datetimehelper.addWeeks(datetimehelper.now(), period*-1)
+        usedDays = 0.0
+        for i in range(len(ub)):
+            if ub[i] >= periodBeginn or ue[i] >= periodBeginn:
+                usedDays += datetimehelper.daysBetween(ue[i], ub[i])*(avg[1]/7)
+                
+        print "usedDays:", usedDays
+        return usedDays
+                
+       
+    def getLastEintritt(self):
+        eintrittDitId = lib.DienstnehmerEreignisTyp.DienstnehmerEreignisTyp().find('dit_kbez', 'EIN').next()['dit_id']
+        eintritt = lib.DienstnehmerEreignis.DienstnehmerEreignis().find('dir_dinid', self['din_id'], orderBy=('dir_datum', 'desc'))
+        eintritt.filter('dir_ditid', eintrittDitId)
+        return eintritt.next()
+        
+        
+    def getEreignisse(self, kbez=None, sorting='asc'):
+        ereignisse = lib.DienstnehmerEreignis.DienstnehmerEreignis().find('dir_dinid', self['din_id'], ('dir_datum', sorting))
+        if kubez is not None:
+            typ = lib.DienstnehmerEreignisTyp.DienstnehmerEreignisTyp().find('dit_kbez', kbez)
+            ereignisse.filter('dir_ditid', typ['dit_id'])
+        return ereignisse
+        
+        
+    def validateEreignisse(self):
+        benoetigteTypen = DienstnehmerEreignisTyp().find('dit_benoetigt', 1)
+        dnEreignisse = self['ereignisse']
+        for bt in benoetigteTypen:
+            found = False
+            for de in dnEreignisse:
+                if de['dir_ditid'] == bt['dit_id']:
+                    found = True
+            if found == False:
+                raise LookupError("Ereignis %s ist erforderlich" % bt)
+        return True
+        
+        
+    def __unicode__(self):
+        return unicode(self['din_nummer']) + u' - ' + unicode(self['din_name'])
+        
+    def __str__(self):
+        return unicode(self).encode('utf-8')
     
     
 if __name__ == '__main__':
@@ -158,14 +263,34 @@ if __name__ == '__main__':
     print sys.argv
     DBConnection.connect(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
     
+    dn = Dienstnehmer(72)
+    print dn
+    
     dbObj = Dienstnehmer()
-    dbObj.get(22)
+    dbObj.get(30)
     print unicode(dbObj['din_name'])
     
     print (("*"*20)+'\n')*5
+    dbObj['din_vorname'] = u"Pupsi"
+    dbObj.save()
     
-    while dbObj.next():
-        print unicode(dbObj['din_name'])
+    #dbObj.getUsedVacationDays()
+    dbObj.getOpenVacationDays()
+    
+    #ereignisse = dbObj['ereignisse']
+    #ereignisse.filter('dir_ditid', 2)
+    #while ereignisse.next():
+    #    print ereignisse
+    
+    #dn = Dienstnehmer().find()
+    #dns = []
+    #while dn.next():
+    #    dns.append((unicode(dn), dn.getAvg('monthly', 12)))
+    #for d in dns:
+    #    print d
+    
+    #while dbObj.next():
+    #    print unicode(dbObj['din_name'])
     
     #dbObj.getTotals()
     #dbObj.getTotals('weekly', -13)
@@ -211,4 +336,6 @@ if __name__ == '__main__':
     
 import lib.Dienst 
 import lib.Gehalt
+import lib.DienstnehmerEreignis
+import lib.DienstnehmerEreignisTyp
 

@@ -100,6 +100,12 @@ class MainWindow(QtGui.QMainWindow):
         self.connect(self.ui.action_Report_Personal_Statistik,
                     QtCore.SIGNAL('triggered()'),
                     lambda: self.openWindow('reports.dienstnehmerStatistik.DienstnehmerStatistikReport'))
+        self.connect(self.ui.action_Report_Personal_DienstnehmerEreignisse,
+                    QtCore.SIGNAL('triggered()'),
+                    lambda: self.openWindow('reports.dienstnehmerEreignisse.DienstnehmerEreignisseReport'))
+        self.connect(self.ui.action_Report_Personal_Urlaub,
+                    QtCore.SIGNAL('triggered()'),
+                    lambda: self.openWindow('reports.urlaubsanspruch.UrlaubsanspruchReport'))                    
         self.connect(self.ui.action_Report_Artikel_Rezepturen,
                     QtCore.SIGNAL('triggered()'),
                     lambda: self.openWindow('reports.rezepturen.RezepturenReport'))

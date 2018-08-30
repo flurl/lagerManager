@@ -62,6 +62,8 @@
      <addaction name="action_Report_Personal_DienstnehmerStunden"/>
      <addaction name="action_Report_Personal_Bonierzeiten"/>
      <addaction name="action_Report_Personal_Statistik"/>
+     <addaction name="action_Report_Personal_DienstnehmerEreignisse"/>
+     <addaction name="action_Report_Personal_Urlaub"/>
     </widget>
     <widget class="QMenu" name="menu_Verbrauch">
      <property name="title">
@@ -393,6 +395,16 @@
   <action name="action_Report_Personal_Statistik">
    <property name="text">
     <string>&amp;Statistik</string>
+   </property>
+  </action>
+  <action name="action_Report_Personal_DienstnehmerEreignisse">
+   <property name="text">
+    <string>Dienstnehmer &amp;Ereignisse</string>
+   </property>
+  </action>
+  <action name="action_Report_Personal_Urlaub">
+   <property name="text">
+    <string>&amp;Urlaub</string>
    </property>
   </action>
  </widget>

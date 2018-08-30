@@ -2,8 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/forms/dienstnehmerForm.ui'
 #
-# Created: Fri Oct 11 12:46:48 2013
-#      by: PyQt4 UI code generator 4.9.3
+# Created by: PyQt4 UI code generator 4.11.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,7 +11,16 @@ from PyQt4 import QtCore, QtGui
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
-    _fromUtf8 = lambda s: s
+    def _fromUtf8(s):
+        return s
+
+try:
+    _encoding = QtGui.QApplication.UnicodeUTF8
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig, _encoding)
+except AttributeError:
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig)
 
 class Ui_DienstnehmerForm(object):
     def setupUi(self, DienstnehmerForm):
@@ -27,9 +35,6 @@ class Ui_DienstnehmerForm(object):
         self.pushButton_newRecord = QtGui.QPushButton(DienstnehmerForm)
         self.pushButton_newRecord.setObjectName(_fromUtf8("pushButton_newRecord"))
         self.horizontalLayout_2.addWidget(self.pushButton_newRecord)
-        self.pushButton_deleteRecord = QtGui.QPushButton(DienstnehmerForm)
-        self.pushButton_deleteRecord.setObjectName(_fromUtf8("pushButton_deleteRecord"))
-        self.horizontalLayout_2.addWidget(self.pushButton_deleteRecord)
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem)
         self.comboBox_period = QtGui.QComboBox(DienstnehmerForm)
@@ -37,7 +42,7 @@ class Ui_DienstnehmerForm(object):
         self.horizontalLayout_2.addWidget(self.comboBox_period)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.gridLayout.addLayout(self.verticalLayout, 0, 0, 2, 2)
-        self.tableView_dienstnehmer = QtGui.QTableView(DienstnehmerForm)
+        self.tableView_dienstnehmer = FilterableTableView(DienstnehmerForm)
         self.tableView_dienstnehmer.setObjectName(_fromUtf8("tableView_dienstnehmer"))
         self.gridLayout.addWidget(self.tableView_dienstnehmer, 2, 0, 1, 1)
 
@@ -45,7 +50,7 @@ class Ui_DienstnehmerForm(object):
         QtCore.QMetaObject.connectSlotsByName(DienstnehmerForm)
 
     def retranslateUi(self, DienstnehmerForm):
-        DienstnehmerForm.setWindowTitle(QtGui.QApplication.translate("DienstnehmerForm", "Dienstnehmer", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton_newRecord.setText(QtGui.QApplication.translate("DienstnehmerForm", "&Neu", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton_deleteRecord.setText(QtGui.QApplication.translate("DienstnehmerForm", "&Löschen", None, QtGui.QApplication.UnicodeUTF8))
+        DienstnehmerForm.setWindowTitle(_translate("DienstnehmerForm", "Dienstnehmer", None))
+        self.pushButton_newRecord.setText(_translate("DienstnehmerForm", "&Neu", None))
 
+from lib.FilterableTableView import FilterableTableView

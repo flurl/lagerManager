@@ -49,12 +49,15 @@ class DienstnehmerStatistikReport(TextReport):
         self.connect(self.ui.comboBox_calculationPeriod, QtCore.SIGNAL('currentIndexChanged(int)'), self.updateData)
         self.connect(self.ui.comboBox_periodAmount, QtCore.SIGNAL('currentIndexChanged(int)'), self.updateData)
         self.connect(self.ui.checkBox_singlePeriods, QtCore.SIGNAL('stateChanged(int)'), self.updateData)
+        self.connect(self.ui.checkBox_showSalary, QtCore.SIGNAL('stateChanged(int)'), self.updateData)
         
     def setTableHeaders(self):
         if not self.ui.checkBox_singlePeriods.isChecked():
             headers = ['Nummer', 'Name', 'Durchrechnungsanzahl', 'Durch. Dienste', 'Durch. Stunden', 'Durch. NAZ']
         else:
             headers = ['Nummer', 'Name', 'Dienste', 'Stunden', 'NAZ', 'Jahr', 'Zeitraum']
+        if self.ui.checkBox_showSalary.isChecked():
+            headers += ['Lohn']
         super(DienstnehmerStatistikReport, self).setTableHeaders(headers)
         
     def updateData(self):
@@ -78,12 +81,12 @@ class DienstnehmerStatistikReport(TextReport):
 #        print dn, empId, dn['din_name']
         while dn.next():
             if not self.ui.checkBox_singlePeriods.isChecked():
-                data.append([dn['din_nummer'], dn['din_name']] + list(dn.getAvg(what, count)))
+                data.append([dn['din_nummer'], dn['din_name']] + list(dn.getAvg(what, count)) + ([dn.getHourlyWage()] if self.ui.checkBox_showSalary.isChecked() else []))
             else:
                 dnData = dn.getTotals(what, count)
                 for k, d in dnData.items():
                     print k, d
-                    data.append([dn['din_nummer'], dn['din_name']] + list(d.values()) + list(k))
+                    data.append([dn['din_nummer'], dn['din_name']] + list(d.values()) + list(k) + ([dn.getHourlyWage()] if self.ui.checkBox_showSalary.isChecked() else []))
             
         self.setData(data)
         print(data)

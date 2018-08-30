@@ -441,7 +441,8 @@ CREATE TABLE IF NOT EXISTS loehne (
 
 create table dienstnehmer (
 	din_id int unsigned auto_increment primary key not null,
-	din_name varchar(255) not null,
+	din_nachname varchar(255) not null,
+	din_vorname varchar(255) not null,
 	din_nummer varchar(255) not null,
 	din_gehalt decimal(18, 3) NOT NULL,
 	din_gehid int unsigned not null,
