@@ -30,7 +30,7 @@ class Dienstnehmer(LMDatabaseObject):
             earnings = d.getEarnings()
             remainingSalary -= d.getEarnings()
             
-        print "BP3 remainingSalary for %s is %s" % (self['din_name'], remainingSalary)
+        #print "BP3 remainingSalary for %s is %s" % (self['din_name'], remainingSalary)
         return remainingSalary
 	
     
@@ -55,7 +55,7 @@ class Dienstnehmer(LMDatabaseObject):
                 if len(ids) > 0:
                     query += " and die_id not in (" + ",".join(ids) + ")"
             except TypeError as te:
-                print te
+                #print te
                 query += " and die_id != %s " % excludeDutyId
         
         values = [self['din_id'], QtCore.QDateTime(monthBegin), QtCore.QDateTime(monthEnd)]
@@ -90,7 +90,7 @@ class Dienstnehmer(LMDatabaseObject):
         res = self.runQuery(query, values)
         res.next()
         retVal = res.value(0).toInt()[0]
-        print "isAvailableForDate:", retVal
+        #print "isAvailableForDate:", retVal
         return retVal
         
       
@@ -114,7 +114,7 @@ class Dienstnehmer(LMDatabaseObject):
             raise IncorrectPeriodException
         
         startDate = datefunc(enddate, period)
-        print "startDate", startDate
+        #print "startDate", startDate
         
         data = {}
         
@@ -122,14 +122,14 @@ class Dienstnehmer(LMDatabaseObject):
         for i in range(abs(period)):
             duties += self.getDuties(datefunc(startDate, i), excludeDutyId=[d['die_id'] for d in duties])
         
-        print 'duties:', len(duties)
+        #print 'duties:', len(duties)
             
         for d in duties:
             k = getKey(d['die_beginn'])
             total = data.get(k, {'count': 0, 'hours': 0.0, 'naz': 0})
             #print "bp1:",total
             data[k] = {'count': total['count']+1, 'hours': total['hours']+d.getWorkingHours(), 'naz': total['naz']+(1 if d.getNAZ()>0.0001 else 0)}
-        print "bp2:",data
+        #print "bp2:",data
         return data
         
 
@@ -190,6 +190,7 @@ class Dienstnehmer(LMDatabaseObject):
         
         print beginnDitId, endeDitId
         ereignisse = self['ereignisse']
+        #print "Ereignisse:", len(ereignisse)
         ereignisse.filter('dir_ditid', beginnDitId)
         ub = []
         for e in ereignisse:

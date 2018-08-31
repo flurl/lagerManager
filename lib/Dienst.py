@@ -30,7 +30,7 @@ class Dienst(LMDatabaseObject):
         hours = self.getWorkingHours()
         feiertagsStunden = self.getFeiertagszuschlagStunden()
         hourlyWage = emp.getHourlyWage(self['die_beginn'])
-        print "feiertagszuschlag für %s stunden" % feiertagsStunden
+        #print "feiertagszuschlag für %s stunden" % feiertagsStunden
         salary = hours*hourlyWage+feiertagsStunden*hourlyWage+self.getNAZ()+foe['beb_trinkgeldpauschale']*globalConf.getValueF('trinkgeldpauschale', self['die_beginn'])*hours
 
         return salary
@@ -77,18 +77,18 @@ class Dienst(LMDatabaseObject):
 
         timeWithinNAZ = beginDateTime.secsTo(endDateTime) - timeOutOfNAZ
 
-        print "checking NAZ: begin:",beginDateTime.toPyDateTime(), "end:", endDateTime.toPyDateTime(), "NAZBegin: ", NAZBegin.toPyDateTime(), "NAZEnd:", NAZEnd.toPyDateTime(), "shiftLen:", beginDateTime.secsTo(endDateTime)/3600.0, 'withinNAZ:', timeWithinNAZ/3600.0, 'outOfNAZ:', timeOutOfNAZ/3600.0 
+        #print "checking NAZ: begin:",beginDateTime.toPyDateTime(), "end:", endDateTime.toPyDateTime(), "NAZBegin: ", NAZBegin.toPyDateTime(), "NAZEnd:", NAZEnd.toPyDateTime(), "shiftLen:", beginDateTime.secsTo(endDateTime)/3600.0, 'withinNAZ:', timeWithinNAZ/3600.0, 'outOfNAZ:', timeOutOfNAZ/3600.0 
         
         if timeWithinNAZ > timeOutOfNAZ:
-            print "Considering NAZ"
+            #print "Considering NAZ"
             return globalConf.getValueF('nachtarbeitszuschlag', self['die_beginn'])
 
-        print "Not considering NAZ"
+        #print "Not considering NAZ"
         return 0
         
         
     def getFeiertagszuschlagStunden(self):
-        print "getFeiertagszuschlagStunden()"
+        #print "getFeiertagszuschlagStunden()"
         hours = 0.0
         beginDateTime = QtCore.QDateTime(self['die_beginn'])
         endDateTime = QtCore.QDateTime(self['die_ende'])
@@ -96,7 +96,7 @@ class Dienst(LMDatabaseObject):
         endDateTime.setTime(QtCore.QTime(0, 0))
         beginFeiertag = Feiertag().find([('fta_datum', beginDateTime)])
         if beginFeiertag.next():
-            print "Feiertag gefunden am %s" % self['die_beginn']
+            #print "Feiertag gefunden am %s" % self['die_beginn']
             #start and end on same day
             if beginDateTime.secsTo(endDateTime) == 0:
                 return self.getWorkingHours()
@@ -104,7 +104,7 @@ class Dienst(LMDatabaseObject):
             
         endFeiertag = Feiertag().find([('fta_datum', endDateTime)])
         while endFeiertag.next():
-            print "Feiertag gefunden am %s" % self['die_ende']
+            #print "Feiertag gefunden am %s" % self['die_ende']
             hours += round(endDateTime.secsTo(self['die_ende'])/3600.0, 2)
         
         return hours
