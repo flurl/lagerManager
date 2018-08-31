@@ -396,6 +396,7 @@ CREATE TABLE IF NOT EXISTS dir_typen (
 	dit_kbez varchar(5) not null,
 	dit_beginn_ditid int unsigned,
 	dit_ende_ditid int unsigned,
+	dit_benoetigt BOOLEAN not null default 0,
 	unique key (dit_kbez),
 	foreign key dir_typen_beginn_typ_fk (dit_beginn_ditid) references dir_typen(dit_id),
 	foreign key dir_typen_beginn_typ_fk (dit_ende_ditid) references dir_typen(dit_id)
