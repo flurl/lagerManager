@@ -122,6 +122,10 @@ class AutoCreateShiftsForm(FormBase):
 		QtGui.QMessageBox.information(self, u'Schichterstellung erfolgreich', 
 										u'Die Schichten wurden erfolgreich import')
 		
+		try:
+			tmp = config.config['connection']
+		except KeyError:
+			config.config['connection'] = {DBConnection.connName: {}}
 		config.config['connection'][DBConnection.connName]['last_shift_import_url'] = url
 		config.config.write()
 		
