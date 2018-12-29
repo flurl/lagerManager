@@ -102,8 +102,9 @@ class AutoCreateShiftsForm(FormBase):
 		for item in feed['items']:
 			name = item['title']
 			dateTime = item['published'][:-6] #strip the last 6 chars for easier parsing below
-			dateTime = QtCore.QDateTime.fromString(dateTime, 'ddd, dd MMM yyyy hh:mm:ss')
-			
+			locale = QtCore.QLocale(QtCore.QLocale.English, QtCore.QLocale.UnitedStates)
+			dateTime = locale.toDateTime(dateTime, 'ddd, dd MMM yyyy hh:mm:ss') # Sat, 29 Dec 2018 22:00:00
+
 			if dateTime <= ignoreBefore:
 				continue
 			
