@@ -35,6 +35,9 @@ class Ui_Lagerstand(object):
         self.pushButton_refresh = QtGui.QPushButton(Lagerstand)
         self.pushButton_refresh.setObjectName(_fromUtf8("pushButton_refresh"))
         self.horizontalLayout.addWidget(self.pushButton_refresh)
+        self.pushButton_export = QtGui.QPushButton(Lagerstand)
+        self.pushButton_export.setObjectName(_fromUtf8("pushButton_export"))
+        self.horizontalLayout.addWidget(self.pushButton_export)
         self.comboBox_period = QtGui.QComboBox(Lagerstand)
         self.comboBox_period.setObjectName(_fromUtf8("comboBox_period"))
         self.horizontalLayout.addWidget(self.comboBox_period)
@@ -76,5 +79,6 @@ class Ui_Lagerstand(object):
     def retranslateUi(self, Lagerstand):
         Lagerstand.setWindowTitle(_translate("Lagerstand", "Lagerstand", None))
         self.pushButton_refresh.setText(_translate("Lagerstand", "Aktualisieren", None))
+        self.pushButton_export.setText(_translate("Lagerstand", "&Export", None))
 
 from reports.reportGraphicsViewWidget import ReportGraphicsViewWidget

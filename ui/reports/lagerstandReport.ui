@@ -37,6 +37,13 @@
       </widget>
      </item>
      <item>
+      <widget class="QPushButton" name="pushButton_export">
+       <property name="text">
+        <string>&amp;Export</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QComboBox" name="comboBox_period"/>
      </item>
     </layout>
