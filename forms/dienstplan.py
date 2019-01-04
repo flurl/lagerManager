@@ -142,7 +142,11 @@ class DienstplanForm(FormBase):
         
         beginDateTimeEdit = QtGui.QDateTimeEdit()
         beginDateTimeEdit.setCalendarPopup(True)
-        beginDateTimeEdit.setMinimumDate(eventProps['ver_datum'])
+        # events starting after midnight might need shift starts on the day before
+        if 0 <= eventProps['ver_beginn'].hour() <= 6:
+            beginDateTimeEdit.setMinimumDate(eventProps['ver_datum'].addDays(-1))
+        else:
+            beginDateTimeEdit.setMinimumDate(eventProps['ver_datum'])
         beginDateTimeEdit.setMaximumDate(eventProps['ver_datum'].addDays(1))
         
         endDateTimeEdit = QtGui.QDateTimeEdit()
