@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>989</width>
+    <width>1096</width>
     <height>500</height>
    </rect>
   </property>
@@ -60,6 +60,13 @@
         <widget class="QCheckBox" name="checkBox_showTableCode">
          <property name="text">
           <string>&amp;Tischbereiche anzeigen</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkBox_includeLMData">
+         <property name="text">
+          <string>&amp;LM Daten</string>
          </property>
         </widget>
        </item>

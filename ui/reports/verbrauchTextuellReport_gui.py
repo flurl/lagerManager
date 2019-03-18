@@ -2,8 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/reports/verbrauchTextuellReport.ui'
 #
-# Created: Thu Jul 30 18:55:34 2015
-#      by: PyQt4 UI code generator 4.10.4
+# Created by: PyQt4 UI code generator 4.11.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -26,7 +25,7 @@ except AttributeError:
 class Ui_VerbrauchTextuellReport(object):
     def setupUi(self, VerbrauchTextuellReport):
         VerbrauchTextuellReport.setObjectName(_fromUtf8("VerbrauchTextuellReport"))
-        VerbrauchTextuellReport.resize(989, 500)
+        VerbrauchTextuellReport.resize(1096, 500)
         self.gridLayout = QtGui.QGridLayout(VerbrauchTextuellReport)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
         self.verticalLayout = QtGui.QVBoxLayout()
@@ -53,6 +52,9 @@ class Ui_VerbrauchTextuellReport(object):
         self.checkBox_showTableCode = QtGui.QCheckBox(VerbrauchTextuellReport)
         self.checkBox_showTableCode.setObjectName(_fromUtf8("checkBox_showTableCode"))
         self.horizontalLayout.addWidget(self.checkBox_showTableCode)
+        self.checkBox_includeLMData = QtGui.QCheckBox(VerbrauchTextuellReport)
+        self.checkBox_includeLMData.setObjectName(_fromUtf8("checkBox_includeLMData"))
+        self.horizontalLayout.addWidget(self.checkBox_includeLMData)
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
         self.pushButton_export = QtGui.QPushButton(VerbrauchTextuellReport)
@@ -77,6 +79,7 @@ class Ui_VerbrauchTextuellReport(object):
         self.radioButton_umsatz.setText(_translate("VerbrauchTextuellReport", "nur &Umsatz", None))
         self.radioButton_aufwand.setText(_translate("VerbrauchTextuellReport", "nur Auf&wand", None))
         self.checkBox_showTableCode.setText(_translate("VerbrauchTextuellReport", "&Tischbereiche anzeigen", None))
+        self.checkBox_includeLMData.setText(_translate("VerbrauchTextuellReport", "&LM Daten", None))
         self.pushButton_export.setText(_translate("VerbrauchTextuellReport", "&Exportieren", None))
 
 from reports.reportTextViewWidget import ReportTextViewWidget
