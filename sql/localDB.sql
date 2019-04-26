@@ -456,6 +456,7 @@ create table dienstnehmer (
 	unique key (din_nummer)
 ) ENGINE=INNODB;
 
+create or replace view dienstnehmer_view as select *, concat(din_nachname, ' ', din_vorname) name from dienstnehmer;
 
 create table veranstaltungen (
 	ver_id int unsigned auto_increment primary key not null,

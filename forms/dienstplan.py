@@ -9,6 +9,7 @@ from PyQt4 import QtCore, QtGui, QtSql
 
 from CONSTANTS import MINHOURSFORPAUSE
 from forms.formBase import FormBase, ComboBoxPKError
+from lib.LMProxyModel import LMProxyModel
 import lib.Arbeitsplatz
 from lib.Beschaeftigungsbereich import Beschaeftigungsbereich
 import lib.Dienst
@@ -126,11 +127,11 @@ class DienstplanForm(FormBase):
         workLayout.addWidget(workplaceCombo)
         
         employeeModel = QtSql.QSqlTableModel()
-        employeeModel.setTable('dienstnehmer')
+        employeeModel.setTable('dienstnehmer_view')
         employeeModel.select()
         employeeCombo = QtGui.QComboBox()
         employeeCombo.setModel(employeeModel)
-        employeeCombo.setModelColumn(employeeModel.fieldIndex('din_name'))
+        employeeCombo.setModelColumn(employeeModel.fieldIndex(u'name'))
         workLayout.addWidget(employeeCombo)
         
         dutyCountLineEdit = QtGui.QLineEdit()
@@ -590,7 +591,7 @@ class DienstplanForm(FormBase):
             edit.setDate(eventProps['ver_datum'])
             edit.setTime(eventProps['ver_beginn'])
             edit.setDateTime(edit.dateTime().addSecs(int(wpProps['arp_std_dienst_dauer'] * 3600)))
-        combo.model().setFilter("dienstnehmer.din_bebid = %s and empIsAvailableForDate(din_id, '%s') = 1" %
+        combo.model().setFilter("dienstnehmer_view.din_bebid = %s and empIsAvailableForDate(din_id, '%s') = 1" %
                                               (wpProps['arp_bebid'], eventProps['ver_datum'].toPyDate().isoformat()))
     
     def setEmployeeFrameColor(self, wr):
