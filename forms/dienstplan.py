@@ -9,7 +9,6 @@ from PyQt4 import QtCore, QtGui, QtSql
 
 from CONSTANTS import MINHOURSFORPAUSE
 from forms.formBase import FormBase, ComboBoxPKError
-from lib.LMProxyModel import LMProxyModel
 import lib.Arbeitsplatz
 from lib.Beschaeftigungsbereich import Beschaeftigungsbereich
 import lib.Dienst
