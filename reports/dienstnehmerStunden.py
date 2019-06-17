@@ -118,11 +118,16 @@ class DienstnehmerStundenReport(TextReport):
         super(DienstnehmerStundenReport, self).setupUi()
 
         model = QtSql.QSqlTableModel()
-        model.setTable('dienstnehmer')
+        model.setTable('dienstnehmer_view')
         model.select()
 
-        self.ui.comboBox_employees.setModel(model)
-        self.ui.comboBox_employees.setModelColumn(model.fieldIndex('din_name'))
+        sortModel = QtGui.QSortFilterProxyModel()
+        sortModel.setDynamicSortFilter(True)
+        sortModel.setSourceModel(model)
+        sortModel.sort(model.fieldIndex('name'))
+
+        self.ui.comboBox_employees.setModel(sortModel)
+        self.ui.comboBox_employees.setModelColumn(model.fieldIndex('name'))
 
         self.ui.comboBox_employees.insertSeparator(-1)
         self.ui.comboBox_employees.setCurrentIndex(-1)
